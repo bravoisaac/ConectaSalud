@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Panel admin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Verificaciones</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of verifications">
+          <ion-label>
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.role }} ? {{ item.status }}</p>
+          </ion-label>
+          <ion-button slot="end" size="small">Revisar</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Reportes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let report of reports">
+          <ion-label>
+            <h2>{{ report.target }}</h2>
+            <p>{{ report.reason }} ? {{ report.status }}</p>
+          </ion-label>
+          <ion-button slot="end" size="small" fill="outline">Resolver</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

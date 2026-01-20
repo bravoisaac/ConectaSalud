@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private tokenKey = 'token';
+  private userKey = 'user';
 
   constructor(
     private http: HttpClient,
@@ -14,11 +15,21 @@ export class AuthService {
     this.storage.create();
   }
 
-  register(name: string, email: string, password: string) {
+  register(
+    name: string,
+    email: string,
+    password: string,
+    role: string,
+    locale: string,
+    phone?: string
+  ) {
     return this.http.post(`${environment.apiBase}/register`, {
       name,
       email,
       password,
+      role,
+      locale,
+      phone,
     });
   }
 
@@ -47,5 +58,17 @@ export class AuthService {
 
   async clearToken() {
     await this.storage.remove(this.tokenKey);
+  }
+
+  async setUser(user: any) {
+    await this.storage.set(this.userKey, user);
+  }
+
+  async getUser() {
+    return this.storage.get(this.userKey);
+  }
+
+  async clearUser() {
+    await this.storage.remove(this.userKey);
   }
 }

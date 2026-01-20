@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Empleos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-searchbar [(ngModel)]="query" placeholder="Buscar empleo"></ion-searchbar>
+
+  <ion-segment [(ngModel)]="modality">
+    <ion-segment-button value="todas">Todas</ion-segment-button>
+    <ion-segment-button value="presencial">Presencial</ion-segment-button>
+    <ion-segment-button value="remoto">Remoto</ion-segment-button>
+  </ion-segment>
+
+  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let job of filteredJobs" lines="full">
+      <ion-label>
+        <h2>{{ job.title }}</h2>
+        <p>{{ job.company_name || ('Empresa #' + job.company_id) }} ? {{ job.location || 'Sin ubicacion' }}</p>
+        <p>{{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</p>
+      </ion-label>
+      <ion-button slot="end" fill="outline">Ver</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-item *ngIf="loading">
+    <ion-label>Cargando...</ion-label>
+  </ion-item>
+</ion-content>

@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'locale',
+        'phone',
+        'status',
     ];
 
     /**
@@ -47,5 +51,15 @@ class User extends Authenticatable
             // O sea, tú NO tienes que hacer Hash::make() manualmente.
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
     }
 }

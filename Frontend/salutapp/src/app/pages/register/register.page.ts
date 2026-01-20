@@ -17,6 +17,9 @@ export class RegisterPage {
   name = '';
   email = '';
   password = '';
+  role = 'user';
+  locale = 'es';
+  phone = '';
   loading = false;
 
   errors: any = {};
@@ -32,11 +35,12 @@ export class RegisterPage {
     this.errors = {};
     this.successMsg = '';
 
-    this.auth.register(this.name, this.email, this.password).subscribe({
+    this.auth.register(this.name, this.email, this.password, this.role, this.locale, this.phone).subscribe({
       next: async (res: any) => {
-        this.successMsg = '✅ Registro exitoso';
+        this.successMsg = 'Registro exitoso';
         await this.auth.setToken(res.token);
-        this.router.navigateByUrl('/home', { replaceUrl: true });
+        await this.auth.setUser(res.user);
+        this.router.navigateByUrl('/app/jobs', { replaceUrl: true });
       },
       error: (err) => {
         this.errors = err?.error?.errors || {};

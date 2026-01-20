@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nuevo chat</ion-card-title>
+      <ion-card-subtitle>IDs separados por coma</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Participantes</ion-label>
+        <ion-input [(ngModel)]="participantsInput" placeholder="2, 3"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="createChat()">Crear chat</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Enviar mensaje</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Chat ID</ion-label>
+        <ion-input [(ngModel)]="chatIdForMessage" type="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Mensaje</ion-label>
+        <ion-input [(ngModel)]="messageBody"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Adjunto URL</ion-label>
+        <ion-input [(ngModel)]="attachmentUrl"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Tipo adjunto</ion-label>
+        <ion-input [(ngModel)]="attachmentType" placeholder="image, video"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="sendMessage()">Enviar</ion-button>
+      <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Chats activos</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let chat of chats">
+      <ion-label>
+        <h2>Chat #{{ chat.id }}</h2>
+        <p>Creado: {{ chat.created_at | date: 'short' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-item *ngIf="loading">
+    <ion-label>Cargando...</ion-label>
+  </ion-item>
+</ion-content>

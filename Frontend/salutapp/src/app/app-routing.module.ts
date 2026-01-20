@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   {
@@ -14,10 +15,49 @@ const routes: Routes = [
       import('./pages/register/register.page').then(m => m.RegisterPage),
   },
   {
-    path: 'home',
+    path: 'admin',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./pages/admin/admin.page').then(m => m.AdminPage),
+  },
+  {
+    path: 'app',
     canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/home/home.page').then(m => m.HomePage),
+      import('./pages/tabs/tabs.page').then(m => m.TabsPage),
+    children: [
+      {
+        path: 'jobs',
+        loadComponent: () =>
+          import('./pages/jobs/jobs.page').then(m => m.JobsPage),
+      },
+      {
+        path: 'health',
+        loadComponent: () =>
+          import('./pages/health/health.page').then(m => m.HealthPage),
+      },
+      {
+        path: 'social',
+        loadComponent: () =>
+          import('./pages/social/social.page').then(m => m.SocialPage),
+      },
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./pages/chat/chat.page').then(m => m.ChatPage),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/profile/profile.page').then(m => m.ProfilePage),
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'jobs',
+      },
+    ],
   },
   {
     path: '',

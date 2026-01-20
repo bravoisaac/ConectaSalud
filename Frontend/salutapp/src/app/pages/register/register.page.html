@@ -1,47 +1,53 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Registro </ion-title>
+    <ion-title>Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="floating">Nombre</ion-label>
+    <ion-input [(ngModel)]="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input [(ngModel)]="email" type="email"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Telefono</ion-label>
+    <ion-input [(ngModel)]="phone" type="tel"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Contrasena</ion-label>
+    <ion-input [(ngModel)]="password" type="password"></ion-input>
+  </ion-item>
 
   <ion-item>
-    <ion-input
-      label="Nombre"
-      labelPlacement="floating"
-      [(ngModel)]="name">
-    </ion-input>
+    <ion-label>Rol</ion-label>
+    <ion-select [(ngModel)]="role">
+      <ion-select-option value="user">Usuario</ion-select-option>
+      <ion-select-option value="health">Salud</ion-select-option>
+      <ion-select-option value="company">Empresa</ion-select-option>
+    </ion-select>
   </ion-item>
-  <ion-text color="danger" *ngIf="errors?.name">{{ errors.name[0] }}</ion-text>
 
   <ion-item>
-    <ion-input
-      label="Email"
-      labelPlacement="floating"
-      type="email"
-      [(ngModel)]="email">
-    </ion-input>
+    <ion-label>Idioma</ion-label>
+    <ion-select [(ngModel)]="locale">
+      <ion-select-option value="es">Espanol</ion-select-option>
+      <ion-select-option value="en">Ingles</ion-select-option>
+    </ion-select>
   </ion-item>
-  <ion-text color="danger" *ngIf="errors?.email">{{ errors.email[0] }}</ion-text>
-
-  <ion-item>
-    <ion-input
-      label="Contraseña"
-      labelPlacement="floating"
-      type="password"
-      [(ngModel)]="password">
-    </ion-input>
-  </ion-item>
-  <ion-text color="danger" *ngIf="errors?.password">{{ errors.password[0] }}</ion-text>
 
   <ion-button expand="block" (click)="submit()" [disabled]="loading">
-    Crear cuenta
+    {{ loading ? 'Registrando...' : 'Registrar' }}
   </ion-button>
 
-  <ion-button expand="block" fill="clear" routerLink="/login">
-    Ya tengo cuenta
-  </ion-button>
+  <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
 
-  <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+  <div class="errors" *ngIf="errors | keyvalue as errs">
+    <p *ngFor="let err of errs">{{ $any(err.value)[0] }}</p>
+  </div>
+
+  <ion-button fill="clear" routerLink="/login">Volver a login</ion-button>
 </ion-content>

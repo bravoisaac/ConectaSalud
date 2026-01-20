@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Red social</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nueva publicacion</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-textarea [(ngModel)]="newPost" placeholder="Que quieres compartir?"></ion-textarea>
+      <div class="actions">
+        <ion-button fill="outline">Foto</ion-button>
+        <ion-button fill="outline">Video</ion-button>
+        <ion-button (click)="publish()">Publicar</ion-button>
+      </div>
+      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngFor="let post of posts">
+    <ion-card-header>
+      <ion-card-title>Usuario #{{ post.user_id }}</ion-card-title>
+      <ion-card-subtitle>{{ post.created_at | date: 'short' }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ post.body }}</p>
+      <div class="actions">
+        <ion-button size="small" fill="clear">Me gusta</ion-button>
+        <ion-button size="small" fill="clear">Comentar</ion-button>
+        <ion-button size="small" fill="clear">Reportar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-item *ngIf="loading">
+    <ion-label>Cargando...</ion-label>
+  </ion-item>
+</ion-content>

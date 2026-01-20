@@ -6,30 +6,19 @@
 
 <ion-content class="ion-padding">
   <ion-item>
-    <ion-input
-      label="Email"
-      labelPlacement="floating"
-      type="email"
-      [(ngModel)]="email">
-    </ion-input>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input [(ngModel)]="email" type="email"></ion-input>
   </ion-item>
-
   <ion-item>
-    <ion-input
-      label="Contraseña"
-      labelPlacement="floating"
-      type="password"
-      [(ngModel)]="password">
-    </ion-input>
+    <ion-label position="floating">Contrasena</ion-label>
+    <ion-input [(ngModel)]="password" type="password"></ion-input>
   </ion-item>
-
-  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
 
   <ion-button expand="block" (click)="submit()" [disabled]="loading">
-    Entrar
+    {{ loading ? 'Entrando...' : 'Entrar' }}
   </ion-button>
 
-  <ion-button expand="block" fill="clear" routerLink="/register">
-    Crear cuenta
-  </ion-button>
+  <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+  <ion-button fill="clear" routerLink="/register">Crear cuenta</ion-button>
 </ion-content>

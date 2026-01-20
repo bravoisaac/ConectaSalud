@@ -30,15 +30,15 @@ export class LoginPage {
 
     this.auth.login(this.email, this.password).subscribe({
       next: async (res: any) => {
-        // Laravel responde { token, user, ... }
         await this.auth.setToken(res.token);
-        this.router.navigateByUrl('/home', { replaceUrl: true });
+        await this.auth.setUser(res.user);
+        this.router.navigateByUrl('/app/jobs', { replaceUrl: true });
       },
       error: (err) => {
         this.errorMsg =
           err?.error?.message ||
           err?.error?.errors?.email?.[0] ||
-          'Error al iniciar sesión';
+          'Error al iniciar sesion';
       }
     }).add(() => {
       this.loading = false;
