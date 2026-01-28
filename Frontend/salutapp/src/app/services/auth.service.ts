@@ -7,12 +7,26 @@ import { environment } from '../../environments/environment';
 export class AuthService {
   private tokenKey = 'token';
   private userKey = 'user';
+  private storageReady: Promise<void>;
+  private storageInstance: Storage | null = null;
 
   constructor(
     private http: HttpClient,
     private storage: Storage
   ) {
-    this.storage.create();
+    this.storageReady = this.initStorage();
+  }
+
+  private async initStorage() {
+    this.storageInstance = await this.storage.create();
+  }
+
+  private async getStorage(): Promise<Storage> {
+    await this.storageReady;
+    if (!this.storageInstance) {
+      throw new Error('Storage no inicializado');
+    }
+    return this.storageInstance;
   }
 
   register(
@@ -49,26 +63,32 @@ export class AuthService {
   }
 
   async setToken(token: string) {
-    await this.storage.set(this.tokenKey, token);
+    const storage = await this.getStorage();
+    await storage.set(this.tokenKey, token);
   }
 
   async getToken() {
-    return this.storage.get(this.tokenKey);
+    const storage = await this.getStorage();
+    return storage.get(this.tokenKey);
   }
 
   async clearToken() {
-    await this.storage.remove(this.tokenKey);
+    const storage = await this.getStorage();
+    await storage.remove(this.tokenKey);
   }
 
   async setUser(user: any) {
-    await this.storage.set(this.userKey, user);
+    const storage = await this.getStorage();
+    await storage.set(this.userKey, user);
   }
 
   async getUser() {
-    return this.storage.get(this.userKey);
+    const storage = await this.getStorage();
+    return storage.get(this.userKey);
   }
 
   async clearUser() {
-    await this.storage.remove(this.userKey);
+    const storage = await this.getStorage();
+    await storage.remove(this.userKey);
   }
 }

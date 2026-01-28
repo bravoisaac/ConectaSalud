@@ -15,6 +15,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,4 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('verifications', [VerificationController::class, 'store']);
     Route::post('payments/authorize', [PaymentController::class, 'authorizePayment']);
     Route::post('payments/{payment}/capture', [PaymentController::class, 'capturePayment']);
+
+    Route::get('profile', [UserProfileController::class, 'show']);
+    Route::post('profile', [UserProfileController::class, 'upsert']);
 });

@@ -1,1 +1,85 @@
 
+.file-input {
+  width: 100%;
+  padding: 8px 0;
+}
+
+ion-note {
+  display: block;
+  margin: 6px 0 12px;
+  color: var(--ion-color-medium);
+}
+
+.experience-block {
+  margin-top: 12px;
+}
+
+.experience-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.experience-card {
+  margin: 8px 0;
+}
+
+.add-card {
+  border: 1px dashed var(--ion-color-medium);
+}
+
+.experience-meta {
+  margin: 4px 0;
+  color: var(--ion-color-medium);
+}
+
+.experience-desc {
+  margin-top: 8px;
+  white-space: pre-line;
+}
+
+.skills-block {
+  margin-top: 12px;
+}
+
+.skills-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 8px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.skills-card {
+  margin: 8px 0;
+}
+
+.skill-item {
+  margin: 0;
+  font-weight: 600;
+}
+
+.education-block {
+  margin-top: 12px;
+}
+
+.education-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 8px;
+}
+
+.education-card {
+  margin: 8px 0;
+}
+
+.education-meta {
+  margin: 4px 0;
+  color: var(--ion-color-medium);
+}

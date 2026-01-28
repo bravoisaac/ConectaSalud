@@ -17,6 +17,259 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Curriculum profesional</ion-card-title>
+      <ion-card-subtitle>Completa tu informacion laboral</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+      <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Nombre completo</ion-label>
+        <ion-input [(ngModel)]="profile.full_name" placeholder="Ej: Maria Gonzalez"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input [(ngModel)]="profile.email" type="email" placeholder="correo@correo.com"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Telefono</ion-label>
+        <ion-input [(ngModel)]="profile.phone" inputmode="tel" placeholder="+56 9 1234 5678"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Profesion</ion-label>
+        <ion-input [(ngModel)]="profile.profession" placeholder="Ej: Enfermera, TENS"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Resumen profesional</ion-label>
+        <ion-textarea [(ngModel)]="profile.summary" autoGrow="true" placeholder="Breve resumen"></ion-textarea>
+      </ion-item>
+      <div class="experience-block">
+        <div class="experience-header">
+          <ion-label>Experiencia laboral</ion-label>
+          <div class="edit-actions" *ngIf="experienceEditMode; else experienceEditButton">
+            <ion-button size="small" fill="outline" (click)="toggleExperienceEdit()">
+              Cancelar
+            </ion-button>
+            <ion-button size="small" (click)="saveProfile()" [disabled]="savingProfile">
+              {{ savingProfile ? 'Guardando...' : 'Guardar cambios' }}
+            </ion-button>
+          </div>
+          <ng-template #experienceEditButton>
+            <ion-button size="small" fill="outline" (click)="toggleExperienceEdit()">
+              Editar
+            </ion-button>
+          </ng-template>
+        </div>
+        <ion-card class="experience-card add-card" *ngIf="experienceEditMode">
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Empresa</ion-label>
+              <ion-input [(ngModel)]="newExperience.company" placeholder="Ej: Clinica Central"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Cargo</ion-label>
+              <ion-input [(ngModel)]="newExperience.role" placeholder="Ej: Enfermera jefe"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de inicio</ion-label>
+              <ion-input [(ngModel)]="newExperience.startDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de finalizacion</ion-label>
+              <ion-input [(ngModel)]="newExperience.endDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Descripcion del cargo</ion-label>
+              <ion-textarea [(ngModel)]="newExperience.description" autoGrow="true" placeholder="Responsabilidades, logros"></ion-textarea>
+            </ion-item>
+            <ion-button size="small" fill="outline" (click)="addExperience()">Agregar experiencia</ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="experience-card" *ngFor="let exp of experienceEntries; let i = index">
+          <ion-card-content *ngIf="experienceEditMode">
+            <ion-item>
+              <ion-label position="stacked">Empresa</ion-label>
+              <ion-input [(ngModel)]="exp.company" placeholder="Ej: Clinica Central"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Cargo</ion-label>
+              <ion-input [(ngModel)]="exp.role" placeholder="Ej: Enfermera jefe"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de inicio</ion-label>
+              <ion-input [(ngModel)]="exp.startDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de finalizacion</ion-label>
+              <ion-input [(ngModel)]="exp.endDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Descripcion del cargo</ion-label>
+              <ion-textarea [(ngModel)]="exp.description" autoGrow="true" placeholder="Responsabilidades, logros"></ion-textarea>
+            </ion-item>
+            <ion-button size="small" color="danger" fill="outline" (click)="removeExperience(i)">
+              Eliminar
+            </ion-button>
+          </ion-card-content>
+          <ion-card-content *ngIf="!experienceEditMode">
+            <h3>Empresa: {{ exp.company || 'Sin empresa' }}</h3>
+            <p class="experience-meta">Cargo: {{ exp.role || 'Sin cargo' }}</p>
+            <p class="experience-meta">
+              Fechas: {{ exp.startDate || 'Inicio' }} - {{ exp.endDate || 'Actualidad' }}
+            </p>
+            <p class="experience-desc">Descripcion: {{ exp.description || 'Sin descripcion' }}</p>
+          </ion-card-content>
+        </ion-card>
+        <ion-text color="medium" *ngIf="!experienceEditMode && !experienceEntries.length">
+          Sin experiencias registradas
+        </ion-text>
+      </div>
+      <div class="skills-block">
+        <div class="skills-header">
+          <ion-label>Habilidades</ion-label>
+          <div class="edit-actions" *ngIf="skillsEditMode; else skillsEditButton">
+            <ion-button size="small" fill="outline" (click)="toggleSkillsEdit()">
+              Cancelar
+            </ion-button>
+            <ion-button size="small" (click)="saveProfile()" [disabled]="savingProfile">
+              {{ savingProfile ? 'Guardando...' : 'Guardar cambios' }}
+            </ion-button>
+          </div>
+          <ng-template #skillsEditButton>
+            <ion-button size="small" fill="outline" (click)="toggleSkillsEdit()">
+              Editar
+            </ion-button>
+          </ng-template>
+        </div>
+        <ion-card class="skills-card add-card" *ngIf="skillsEditMode">
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Nueva habilidad</ion-label>
+              <ion-input [(ngModel)]="newSkill" placeholder="Ej: Inyectables"></ion-input>
+            </ion-item>
+            <ion-button size="small" fill="outline" (click)="addSkill()">Agregar habilidad</ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="skills-card" *ngFor="let skill of skillsEntries; let i = index">
+          <ion-card-content *ngIf="skillsEditMode">
+            <ion-item>
+              <ion-label position="stacked">Habilidad</ion-label>
+              <ion-input [(ngModel)]="skillsEntries[i]" placeholder="Ej: Cuidado adulto mayor"></ion-input>
+            </ion-item>
+            <ion-button size="small" color="danger" fill="outline" (click)="removeSkill(i)">
+              Eliminar
+            </ion-button>
+          </ion-card-content>
+          <ion-card-content *ngIf="!skillsEditMode">
+            <p class="skill-item">{{ skill }}</p>
+          </ion-card-content>
+        </ion-card>
+        <ion-text color="medium" *ngIf="!skillsEditMode && !skillsEntries.length">
+          Sin habilidades registradas
+        </ion-text>
+      </div>
+      <div class="education-block">
+        <div class="education-header">
+          <ion-label>Estudios</ion-label>
+          <div class="edit-actions" *ngIf="educationEditMode; else educationEditButton">
+            <ion-button size="small" fill="outline" (click)="toggleEducationEdit()">
+              Cancelar
+            </ion-button>
+            <ion-button size="small" (click)="saveProfile()" [disabled]="savingProfile">
+              {{ savingProfile ? 'Guardando...' : 'Guardar cambios' }}
+            </ion-button>
+          </div>
+          <ng-template #educationEditButton>
+            <ion-button size="small" fill="outline" (click)="toggleEducationEdit()">
+              Editar
+            </ion-button>
+          </ng-template>
+        </div>
+
+        <ion-card class="education-card add-card" *ngIf="educationEditMode">
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Carrera</ion-label>
+              <ion-input [(ngModel)]="newEducation.degree" placeholder="Ej: Enfermeria"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Casa de estudio</ion-label>
+              <ion-input [(ngModel)]="newEducation.institution" placeholder="Ej: Duoc UC"></ion-input>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>Finalizado</ion-label>
+              <ion-checkbox [(ngModel)]="newEducation.completed"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de inicio</ion-label>
+              <ion-input [(ngModel)]="newEducation.startDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de finalizacion</ion-label>
+              <ion-input [(ngModel)]="newEducation.endDate" type="date" [disabled]="!newEducation.completed"></ion-input>
+            </ion-item>
+            <ion-button size="small" fill="outline" (click)="addEducation()">Agregar estudio</ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="education-card" *ngFor="let edu of educationEntries; let i = index">
+          <ion-card-content *ngIf="educationEditMode">
+            <ion-item>
+              <ion-label position="stacked">Carrera</ion-label>
+              <ion-input [(ngModel)]="edu.degree"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Casa de estudio</ion-label>
+              <ion-input [(ngModel)]="edu.institution"></ion-input>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>Finalizado</ion-label>
+              <ion-checkbox [(ngModel)]="edu.completed"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de inicio</ion-label>
+              <ion-input [(ngModel)]="edu.startDate" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de finalizacion</ion-label>
+              <ion-input [(ngModel)]="edu.endDate" type="date" [disabled]="!edu.completed"></ion-input>
+            </ion-item>
+            <ion-button size="small" color="danger" fill="outline" (click)="removeEducation(i)">
+              Eliminar
+            </ion-button>
+          </ion-card-content>
+          <ion-card-content *ngIf="!educationEditMode">
+            <h3>Carrera: {{ edu.degree || 'Sin carrera' }}</h3>
+            <p class="education-meta">Casa de estudio: {{ edu.institution || 'Sin institucion' }}</p>
+            <p class="education-meta">
+              Fechas: {{ edu.startDate || 'Inicio' }} - {{ edu.completed ? (edu.endDate || 'Finalizado') : 'En curso' }}
+            </p>
+            <p class="education-meta">Finalizado: {{ edu.completed ? 'Si' : 'No' }}</p>
+          </ion-card-content>
+        </ion-card>
+        <ion-text color="medium" *ngIf="!educationEditMode && !educationEntries.length">
+          Sin estudios registrados
+        </ion-text>
+      </div>
+      <ion-item lines="none">
+        <ion-label position="stacked">Curriculum PDF</ion-label>
+        <input class="file-input" type="file" accept="application/pdf" (change)="onFileSelected($event)" />
+      </ion-item>
+      <ion-note *ngIf="cvName">Archivo seleccionado: {{ cvName }}</ion-note>
+      <ion-button *ngIf="profile.cv_url" expand="block" fill="outline" [href]="profile.cv_url" target="_blank">
+        Ver curriculum actual
+      </ion-button>
+      <ion-button expand="block" (click)="saveProfile()" [disabled]="savingProfile">
+        {{ savingProfile ? 'Guardando...' : 'Guardar curriculum' }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
   <ion-list>
     <ion-item *ngIf="isAdmin" button routerLink="/admin">
       <ion-label>Panel admin</ion-label>

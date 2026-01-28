@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 12, 2)->default(0);
+            $table->date('fecha');
+            $table->string('estado_aprobacion')->default('pendiente');
+            $table->string('estado_proceso')->default('en_proceso');
             $table->timestamps();
         });
     }

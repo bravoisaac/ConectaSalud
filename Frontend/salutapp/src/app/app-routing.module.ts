@@ -28,6 +28,11 @@ const routes: Routes = [
       import('./pages/tabs/tabs.page').then(m => m.TabsPage),
     children: [
       {
+        path: 'jobs/:id',
+        loadComponent: () =>
+          import('./pages/job-detail/job-detail.page').then(m => m.JobDetailPage),
+      },
+      {
         path: 'jobs',
         loadComponent: () =>
           import('./pages/jobs/jobs.page').then(m => m.JobsPage),

@@ -31,9 +31,6 @@ class JobApplicationController extends Controller
     public function store(Request $request, JobPost $job)
     {
         $user = $request->user();
-        if (!$user->isAdmin() && !$user->hasRole('user')) {
-            return response()->json(['message' => 'No autorizado'], 403);
-        }
         if ($job->status !== 'open') {
             return response()->json(['message' => 'Oferta no disponible'], 422);
         }

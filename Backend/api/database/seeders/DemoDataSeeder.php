@@ -17,6 +17,7 @@ use App\Models\Post;
 use App\Models\PostComment;
 use App\Models\PostLike;
 use App\Models\PostMedia;
+use App\Models\Product;
 use App\Models\Report;
 use App\Models\User;
 use App\Models\VerificationRequest;
@@ -29,6 +30,7 @@ class DemoDataSeeder extends Seeder
     public function run(): void
     {
         $faker = \Faker\Factory::create('en_US');
+        $seedCount = 5;
 
         $admin = User::firstOrCreate(
             ['email' => 'admin@mitatita.cl'],
@@ -49,7 +51,7 @@ class DemoDataSeeder extends Seeder
         ];
 
         foreach (array_keys($usersByRole) as $role) {
-            for ($i = 0; $i < 10; $i++) {
+            for ($i = 0; $i < $seedCount; $i++) {
                 $email = $this->uniqueEmail($role);
                 $usersByRole[$role][] = User::create([
                     'name' => ucfirst($role) . ' ' . ($i + 1),
@@ -76,13 +78,29 @@ class DemoDataSeeder extends Seeder
         }
 
         $jobPosts = [];
-        for ($i = 0; $i < 10; $i++) {
+        $jobRoles = [
+            'Enfermera',
+            'TENS',
+            'Doctor',
+            'Kinesiologo',
+            'Psicologo',
+        ];
+        $jobLocations = [
+            'Chile, Biobio, Concepcion',
+            'Chile, Metropolitana, Santiago',
+            'Chile, Valparaiso, Vina del Mar',
+            'Chile, Araucania, Temuco',
+            'Chile, Los Lagos, Puerto Montt',
+        ];
+        for ($i = 0; $i < $seedCount; $i++) {
             $company = $companies[$i % count($companies)];
+            $role = $jobRoles[$i % count($jobRoles)];
+            $location = $jobLocations[$i % count($jobLocations)];
             $jobPosts[] = JobPost::create([
                 'company_id' => $company->id,
-                'title' => 'Oferta Laboral ' . ($i + 1),
-                'description' => 'Descripcion de oferta laboral ' . ($i + 1),
-                'location' => $faker->city,
+                'title' => $role,
+                'description' => "Oficio: {$role}\nUbicacion: {$location}\nDescripcion de oferta laboral " . ($i + 1),
+                'location' => $location,
                 'modality' => $faker->randomElement(['presencial', 'remoto']),
                 'salary_min' => $faker->numberBetween(400000, 800000),
                 'salary_max' => $faker->numberBetween(900000, 1500000),
@@ -93,7 +111,7 @@ class DemoDataSeeder extends Seeder
 
         $applicationsCreated = 0;
         $applicationAttempts = 0;
-        while ($applicationsCreated < 10 && $applicationAttempts < 100) {
+        while ($applicationsCreated < $seedCount && $applicationAttempts < 100) {
             $applicationAttempts++;
             $job = $jobPosts[array_rand($jobPosts)];
             $user = $usersByRole['user'][array_rand($usersByRole['user'])];
@@ -128,7 +146,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $profile = $healthProfiles[$i % count($healthProfiles)];
             $startHour = $faker->numberBetween(8, 16);
             $endHour = $startHour + 2;
@@ -143,7 +161,7 @@ class DemoDataSeeder extends Seeder
         }
 
         $bookings = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $profile = $healthProfiles[$i % count($healthProfiles)];
             $user = $usersByRole['user'][$i % count($usersByRole['user'])];
             $startAt = Carbon::now()->addDays($faker->numberBetween(1, 10))->setTime($faker->numberBetween(8, 18), 0);
@@ -166,7 +184,7 @@ class DemoDataSeeder extends Seeder
         }
 
         $posts = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $author = $usersByRole['user'][$i % count($usersByRole['user'])];
             $posts[] = Post::create([
                 'user_id' => $author->id,
@@ -175,7 +193,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $post = $posts[$i % count($posts)];
             $type = $faker->randomElement(['image', 'video']);
 
@@ -188,7 +206,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $post = $posts[$i % count($posts)];
             $user = $usersByRole['user'][($i + 3) % count($usersByRole['user'])];
 
@@ -201,7 +219,7 @@ class DemoDataSeeder extends Seeder
 
         $likesCreated = 0;
         $likesAttempts = 0;
-        while ($likesCreated < 10 && $likesAttempts < 100) {
+        while ($likesCreated < $seedCount && $likesAttempts < 100) {
             $likesAttempts++;
             $post = $posts[array_rand($posts)];
             $user = $usersByRole['user'][array_rand($usersByRole['user'])];
@@ -222,7 +240,7 @@ class DemoDataSeeder extends Seeder
             $likesCreated++;
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $reporter = $usersByRole['user'][$i % count($usersByRole['user'])];
             $targetType = $faker->randomElement(['post', 'comment', 'user']);
             $targetId = match ($targetType) {
@@ -242,7 +260,7 @@ class DemoDataSeeder extends Seeder
         }
 
         $chats = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $chat = Chat::create();
             $participant = $usersByRole['user'][$i % count($usersByRole['user'])];
             ChatParticipant::create([
@@ -252,7 +270,7 @@ class DemoDataSeeder extends Seeder
             $chats[] = $chat;
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $chat = $chats[$i % count($chats)];
             $senderId = ChatParticipant::query()
                 ->where('chat_id', $chat->id)
@@ -267,7 +285,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $role = $faker->randomElement(['health', 'company']);
             $user = $usersByRole[$role][$i % count($usersByRole[$role])];
 
@@ -283,7 +301,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $booking = $bookings[$i % count($bookings)];
             $providerId = HealthProfile::query()
                 ->where('id', $booking->health_profile_id)
@@ -302,7 +320,7 @@ class DemoDataSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $seedCount; $i++) {
             $booking = $bookings[$i % count($bookings)];
             $providerId = HealthProfile::query()
                 ->where('id', $booking->health_profile_id)
@@ -313,6 +331,17 @@ class DemoDataSeeder extends Seeder
                 'provider_id' => $providerId,
                 'percent' => 20,
                 'status' => 'pending',
+            ]);
+        }
+
+        for ($i = 0; $i < $seedCount; $i++) {
+            Product::create([
+                'name' => 'Producto ' . ($i + 1),
+                'description' => 'Descripcion de producto ' . ($i + 1),
+                'price' => $faker->numberBetween(5000, 50000),
+                'fecha' => Carbon::now()->subDays($faker->numberBetween(0, 30)),
+                'estado_aprobacion' => $faker->randomElement(['pendiente', 'aprobado', 'rechazado']),
+                'estado_proceso' => $faker->randomElement(['en_proceso', 'confirmado']),
             ]);
         }
     }

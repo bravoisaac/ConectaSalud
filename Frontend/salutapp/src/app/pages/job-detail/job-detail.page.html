@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/jobs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle empleo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+  <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+
+  <ion-item *ngIf="loading">
+    <ion-label>Cargando...</ion-label>
+  </ion-item>
+
+  <ng-container *ngIf="!loading && job">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ job.title }}</ion-card-title>
+        <ion-card-subtitle>{{ job.company_name || ('Empresa #' + job.company_id) }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="meta"><strong>Ubicacion:</strong> {{ job.location || 'Sin ubicacion' }}</p>
+        <p class="meta"><strong>Modalidad:</strong> {{ job.modality || 'Sin especificar' }}</p>
+        <p class="meta"><strong>Salario:</strong> {{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</p>
+        <p class="meta"><strong>Estado:</strong> {{ job.status || 'sin estado' }}</p>
+        <p class="meta" *ngIf="job.published_at"><strong>Publicado:</strong> {{ job.published_at | date:'mediumDate' }}</p>
+        <div class="description">{{ descriptionText }}</div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Postular</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Carta de presentacion (opcional)</ion-label>
+          <ion-textarea
+            placeholder="Escribe un mensaje para la empresa"
+            [(ngModel)]="coverLetter">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-button expand="block" [disabled]="applyLoading || !canApply" (click)="apply()">
+          {{ applyLoading ? 'Enviando...' : 'Enviar postulacion' }}
+        </ion-button>
+
+        <ion-text color="medium" *ngIf="!canApply">Esta oferta no esta disponible.</ion-text>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+</ion-content>

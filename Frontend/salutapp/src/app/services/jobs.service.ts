@@ -14,6 +14,10 @@ export class JobsService {
     return this.http.get(`${environment.apiBase}/jobs`, { params });
   }
 
+  get(jobId: number) {
+    return this.http.get(`${environment.apiBase}/jobs/${jobId}`);
+  }
+
   apply(jobId: number, coverLetter?: string) {
     return this.http.post(`${environment.apiBase}/jobs/${jobId}/apply`, {
       cover_letter: coverLetter || null,
