@@ -22,6 +22,7 @@ class JobApplicationController extends Controller
 
         $applications = JobApplication::query()
             ->where('job_post_id', $job->id)
+            ->with(['user', 'profile'])
             ->latest()
             ->paginate(20);
 
@@ -49,6 +50,8 @@ class JobApplicationController extends Controller
                 'status' => 'applied',
             ]
         );
+
+        $application->load(['user', 'profile']);
 
         $status = $application->wasRecentlyCreated ? 201 : 200;
 

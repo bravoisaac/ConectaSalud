@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class UserProfile extends Model
 {
     use HasFactory;
+
+    protected $appends = ['cv_url'];
 
     protected $fillable = [
         'user_id',
@@ -23,4 +26,12 @@ class UserProfile extends Model
         'cv_filename',
         'cv_mime',
     ];
+
+    public function getCvUrlAttribute(): ?string
+    {
+        if (!$this->cv_path) {
+            return null;
+        }
+        return Storage::disk('public')->url($this->cv_path);
+    }
 }

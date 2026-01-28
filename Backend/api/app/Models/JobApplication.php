@@ -15,4 +15,14 @@ class JobApplication extends Model
         'cover_letter',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
+    }
 }
