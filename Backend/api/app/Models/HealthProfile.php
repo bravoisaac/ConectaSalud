@@ -14,7 +14,13 @@ class HealthProfile extends Model
         'specialty',
         'experience_years',
         'rate_hour',
+        'location',
         'bio',
         'verification_status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

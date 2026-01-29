@@ -9,7 +9,12 @@ class HealthProfileController extends Controller
 {
     public function index()
     {
-        return response()->json(HealthProfile::query()->latest()->paginate(20));
+        return response()->json(
+            HealthProfile::query()
+                ->with('user')
+                ->latest()
+                ->paginate(20)
+        );
     }
 
     public function show(HealthProfile $profile)
@@ -31,6 +36,7 @@ class HealthProfileController extends Controller
             'specialty' => 'required|string|max:255',
             'experience_years' => 'nullable|integer|min:0',
             'rate_hour' => 'nullable|numeric|min:0',
+            'location' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
         ]);
 
@@ -53,6 +59,7 @@ class HealthProfileController extends Controller
             'specialty' => 'sometimes|required|string|max:255',
             'experience_years' => 'nullable|integer|min:0',
             'rate_hour' => 'nullable|numeric|min:0',
+            'location' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
             'verification_status' => 'nullable|string',
         ]);

@@ -5,48 +5,98 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Nueva reserva</ion-card-title>
-      <ion-card-subtitle>Duracion estandar: 60 min</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label>Profesional</ion-label>
-        <ion-select [(ngModel)]="bookingProfileId">
-          <ion-select-option *ngFor="let profile of profiles" [value]="profile.id">
-            {{ profile.specialty }} ? {{ profile.user_id }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>Inicio</ion-label>
-        <ion-datetime presentation="date-time" [(ngModel)]="bookingStart"></ion-datetime>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>Fin (opcional)</ion-label>
-        <ion-datetime presentation="date-time" [(ngModel)]="bookingEnd"></ion-datetime>
-      </ion-item>
-
-      <ion-button expand="block" (click)="createBooking()">Crear reserva</ion-button>
-      <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
-      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
-    </ion-card-content>
-  </ion-card>
-
   <ion-list>
     <ion-list-header>
-      <ion-label>Profesionales disponibles</ion-label>
+      <ion-label>Profesionales de salud</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let specialist of profiles">
+    <ion-item *ngFor="let specialist of profiles" button (click)="openProfile(specialist)">
       <ion-label>
-        <h2>{{ specialist.specialty }}</h2>
-        <p>Tarifa: {{ specialist.rate_hour || 0 }} CLP</p>
+        <h2>{{ displayName(specialist) }}</h2>
+        <p>Profesion: {{ specialist.specialty || 'Sin especialidad' }}</p>
+        <p>Sueldo por hora: {{ specialist.rate_hour || 0 }} CLP</p>
+        <p>Ubicacion: {{ specialist.location || 'Sin ubicacion' }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
+
+  <ion-modal [isOpen]="!!selectedProfile" (didDismiss)="closeProfile()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ displayName(selectedProfile) }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeProfile()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-card class="profile-card">
+          <ion-card-header>
+            <ion-card-title>Informacion del profesional</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Profesion:</strong> {{ selectedProfile?.specialty || 'Sin especialidad' }}</p>
+            <p><strong>Experiencia:</strong> {{ selectedProfile?.experience_years || 0 }} anos</p>
+            <p><strong>Tarifa por hora:</strong> {{ selectedProfile?.rate_hour || 0 }} CLP</p>
+            <p><strong>Ubicacion:</strong> {{ selectedProfile?.location || 'Sin ubicacion' }}</p>
+            <p><strong>Telefono:</strong> {{ selectedProfile?.user?.phone || 'Sin telefono' }}</p>
+            <p><strong>Correo:</strong> {{ selectedProfile?.user?.email || 'Sin correo' }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Calendario de horas</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list *ngIf="!availabilityLoading && availability.length">
+              <ion-item *ngFor="let slot of availability">
+                <ion-label>
+                  <h3>{{ dayLabel(slot.day_of_week) }}</h3>
+                  <p>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.timezone || 'America/Santiago' }})</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-text color="medium" *ngIf="!availabilityLoading && !availability.length">
+              Sin disponibilidad registrada
+            </ion-text>
+            <ion-item *ngIf="availabilityLoading">
+              <ion-label>Cargando disponibilidad...</ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="booking-card">
+          <ion-card-header>
+            <ion-card-title>Nueva reserva</ion-card-title>
+            <ion-card-subtitle>
+              {{ displayName(selectedProfile) }} · {{ selectedProfile?.specialty || 'Profesional' }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Profesional</ion-label>
+              <ion-input [value]="displayName(selectedProfile)" readonly></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Inicio</ion-label>
+              <ion-datetime presentation="date-time" [(ngModel)]="bookingStart"></ion-datetime>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Fin (opcional)</ion-label>
+              <ion-datetime presentation="date-time" [(ngModel)]="bookingEnd"></ion-datetime>
+            </ion-item>
+
+            <ion-button expand="block" (click)="createBooking()">Crear reserva</ion-button>
+            <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+            <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
   <ion-item *ngIf="loading">
     <ion-label>Cargando...</ion-label>

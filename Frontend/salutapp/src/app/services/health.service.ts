@@ -10,6 +10,10 @@ export class HealthService {
     return this.http.get(`${environment.apiBase}/health/profiles`);
   }
 
+  getAvailability(profileId: number) {
+    return this.http.get(`${environment.apiBase}/health/profiles/${profileId}/availability`);
+  }
+
   createBooking(profileId: number, startAt: string, endAt?: string) {
     return this.http.post(`${environment.apiBase}/health/bookings`, {
       health_profile_id: profileId,

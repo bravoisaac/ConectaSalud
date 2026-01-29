@@ -17,6 +17,9 @@ export class HealthPage implements OnInit {
   loading = false;
   errorMsg = '';
   successMsg = '';
+  selectedProfile: any = null;
+  availability: any[] = [];
+  availabilityLoading = false;
 
   bookingProfileId: number | null = null;
   bookingStart = new Date(Date.now() + 3600 * 1000).toISOString();
@@ -42,6 +45,37 @@ export class HealthPage implements OnInit {
     }).add(() => {
       this.loading = false;
     });
+  }
+
+  openProfile(profile: any) {
+    this.selectedProfile = profile;
+    this.bookingProfileId = profile?.id ?? null;
+    this.availability = [];
+    this.availabilityLoading = true;
+    this.healthService.getAvailability(profile.id).subscribe({
+      next: (res: any) => {
+        this.availability = Array.isArray(res) ? res : [];
+      },
+      error: () => {
+        this.errorMsg = 'No se pudo cargar la disponibilidad';
+      }
+    }).add(() => {
+      this.availabilityLoading = false;
+    });
+  }
+
+  closeProfile() {
+    this.selectedProfile = null;
+    this.availability = [];
+  }
+
+  displayName(profile: any) {
+    return profile?.user?.name || profile?.user?.email || 'Profesional';
+  }
+
+  dayLabel(day: number) {
+    const labels = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+    return labels[day] || 'Dia';
   }
 
   createBooking() {

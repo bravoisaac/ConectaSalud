@@ -141,6 +141,7 @@ class DemoDataSeeder extends Seeder
                 'specialty' => $faker->randomElement(['Enfermeria', 'Kinesiologia', 'Psicologia', 'Medicina general']),
                 'experience_years' => $faker->numberBetween(1, 15),
                 'rate_hour' => $faker->numberBetween(15000, 45000),
+                'location' => $faker->city,
                 'bio' => 'Perfil profesional ' . ($index + 1),
                 'verification_status' => $faker->randomElement(['pending', 'approved']),
             ]);

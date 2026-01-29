@@ -53,9 +53,6 @@ class HealthBookingController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        if (!$user->isAdmin() && !$user->hasRole('user')) {
-            return response()->json(['message' => 'No autorizado'], 403);
-        }
 
         $data = $request->validate([
             'health_profile_id' => 'required|exists:health_profiles,id',
