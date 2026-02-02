@@ -19,10 +19,18 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Curriculum profesional</ion-card-title>
-      <ion-card-subtitle>Completa tu informacion laboral</ion-card-subtitle>
+      <ion-item lines="none" class="cv-header-item" button detail="false" (click)="toggleCvSection()">
+        <ion-label>
+          <ion-card-title>Curriculum profesional</ion-card-title>
+          <ion-card-subtitle>Completa tu informacion laboral</ion-card-subtitle>
+        </ion-label>
+        <ion-icon
+          slot="end"
+          [name]="isCvSectionCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"
+        ></ion-icon>
+      </ion-item>
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content *ngIf="!isCvSectionCollapsed">
       <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
       <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
 
@@ -267,6 +275,112 @@
       <ion-button expand="block" (click)="saveProfile()" [disabled]="savingProfile">
         {{ savingProfile ? 'Guardando...' : 'Guardar curriculum' }}
       </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="isHealthUser">
+    <ion-card-header>
+      <ion-item lines="none" class="cv-header-item" button detail="false" (click)="toggleHealthServiceSection()">
+        <ion-label>
+          <ion-card-title>Servicio de salud</ion-card-title>
+          <ion-card-subtitle>Crea o actualiza tu perfil profesional de salud</ion-card-subtitle>
+        </ion-label>
+        <ion-icon
+          slot="end"
+          [name]="isHealthServiceSectionCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"
+        ></ion-icon>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content *ngIf="!isHealthServiceSectionCollapsed">
+      <ion-text color="danger" *ngIf="healthErrorMsg">{{ healthErrorMsg }}</ion-text>
+      <ion-text color="success" *ngIf="healthSuccessMsg">{{ healthSuccessMsg }}</ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Profesion / Especialidad</ion-label>
+        <ion-input [(ngModel)]="healthProfile.specialty" placeholder="Ej: Enfermeria, Kinesiologia"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Experiencia (anos)</ion-label>
+        <ion-input [(ngModel)]="healthProfile.experience_years" type="number" inputmode="numeric"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Sueldo por hora (CLP)</ion-label>
+        <ion-input [(ngModel)]="healthProfile.rate_hour" type="number" inputmode="numeric"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Ubicacion</ion-label>
+        <ion-input [(ngModel)]="healthProfile.location" placeholder="Ej: Chile, Biobio, Concepcion"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Descripcion del servicio</ion-label>
+        <ion-textarea [(ngModel)]="healthProfile.bio" autoGrow="true" placeholder="Servicios, enfoque, experiencia"></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" (click)="saveHealthServiceProfile()" [disabled]="savingHealthProfile">
+        {{ savingHealthProfile ? 'Guardando...' : 'Guardar servicio de salud' }}
+      </ion-button>
+
+      <ion-card class="availability-card">
+        <ion-card-header>
+          <ion-card-title>Disponibilidad para reservas</ion-card-title>
+          <ion-card-subtitle>Define dias y horas para recibir reservas</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="stacked">Dia</ion-label>
+            <ion-select [(ngModel)]="availabilityForm.day_of_week">
+              <ion-select-option *ngFor="let day of weekDays" [value]="day.value">
+                {{ day.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Hora de inicio</ion-label>
+            <ion-input [(ngModel)]="availabilityForm.start_time" type="time"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Hora de fin</ion-label>
+            <ion-input [(ngModel)]="availabilityForm.end_time" type="time"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Zona horaria</ion-label>
+            <ion-input [(ngModel)]="availabilityForm.timezone" placeholder="America/Santiago"></ion-input>
+          </ion-item>
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            (click)="saveHealthAvailability()"
+            [disabled]="savingHealthAvailability"
+          >
+            {{ savingHealthAvailability ? 'Guardando horario...' : 'Agregar horario' }}
+          </ion-button>
+
+          <ion-list *ngIf="!loadingHealthAvailability && healthAvailability.length">
+            <ion-item *ngFor="let slot of healthAvailability">
+              <ion-label>
+                <h3>{{ dayName(slot.day_of_week) }}</h3>
+                <p>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.timezone || 'America/Santiago' }})</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+
+          <ion-text color="medium" *ngIf="!loadingHealthAvailability && !healthAvailability.length">
+            Aun no has agregado horarios
+          </ion-text>
+
+          <ion-item *ngIf="loadingHealthAvailability">
+            <ion-label>Cargando horarios...</ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
     </ion-card-content>
   </ion-card>
 

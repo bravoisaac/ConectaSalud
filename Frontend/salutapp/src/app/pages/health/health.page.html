@@ -70,29 +70,53 @@
           <ion-card-header>
             <ion-card-title>Nueva reserva</ion-card-title>
             <ion-card-subtitle>
-              {{ displayName(selectedProfile) }} · {{ selectedProfile?.specialty || 'Profesional' }}
+              {{ displayName(selectedProfile) }} - {{ selectedProfile?.specialty || 'Profesional' }}
             </ion-card-subtitle>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content *ngIf="canBookSelectedProfile; else ownProfileBookingBlock">
             <ion-item>
               <ion-label position="stacked">Profesional</ion-label>
               <ion-input [value]="displayName(selectedProfile)" readonly></ion-input>
             </ion-item>
 
             <ion-item>
-              <ion-label position="stacked">Inicio</ion-label>
-              <ion-datetime presentation="date-time" [(ngModel)]="bookingStart"></ion-datetime>
+              <ion-label position="stacked">Dia de reserva</ion-label>
+              <ion-datetime
+                presentation="date"
+                [(ngModel)]="bookingDate"
+                [isDateEnabled]="isDateEnabled"
+                (ngModelChange)="onBookingDateChange($event)"
+              ></ion-datetime>
             </ion-item>
 
             <ion-item>
-              <ion-label position="stacked">Fin (opcional)</ion-label>
-              <ion-datetime presentation="date-time" [(ngModel)]="bookingEnd"></ion-datetime>
+              <ion-label position="stacked">Hora de inicio</ion-label>
+              <ion-input [(ngModel)]="bookingStartTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
             </ion-item>
 
-            <ion-button expand="block" (click)="createBooking()">Crear reserva</ion-button>
+            <ion-item>
+              <ion-label position="stacked">Hora de fin</ion-label>
+              <ion-input [(ngModel)]="bookingEndTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
+            </ion-item>
+
+            <ion-note color="medium">
+              Dias habilitados segun calendario del profesional.
+              Horarios del dia: {{ selectedDayRangesText }}
+            </ion-note>
+
+            <ion-button expand="block" (click)="createBooking()" [disabled]="!hasSelectedDaySlots">
+              Crear reserva
+            </ion-button>
             <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
             <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
           </ion-card-content>
+          <ng-template #ownProfileBookingBlock>
+            <ion-card-content>
+              <ion-text color="medium">
+                Este es tu propio perfil de salud. No puedes crear reservas para ti mismo.
+              </ion-text>
+            </ion-card-content>
+          </ng-template>
         </ion-card>
       </ion-content>
     </ng-template>

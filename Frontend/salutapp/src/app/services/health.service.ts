@@ -10,8 +10,37 @@ export class HealthService {
     return this.http.get(`${environment.apiBase}/health/profiles`);
   }
 
+  createProfile(payload: {
+    specialty: string;
+    experience_years?: number | null;
+    rate_hour?: number | null;
+    location?: string | null;
+    bio?: string | null;
+  }) {
+    return this.http.post(`${environment.apiBase}/health/profiles`, payload);
+  }
+
+  updateProfile(profileId: number, payload: {
+    specialty?: string;
+    experience_years?: number | null;
+    rate_hour?: number | null;
+    location?: string | null;
+    bio?: string | null;
+  }) {
+    return this.http.put(`${environment.apiBase}/health/profiles/${profileId}`, payload);
+  }
+
   getAvailability(profileId: number) {
     return this.http.get(`${environment.apiBase}/health/profiles/${profileId}/availability`);
+  }
+
+  createAvailability(profileId: number, payload: {
+    day_of_week: number;
+    start_time: string;
+    end_time: string;
+    timezone?: string;
+  }) {
+    return this.http.post(`${environment.apiBase}/health/profiles/${profileId}/availability`, payload);
   }
 
   createBooking(profileId: number, startAt: string, endAt?: string) {

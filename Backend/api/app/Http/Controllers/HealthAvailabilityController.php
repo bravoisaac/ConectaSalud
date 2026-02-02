@@ -33,14 +33,26 @@ class HealthAvailabilityController extends Controller
             'timezone' => 'nullable|string|max:100',
         ]);
 
-        $availability = HealthAvailability::create([
-            'health_profile_id' => $profile->id,
-            'day_of_week' => $data['day_of_week'],
-            'start_time' => $data['start_time'],
-            'end_time' => $data['end_time'],
-            'timezone' => $data['timezone'] ?? 'America/Santiago',
-        ]);
+        // Mantener un solo horario por dia para cada profesional.
+        $availability = HealthAvailability::query()->updateOrCreate(
+            [
+                'health_profile_id' => $profile->id,
+                'day_of_week' => $data['day_of_week'],
+            ],
+            [
+                'start_time' => $data['start_time'],
+                'end_time' => $data['end_time'],
+                'timezone' => $data['timezone'] ?? 'America/Santiago',
+            ]
+        );
 
-        return response()->json($availability, 201);
+        // Limpia duplicados antiguos si existian.
+        HealthAvailability::query()
+            ->where('health_profile_id', $profile->id)
+            ->where('day_of_week', $data['day_of_week'])
+            ->where('id', '!=', $availability->id)
+            ->delete();
+
+        return response()->json($availability, 200);
     }
 }

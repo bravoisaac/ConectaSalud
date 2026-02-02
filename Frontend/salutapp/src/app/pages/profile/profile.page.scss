@@ -83,3 +83,12 @@ ion-note {
   margin: 4px 0;
   color: var(--ion-color-medium);
 }
+
+.cv-header-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.availability-card {
+  margin-top: 16px;
+}
