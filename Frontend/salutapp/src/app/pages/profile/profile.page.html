@@ -384,6 +384,35 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card *ngIf="isHealthUser">
+    <ion-card-header>
+      <ion-card-title>Reservas de salud</ion-card-title>
+      <ion-card-subtitle>Revisa, acepta o rechaza solicitudes en espera</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list *ngIf="!loadingHealthBookings && healthBookings.length">
+        <ion-item *ngFor="let booking of healthBookings | slice:0:3">
+          <ion-label>
+            <h3>{{ bookingUserName(booking) }}</h3>
+            <p class="booking-meta">
+              {{ booking.start_at | date:'shortDate' }} {{ booking.start_at | date:'shortTime' }}
+            </p>
+            <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-item *ngIf="loadingHealthBookings">
+        <ion-label>Cargando reservas...</ion-label>
+      </ion-item>
+      <ion-text color="medium" *ngIf="!loadingHealthBookings && !healthBookings.length">
+        No hay reservas todavia.
+      </ion-text>
+      <ion-button expand="block" routerLink="/app/health-bookings">
+        Ver todas las reservas
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
   <ion-list>
     <ion-item *ngIf="isAdmin" button routerLink="/admin">
       <ion-label>Panel admin</ion-label>

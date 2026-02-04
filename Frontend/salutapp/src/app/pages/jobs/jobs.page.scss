@@ -32,3 +32,21 @@
 :host ::ng-deep .filter-popover {
   --width: 260px;
 }
+
+@media (min-width: 992px) {
+  .filters-row {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 10px;
+    padding-bottom: 14px;
+  }
+
+  .filter-pill {
+    --padding-start: 14px;
+    --padding-end: 14px;
+  }
+
+  :host ::ng-deep .filter-popover {
+    --width: 320px;
+  }
+}

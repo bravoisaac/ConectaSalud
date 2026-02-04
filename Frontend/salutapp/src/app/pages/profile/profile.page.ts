@@ -79,6 +79,8 @@ export class ProfilePage implements OnInit {
   loadingHealthAvailability = false;
   savingHealthAvailability = false;
   healthAvailability: any[] = [];
+  loadingHealthBookings = false;
+  healthBookings: any[] = [];
   availabilityForm = {
     day_of_week: 1,
     start_time: '08:00',
@@ -130,6 +132,7 @@ export class ProfilePage implements OnInit {
       this.loadProfile();
       if (this.isHealthUser) {
         this.loadHealthServiceProfile();
+        this.loadHealthBookings();
       }
       return;
     }
@@ -144,6 +147,7 @@ export class ProfilePage implements OnInit {
         this.loadProfile();
         if (this.isHealthUser) {
           this.loadHealthServiceProfile();
+          this.loadHealthBookings();
         }
       }
     });
@@ -197,6 +201,22 @@ export class ProfilePage implements OnInit {
       }
     }).add(() => {
       this.loadingHealthAvailability = false;
+    });
+  }
+
+  loadHealthBookings() {
+    this.loadingHealthBookings = true;
+    this.healthErrorMsg = '';
+    this.healthService.listBookings().subscribe({
+      next: (res: any) => {
+        const rows = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
+        this.healthBookings = rows;
+      },
+      error: () => {
+        this.healthErrorMsg = 'No se pudieron cargar las reservas';
+      }
+    }).add(() => {
+      this.loadingHealthBookings = false;
     });
   }
 
@@ -584,6 +604,27 @@ export class ProfilePage implements OnInit {
 
   dayName(day: number) {
     return this.weekDays.find(item => item.value === Number(day))?.label || 'Dia';
+  }
+
+  bookingUserName(booking: any) {
+    return booking?.user?.name || booking?.user?.email || `Usuario #${booking?.user_id || '-'}`;
+  }
+
+  bookingStatusLabel(status: string) {
+    const key = String(status || '').toLowerCase();
+    if (key === 'requested') {
+      return 'En espera';
+    }
+    if (key === 'in_service') {
+      return 'Aceptada';
+    }
+    if (key === 'completed') {
+      return 'Completada';
+    }
+    if (key === 'cancelled') {
+      return 'Rechazada';
+    }
+    return status || 'Sin estado';
   }
 
   async logout() {

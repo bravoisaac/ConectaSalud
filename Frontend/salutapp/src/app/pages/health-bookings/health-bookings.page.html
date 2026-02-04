@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reservas de salud</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+  <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+
+  <ion-item *ngIf="loading">
+    <ion-label>Cargando reservas...</ion-label>
+  </ion-item>
+
+  <h3 class="section-title" *ngIf="!loading && activeBookings.length">Reservas activas</h3>
+  <div class="booking-list" *ngIf="!loading && activeBookings.length">
+    <ion-card *ngFor="let booking of activeBookings" class="booking-card">
+      <ion-card-content>
+        <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
+        <p class="booking-meta">Reserva #{{ booking.id }}</p>
+        <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
+        <p class="booking-meta">
+          Hora: {{ booking.start_at | date:'shortTime' }} - {{ booking.end_at | date:'shortTime' }}
+        </p>
+        <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
+        <p class="booking-meta">
+          Contacto: {{ booking?.user?.phone || 'Sin telefono' }} / {{ booking?.user?.email || 'Sin correo' }}
+        </p>
+        <div class="actions">
+          <ion-button
+            size="small"
+            color="success"
+            [disabled]="!canManageBooking(booking) || updatingId === booking.id"
+            (click)="acceptBooking(booking)"
+          >
+            Aceptar
+          </ion-button>
+          <ion-button
+            size="small"
+            color="danger"
+            fill="outline"
+            [disabled]="!canManageBooking(booking) || updatingId === booking.id"
+            (click)="rejectBooking(booking)"
+          >
+            Rechazar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <h3 class="section-title" *ngIf="!loading && rejectedHistoryBookings.length">Historial de rechazadas</h3>
+  <div class="booking-list" *ngIf="!loading && rejectedHistoryBookings.length">
+    <ion-card *ngFor="let booking of rejectedHistoryBookings" class="booking-card history-card">
+      <ion-card-content>
+        <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
+        <p class="booking-meta">Reserva #{{ booking.id }}</p>
+        <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
+        <p class="booking-meta">
+          Hora: {{ booking.start_at | date:'shortTime' }} - {{ booking.end_at | date:'shortTime' }}
+        </p>
+        <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-text color="medium" *ngIf="!loading && !bookings.length">
+    {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
+  </ion-text>
+</ion-content>

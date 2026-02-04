@@ -7,3 +7,7 @@
   margin-top: 12px;
   color: #dc2626;
 }
+
+ion-content::part(scroll) {
+  max-width: 560px;
+}

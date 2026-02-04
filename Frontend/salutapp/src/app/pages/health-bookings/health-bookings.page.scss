@@ -1,0 +1,46 @@
+.booking-meta {
+  margin: 3px 0;
+  color: var(--ion-color-medium);
+}
+
+.section-title {
+  margin: 14px 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+.booking-list {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-card {
+  margin: 0;
+}
+
+.booking-title {
+  margin: 0 0 6px;
+  color: var(--ion-text-color);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.history-card {
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .actions {
+    width: 100%;
+    margin-top: 8px;
+    flex-direction: column;
+  }
+}

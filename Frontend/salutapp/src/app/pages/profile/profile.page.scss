@@ -92,3 +92,39 @@ ion-note {
 .availability-card {
   margin-top: 16px;
 }
+
+.booking-meta {
+  margin: 4px 0;
+  color: var(--ion-color-medium);
+}
+
+@media (max-width: 640px) {
+  .experience-header,
+  .skills-header,
+  .education-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .edit-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 992px) {
+  .experience-card,
+  .skills-card,
+  .education-card,
+  .availability-card {
+    margin: 12px 0;
+  }
+
+  .experience-block,
+  .skills-block,
+  .education-block {
+    margin-top: 20px;
+  }
+}

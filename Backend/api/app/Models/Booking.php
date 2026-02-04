@@ -25,4 +25,14 @@ class Booking extends Model
         'total_amount',
         'currency',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function healthProfile()
+    {
+        return $this->belongsTo(HealthProfile::class);
+    }
 }

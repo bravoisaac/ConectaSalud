@@ -25,7 +25,10 @@ class HealthBookingController extends Controller
             $query = Booking::query()->where('user_id', $user->id);
         }
 
-        $bookings = $query->latest()->paginate(20);
+        $bookings = $query
+            ->with(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location'])
+            ->latest()
+            ->paginate(20);
         $bookings->getCollection()->transform(function ($booking) use ($user) {
             if (!$this->canSeeOtp($user, $booking)) {
                 $booking->otp_code = null;
@@ -46,6 +49,8 @@ class HealthBookingController extends Controller
         if (!$this->canSeeOtp($user, $booking)) {
             $booking->otp_code = null;
         }
+
+        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
 
         return response()->json($booking);
     }
@@ -86,6 +91,8 @@ class HealthBookingController extends Controller
             'currency' => $data['currency'] ?? 'CLP',
         ]);
 
+        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
+
         return response()->json($booking, 201);
     }
 
@@ -97,10 +104,21 @@ class HealthBookingController extends Controller
         }
 
         $data = $request->validate([
-            'status' => 'nullable|string',
+            'status' => 'nullable|string|in:requested,in_service,completed,cancelled',
         ]);
 
+        if (
+            isset($data['status'])
+            && $this->isProvider($user, $booking)
+            && in_array($data['status'], ['in_service', 'cancelled'], true)
+            && $booking->status !== 'requested'
+        ) {
+            return response()->json(['message' => 'Solo puedes aceptar o rechazar reservas en espera'], 422);
+        }
+
         $booking->update($data);
+
+        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
 
         return response()->json($booking);
     }

@@ -50,4 +50,12 @@ export class HealthService {
       end_at: endAt || null,
     });
   }
+
+  listBookings() {
+    return this.http.get(`${environment.apiBase}/health/bookings`);
+  }
+
+  updateBookingStatus(bookingId: number, status: string) {
+    return this.http.put(`${environment.apiBase}/health/bookings/${bookingId}`, { status });
+  }
 }
