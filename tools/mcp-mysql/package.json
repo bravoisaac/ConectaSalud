@@ -1,0 +1,23 @@
+{
+  "name": "@salut/mcp-mysql",
+  "version": "0.1.0",
+  "description": "MCP server for Salut_app MySQL",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "selftest": "node selftest.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "mysql2": "^3.18.2",
+    "zod": "^4.3.6"
+  }
+}
