@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
+import { AuthService } from '../../services/auth.service';
 import { JobsService } from '../../services/jobs.service';
 
 @Component({
@@ -14,6 +15,7 @@ import { JobsService } from '../../services/jobs.service';
   imports: [IonicModule, CommonModule, FormsModule, RouterModule],
 })
 export class JobsPage implements OnInit {
+  canCreateJob = false;
   query = '';
   modality = 'todas';
   location = '';
@@ -28,15 +30,19 @@ export class JobsPage implements OnInit {
   loading = false;
   errorMsg = '';
   showSuccess = false;
+  showCreated = false;
 
   constructor(
     private jobsService: JobsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.resolveCreatePermission();
     this.route.queryParamMap.subscribe(params => {
       this.showSuccess = params.get('applied') === '1';
+      this.showCreated = params.get('created') === '1';
       this.query = params.get('query') ?? '';
       this.modality = this.normalizeModality(params.get('modality'));
       this.location = params.get('location') ?? '';
@@ -47,8 +53,35 @@ export class JobsPage implements OnInit {
       this.salaryMax = params.get('salaryMax') ?? '';
       this.sortBy = this.normalizeSort(params.get('sortBy'));
       this.dateRange = this.normalizeDateRange(params.get('dateRange'));
+      if (this.showCreated) {
+        this.loadJobs();
+      }
     });
     this.loadJobs();
+  }
+
+  private async resolveCreatePermission() {
+    const user = await this.resolveCurrentUser();
+    const role = String(user?.role || '').toLowerCase();
+    this.canCreateJob = role === 'company' || role === 'admin' || role === 'user';
+  }
+
+  private async resolveCurrentUser() {
+    const storedUser = await this.authService.getUser();
+    if (storedUser?.id) {
+      return storedUser;
+    }
+    return new Promise<any>((resolve) => {
+      this.authService.me().subscribe({
+        next: async (res: any) => {
+          if (res?.id) {
+            await this.authService.setUser(res);
+          }
+          resolve(res);
+        },
+        error: () => resolve(null),
+      });
+    });
   }
 
   get filteredJobs() {
@@ -60,7 +93,8 @@ export class JobsPage implements OnInit {
     const salaryMin = this.parseSalary(this.salaryMin);
     const salaryMax = this.parseSalary(this.salaryMax);
     const filtered = this.jobs.filter(job => {
-      const matchesQuery = !q || `${job.title} ${job.company_name || ''} ${job.location || ''}`
+      const poster = this.jobPosterText(job);
+      const matchesQuery = !q || `${job.title} ${poster} ${job.location || ''}`
         .toLowerCase()
         .includes(q);
       const matchesModality = this.modality === 'todas' || (job.modality || '').toLowerCase() === this.modality;
@@ -88,6 +122,31 @@ export class JobsPage implements OnInit {
         && matchesDate;
     });
     return this.sortJobs(filtered);
+  }
+
+  isPersonalJob(job: any) {
+    return String(job?.company?.verification_status || '').toLowerCase() === 'personal';
+  }
+
+  jobPosterText(job: any) {
+    if (this.isPersonalJob(job)) {
+      return 'Particular';
+    }
+    return job?.company?.name || job?.company_name || (job?.company_id ? `Empresa #${job.company_id}` : 'Empresa');
+  }
+
+  jobPosterTrust(job: any) {
+    if (this.isPersonalJob(job)) {
+      return '';
+    }
+    const status = String(job?.company?.verification_status || '').toLowerCase();
+    if (status === 'approved') {
+      return 'Verificada';
+    }
+    if (status === 'pending') {
+      return 'Pendiente';
+    }
+    return status ? status : '';
   }
 
   loadJobs() {

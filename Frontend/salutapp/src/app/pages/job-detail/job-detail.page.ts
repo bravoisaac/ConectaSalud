@@ -32,6 +32,31 @@ export class JobDetailPage implements OnInit {
   returnSortBy = 'recent';
   returnDateRange = 'any';
 
+  get isPersonalJob() {
+    return String(this.job?.company?.verification_status || '').toLowerCase() === 'personal';
+  }
+
+  get posterTitle() {
+    if (this.isPersonalJob) {
+      return 'Particular';
+    }
+    return this.job?.company?.name || this.job?.company_name || (this.job?.company_id ? `Empresa #${this.job.company_id}` : 'Empresa');
+  }
+
+  get companyTrustLabel() {
+    const status = String(this.job?.company?.verification_status || '').toLowerCase();
+    if (!status || status === 'personal') {
+      return '';
+    }
+    if (status === 'approved') {
+      return 'Verificada';
+    }
+    if (status === 'pending') {
+      return 'Pendiente';
+    }
+    return status;
+  }
+
   get descriptionText() {
     if (!this.job) {
       return 'Sin descripcion';

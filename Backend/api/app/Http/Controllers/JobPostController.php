@@ -10,7 +10,9 @@ class JobPostController extends Controller
 {
     public function index(Request $request)
     {
-        $query = JobPost::query()->latest();
+        $query = JobPost::query()
+            ->with('company')
+            ->latest();
 
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));
@@ -21,6 +23,7 @@ class JobPostController extends Controller
 
     public function show(JobPost $job)
     {
+        $job->load('company');
         return response()->json($job);
     }
 
@@ -28,7 +31,7 @@ class JobPostController extends Controller
     {
         $user = $request->user();
         $data = $request->validate([
-            'company_id' => 'required|exists:companies,id',
+            'company_id' => 'nullable|exists:companies,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'nullable|string|max:255',
@@ -39,16 +42,40 @@ class JobPostController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $company = Company::find($data['company_id']);
-        if (!$company) {
-            return response()->json(['message' => 'Empresa no encontrada'], 404);
-        }
-        if (!$user->isAdmin() && $company->user_id !== $user->id) {
-            return response()->json(['message' => 'No autorizado'], 403);
+        $companyId = $data['company_id'] ?? null;
+        if ($companyId) {
+            $company = Company::find($companyId);
+            if (!$company) {
+                return response()->json(['message' => 'Empresa no encontrada'], 404);
+            }
+            if (!$user->isAdmin() && $company->user_id !== $user->id) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+        } else {
+            if (!$user->isAdmin() && !$user->hasRole('user')) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+            // Publicación como particular: crear empresa "personal" automáticamente (sin pedirla al usuario).
+            $personalRut = 'PERS-' . $user->id;
+            $personalCompany = Company::firstOrCreate(
+                ['rut' => $personalRut],
+                [
+                    'user_id' => $user->id,
+                    'name' => $user->name ?: ('Usuario #' . $user->id),
+                    'legal_name' => null,
+                    'verification_status' => 'personal',
+                ]
+            );
+            // Asegurar dueño correcto si existía por alguna razón.
+            if ($personalCompany->user_id !== $user->id) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+            $data['company_id'] = $personalCompany->id;
         }
 
         $job = JobPost::create($data);
 
+        $job->load('company');
         return response()->json($job, 201);
     }
 

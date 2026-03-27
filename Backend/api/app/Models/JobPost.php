@@ -9,6 +9,11 @@ class JobPost extends Model
 {
     use HasFactory;
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     protected $fillable = [
         'company_id',
         'title',

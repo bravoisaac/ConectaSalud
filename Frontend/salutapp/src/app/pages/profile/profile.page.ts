@@ -19,6 +19,11 @@ export class ProfilePage implements OnInit {
   user: any = null;
   isAdmin = false;
   isHealthUser = false;
+  isPersonalEditMode = false;
+  personalDraft = { full_name: '', email: '', phone: '' };
+  savingPersonal = false;
+  personalSuccessMsg = '';
+  personalErrorMsg = '';
   isCvSectionCollapsed = true;
   isHealthServiceSectionCollapsed = true;
   loadingProfile = false;
@@ -108,6 +113,26 @@ export class ProfilePage implements OnInit {
     private profileService: ProfileService,
     private healthService: HealthService
   ) {}
+
+  startPersonalEdit() {
+    this.personalDraft = {
+      full_name: this.profile.full_name || '',
+      email: this.profile.email || '',
+      phone: this.profile.phone || '',
+    };
+    this.isPersonalEditMode = true;
+    this.personalSuccessMsg = '';
+    this.personalErrorMsg = '';
+  }
+
+  cancelPersonalEdit() {
+    this.profile.full_name = this.personalDraft.full_name;
+    this.profile.email = this.personalDraft.email;
+    this.profile.phone = this.personalDraft.phone;
+    this.isPersonalEditMode = false;
+    this.personalSuccessMsg = '';
+    this.personalErrorMsg = '';
+  }
 
   toggleCvSection() {
     this.isCvSectionCollapsed = !this.isCvSectionCollapsed;
@@ -475,9 +500,6 @@ export class ProfilePage implements OnInit {
     this.errorMsg = '';
 
     const payload = {
-      full_name: this.profile.full_name,
-      email: this.profile.email,
-      phone: this.profile.phone,
       profession: this.profile.profession,
       summary: this.profile.summary,
       experience: this.buildExperiencePayload(),
@@ -505,6 +527,38 @@ export class ProfilePage implements OnInit {
       }
     }).add(() => {
       this.savingProfile = false;
+    });
+  }
+
+  savePersonalProfile() {
+    this.savingPersonal = true;
+    this.personalSuccessMsg = '';
+    this.personalErrorMsg = '';
+
+    const payload = {
+      full_name: this.profile.full_name,
+      email: this.profile.email,
+      phone: this.profile.phone,
+    };
+
+    this.profileService.saveProfile(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.profile = { ...this.profile, ...res };
+        }
+        this.personalDraft = {
+          full_name: this.profile.full_name || '',
+          email: this.profile.email || '',
+          phone: this.profile.phone || '',
+        };
+        this.personalSuccessMsg = 'Perfil actualizado';
+        this.isPersonalEditMode = false;
+      },
+      error: () => {
+        this.personalErrorMsg = 'No se pudo guardar el perfil';
+      }
+    }).add(() => {
+      this.savingPersonal = false;
     });
   }
 

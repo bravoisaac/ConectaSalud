@@ -9,6 +9,10 @@
     Postulacion exitosa ✓
   </ion-text>
 
+  <ion-text color="success" *ngIf="showCreated" class="success-message">
+    Empleo publicado ✓
+  </ion-text>
+
   <ion-searchbar [(ngModel)]="query" placeholder="Buscar empleo"></ion-searchbar>
 
   <div class="filters-row">
@@ -214,7 +218,11 @@
     >
       <ion-label>
         <h2>{{ job.title }}</h2>
-        <p>{{ job.company_name || ('Empresa #' + job.company_id) }} ? {{ job.location || 'Sin ubicacion' }}</p>
+        <p>
+          {{ jobPosterText(job) }}
+          <ng-container *ngIf="jobPosterTrust(job)">({{ jobPosterTrust(job) }})</ng-container>
+          • {{ job.location || 'Sin ubicacion' }}
+        </p>
         <p>{{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</p>
       </ion-label>
       <ion-note slot="end">Ver</ion-note>
@@ -224,4 +232,10 @@
   <ion-item *ngIf="loading">
     <ion-label>Cargando...</ion-label>
   </ion-item>
+
+  <ion-fab *ngIf="canCreateJob" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/app/jobs/new" aria-label="Crear empleo">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

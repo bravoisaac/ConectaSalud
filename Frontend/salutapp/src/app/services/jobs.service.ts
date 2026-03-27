@@ -14,6 +14,20 @@ export class JobsService {
     return this.http.get(`${environment.apiBase}/jobs`, { params });
   }
 
+  create(payload: {
+    company_id?: number | null;
+    title: string;
+    description: string;
+    location?: string | null;
+    modality?: string | null;
+    salary_min?: number | null;
+    salary_max?: number | null;
+    status?: string | null;
+    published_at?: string | null;
+  }) {
+    return this.http.post(`${environment.apiBase}/jobs`, payload);
+  }
+
   get(jobId: number) {
     return this.http.get(`${environment.apiBase}/jobs/${jobId}`);
   }
