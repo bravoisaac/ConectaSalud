@@ -14,6 +14,14 @@ import { AuthService } from '../../services/auth.service';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class HealthPage implements OnInit {
+  query = '';
+  location = '';
+  specialty = '';
+  experienceMin = '';
+  rateMin = '';
+  rateMax = '';
+  sortBy = 'name_asc';
+
   profiles: any[] = [];
   loading = false;
   errorMsg = '';
@@ -50,6 +58,34 @@ export class HealthPage implements OnInit {
   async ngOnInit() {
     await this.loadCurrentUser();
     this.loadProfiles();
+  }
+
+  get filteredProfiles() {
+    const q = this.query.trim().toLowerCase();
+    const locationQuery = this.location.trim().toLowerCase();
+    const specialtyQuery = this.specialty.trim().toLowerCase();
+    const experienceMin = this.parseNumber(this.experienceMin);
+    const rateMin = this.parseNumber(this.rateMin);
+    const rateMax = this.parseNumber(this.rateMax);
+
+    const filtered = this.profiles.filter(profile => {
+      const haystack = `${this.displayName(profile)} ${profile?.specialty || ''} ${profile?.location || ''}`
+        .toLowerCase();
+
+      const matchesQuery = !q || haystack.includes(q);
+      const matchesLocation = !locationQuery || String(profile?.location || '').toLowerCase().includes(locationQuery);
+      const matchesSpecialty = !specialtyQuery || String(profile?.specialty || '').toLowerCase().includes(specialtyQuery);
+
+      const experience = this.toNumber(profile?.experience_years);
+      const rate = this.toNumber(profile?.rate_hour);
+
+      const matchesExperience = experienceMin === null || (experience !== null && experience >= experienceMin);
+      const matchesRate = this.matchesRange(rate, rateMin, rateMax);
+
+      return matchesQuery && matchesLocation && matchesSpecialty && matchesExperience && matchesRate;
+    });
+
+    return this.sortProfiles(filtered);
   }
 
   private async loadCurrentUser() {
@@ -330,5 +366,72 @@ export class HealthPage implements OnInit {
       }
     }
     return 'No se pudo crear la reserva';
+  }
+
+  private parseNumber(value: string | number | null | undefined): number | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? value : null;
+    }
+    const trimmed = String(value).trim();
+    if (!trimmed) {
+      return null;
+    }
+    const num = Number(trimmed);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  private toNumber(value: any): number | null {
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+    const num = Number(value);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  private matchesRange(value: number | null, min: number | null, max: number | null) {
+    if (min === null && max === null) {
+      return true;
+    }
+    if (value === null) {
+      return false;
+    }
+    if (min !== null && value < min) {
+      return false;
+    }
+    if (max !== null && value > max) {
+      return false;
+    }
+    return true;
+  }
+
+  private sortProfiles(profiles: any[]) {
+    const sorted = [...profiles];
+    switch (this.sortBy) {
+      case 'name_desc':
+        return sorted.sort((a, b) => this.compareText(this.displayName(b), this.displayName(a)));
+      case 'rate_desc':
+        return sorted.sort((a, b) => this.compareNumber(b?.rate_hour, a?.rate_hour));
+      case 'rate_asc':
+        return sorted.sort((a, b) => this.compareNumber(a?.rate_hour, b?.rate_hour));
+      case 'experience_desc':
+        return sorted.sort((a, b) => this.compareNumber(b?.experience_years, a?.experience_years));
+      case 'experience_asc':
+        return sorted.sort((a, b) => this.compareNumber(a?.experience_years, b?.experience_years));
+      default:
+        return sorted.sort((a, b) => this.compareText(this.displayName(a), this.displayName(b)));
+    }
+  }
+
+  private compareNumber(a: any, b: any) {
+    const numA = this.toNumber(a) ?? 0;
+    const numB = this.toNumber(b) ?? 0;
+    return numA - numB;
+  }
+
+  private compareText(a?: string, b?: string) {
+    return (a || '').localeCompare(b || '');
   }
 }

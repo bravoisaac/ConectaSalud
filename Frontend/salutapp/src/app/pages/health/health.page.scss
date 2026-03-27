@@ -2,12 +2,57 @@ ion-card {
   margin-bottom: 16px;
 }
 
+.filters-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.filters-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-pill {
+  --border-radius: 16px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  height: auto;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+:host ::ng-deep .filter-popover {
+  --width: 260px;
+}
+
 .profile-card p,
 .booking-card ion-label {
   font-size: 0.95rem;
 }
 
 @media (min-width: 992px) {
+  .filters-row {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 10px;
+    padding-bottom: 14px;
+  }
+
+  .filter-pill {
+    --padding-start: 14px;
+    --padding-end: 14px;
+  }
+
+  :host ::ng-deep .filter-popover {
+    --width: 320px;
+  }
+
   ion-list ion-item {
     --padding-top: 8px;
     --padding-bottom: 8px;

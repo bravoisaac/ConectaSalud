@@ -5,17 +5,128 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-searchbar [(ngModel)]="query" placeholder="Buscar profesional o servicio"></ion-searchbar>
+
+  <div class="filters-row">
+    <ion-button id="filter-sort-health" size="small" fill="outline" class="filter-pill">
+      Ordenar
+      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="filter-location-health" size="small" fill="outline" class="filter-pill">
+      Ubicacion
+      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill">
+      Especialidad
+      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="filter-experience-health" size="small" fill="outline" class="filter-pill">
+      Experiencia
+      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="filter-rate-health" size="small" fill="outline" class="filter-pill">
+      Tarifa
+      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <ion-popover trigger="filter-sort-health" side="bottom" alignment="start" class="filter-popover">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-radio-group [(ngModel)]="sortBy">
+            <ion-item>
+              <ion-label>Nombre A-Z</ion-label>
+              <ion-radio slot="end" value="name_asc"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Nombre Z-A</ion-label>
+              <ion-radio slot="end" value="name_desc"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Tarifa mayor</ion-label>
+              <ion-radio slot="end" value="rate_desc"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Tarifa menor</ion-label>
+              <ion-radio slot="end" value="rate_asc"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Mas experiencia</ion-label>
+              <ion-radio slot="end" value="experience_desc"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Menos experiencia</ion-label>
+              <ion-radio slot="end" value="experience_asc"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover trigger="filter-location-health" side="bottom" alignment="start" class="filter-popover">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <ion-item lines="none">
+          <ion-label position="stacked">Ubicacion</ion-label>
+          <ion-input [(ngModel)]="location" placeholder="Ej: Santiago"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover trigger="filter-specialty-health" side="bottom" alignment="start" class="filter-popover">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <ion-item lines="none">
+          <ion-label position="stacked">Especialidad o profesion</ion-label>
+          <ion-input [(ngModel)]="specialty" placeholder="Ej: Kinesiologia, Psicologia"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover trigger="filter-experience-health" side="bottom" alignment="start" class="filter-popover">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <ion-item lines="none">
+          <ion-label position="stacked">Experiencia minima (anos)</ion-label>
+          <ion-input [(ngModel)]="experienceMin" type="number" inputmode="numeric" placeholder="Ej: 2"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover trigger="filter-rate-health" side="bottom" alignment="start" class="filter-popover">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <ion-item lines="none">
+          <ion-label position="stacked">Tarifa minima (CLP/h)</ion-label>
+          <ion-input [(ngModel)]="rateMin" type="number" inputmode="numeric" placeholder="Ej: 8000"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Tarifa maxima (CLP/h)</ion-label>
+          <ion-input [(ngModel)]="rateMax" type="number" inputmode="numeric" placeholder="Ej: 20000"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
   <ion-list>
     <ion-list-header>
       <ion-label>Profesionales de salud</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let specialist of profiles" button (click)="openProfile(specialist)">
+    <ion-item *ngFor="let specialist of filteredProfiles" button (click)="openProfile(specialist)">
       <ion-label>
         <h2>{{ displayName(specialist) }}</h2>
         <p>Profesion: {{ specialist.specialty || 'Sin especialidad' }}</p>
         <p>Sueldo por hora: {{ specialist.rate_hour || 0 }} CLP</p>
         <p>Ubicacion: {{ specialist.location || 'Sin ubicacion' }}</p>
       </ion-label>
+    </ion-item>
+    <ion-item *ngIf="!loading && !filteredProfiles.length">
+      <ion-label>No hay resultados con esos filtros.</ion-label>
     </ion-item>
   </ion-list>
 
