@@ -43,11 +43,31 @@ export class HealthService {
     return this.http.post(`${environment.apiBase}/health/profiles/${profileId}/availability`, payload);
   }
 
-  createBooking(profileId: number, startAt: string, endAt?: string) {
+  createBooking(
+    profileId: number,
+    startAt: string,
+    endAt?: string,
+    serviceAddress?: string,
+    serviceRegion?: string,
+    serviceComuna?: string,
+    serviceCity?: string,
+    serviceStreet?: string,
+    serviceNumber?: string,
+    serviceLat?: number | null,
+    serviceLng?: number | null
+  ) {
     return this.http.post(`${environment.apiBase}/health/bookings`, {
       health_profile_id: profileId,
       start_at: startAt,
       end_at: endAt || null,
+      service_address: serviceAddress || null,
+      service_region: serviceRegion || null,
+      service_comuna: serviceComuna || null,
+      service_city: serviceCity || null,
+      service_street: serviceStreet || null,
+      service_number: serviceNumber || null,
+      service_lat: typeof serviceLat === 'number' ? serviceLat : null,
+      service_lng: typeof serviceLng === 'number' ? serviceLng : null,
     });
   }
 

@@ -58,6 +58,11 @@ const routes: Routes = [
           import('./pages/health-bookings/health-bookings.page').then(m => m.HealthBookingsPage),
       },
       {
+        path: 'my-proposals',
+        loadComponent: () =>
+          import('./pages/my-proposals/my-proposals.page').then(m => m.MyProposalsPage),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'jobs',

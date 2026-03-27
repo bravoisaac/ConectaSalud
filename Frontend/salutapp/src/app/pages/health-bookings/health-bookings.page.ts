@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { AuthService } from '../../services/auth.service';
 import { HealthService } from '../../services/health.service';
@@ -19,10 +20,12 @@ export class HealthBookingsPage implements OnInit {
   successMsg = '';
   isHealthUser = false;
   bookings: any[] = [];
+  selectedBooking: any = null;
 
   constructor(
     private authService: AuthService,
     private healthService: HealthService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   async ngOnInit() {
@@ -77,6 +80,11 @@ export class HealthBookingsPage implements OnInit {
     return this.isHealthUser && String(booking?.status || '').toLowerCase() === 'requested';
   }
 
+  canSeeCounterpartContact(booking: any) {
+    const key = this.statusKey(booking?.status);
+    return key === 'in_service' || key === 'completed';
+  }
+
   get currentBookings() {
     const currentStatuses = new Set(['requested', 'in_service']);
     return this.bookings.filter(item => currentStatuses.has(this.statusKey(item?.status)));
@@ -87,8 +95,24 @@ export class HealthBookingsPage implements OnInit {
     return this.bookings.filter(item => finalizedStatuses.has(this.statusKey(item?.status)));
   }
 
-  bookingUserName(booking: any) {
-    return booking?.user?.name || booking?.user?.email || `Usuario #${booking?.user_id || '-'}`;
+  private bookingHealthProfile(booking: any) {
+    return booking?.health_profile || booking?.healthProfile || null;
+  }
+
+  private providerUser(booking: any) {
+    return this.bookingHealthProfile(booking)?.user || null;
+  }
+
+  counterpartUser(booking: any) {
+    if (this.isHealthUser) {
+      return booking?.user || null;
+    }
+    return this.providerUser(booking);
+  }
+
+  bookingCounterpartName(booking: any) {
+    const user = this.counterpartUser(booking);
+    return user?.name || user?.email || `Usuario #${user?.id || '-'}`;
   }
 
   bookingStatusLabel(status: string) {
@@ -119,8 +143,12 @@ export class HealthBookingsPage implements OnInit {
 
     this.healthService.updateBookingStatus(Number(booking.id), status).subscribe({
       next: (updated: any) => {
-        this.bookings = this.bookings.map(item => item.id === booking.id ? { ...item, ...updated } : item);
+        const merged = { ...booking, ...updated };
+        this.bookings = this.bookings.map(item => item.id === booking.id ? merged : item);
         this.successMsg = okMessage;
+        if (status === 'in_service') {
+          this.openBookingDetails(merged);
+        }
       },
       error: (err: any) => {
         this.errorMsg = err?.error?.message || 'No se pudo actualizar la reserva';
@@ -128,6 +156,106 @@ export class HealthBookingsPage implements OnInit {
     }).add(() => {
       this.updatingId = null;
     });
+  }
+
+  openBookingDetails(booking: any) {
+    if (!booking) {
+      return;
+    }
+    if (this.isHealthUser) {
+      const key = this.statusKey(booking?.status);
+      if (key !== 'in_service' && key !== 'completed') {
+        return;
+      }
+    }
+    this.selectedBooking = booking;
+  }
+
+  closeBookingDetails() {
+    this.selectedBooking = null;
+  }
+
+  get selectedCounterpartUser() {
+    if (!this.selectedBooking) {
+      return null;
+    }
+    return this.counterpartUser(this.selectedBooking);
+  }
+
+  get counterpartTitle() {
+    return this.isHealthUser ? 'Cliente' : 'Profesional';
+  }
+
+  get counterpartSpecialty() {
+    if (this.isHealthUser) {
+      return '';
+    }
+    return String(this.bookingHealthProfile(this.selectedBooking)?.specialty || '').trim();
+  }
+
+  get bookingAddress() {
+    return String(this.selectedBooking?.service_address || this.selectedBooking?.serviceAddress || '').trim();
+  }
+
+  get bookingAddressParts() {
+    const region = String(this.selectedBooking?.service_region || this.selectedBooking?.serviceRegion || '').trim();
+    const comuna = String(this.selectedBooking?.service_comuna || this.selectedBooking?.serviceComuna || '').trim();
+    const city = String(this.selectedBooking?.service_city || this.selectedBooking?.serviceCity || '').trim();
+    const street = String(this.selectedBooking?.service_street || this.selectedBooking?.serviceStreet || '').trim();
+    const number = String(this.selectedBooking?.service_number || this.selectedBooking?.serviceNumber || '').trim();
+    return { region, comuna, city, street, number };
+  }
+
+  get formattedServiceAddress() {
+    const { region, comuna, city, street, number } = this.bookingAddressParts;
+    const parts = [region, city, comuna].filter(Boolean);
+    const streetLine = `${street} ${number}`.trim();
+    if (streetLine) {
+      parts.push(streetLine);
+    }
+    const formatted = parts.join(', ');
+    return formatted || this.bookingAddress;
+  }
+
+  get mapsLink() {
+    const address = this.formattedServiceAddress;
+    if (address) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    }
+    const lat = this.bookingLat;
+    const lng = this.bookingLng;
+    if (lat !== null && lng !== null) {
+      return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    }
+    return '';
+  }
+
+  get bookingLat(): number | null {
+    const raw = this.selectedBooking?.service_lat ?? this.selectedBooking?.serviceLat ?? null;
+    const num = Number(raw);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  get bookingLng(): number | null {
+    const raw = this.selectedBooking?.service_lng ?? this.selectedBooking?.serviceLng ?? null;
+    const num = Number(raw);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  get mapEmbedUrl(): SafeResourceUrl | null {
+    const lat = this.bookingLat;
+    const lng = this.bookingLng;
+    if (lat !== null && lng !== null) {
+      const delta = 0.005;
+      const left = lng - delta;
+      const bottom = lat - delta;
+      const right = lng + delta;
+      const top = lat + delta;
+      const bbox = `${left},${bottom},${right},${top}`;
+      const url = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${lat},${lng}`;
+      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+    return null;
   }
 
   private statusKey(status: string) {

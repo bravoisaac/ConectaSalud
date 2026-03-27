@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { regions as clRegions, provinces as clProvinces, communes as clCommunes } from '@clregions/data/array';
 
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
@@ -16,11 +17,24 @@ import { HealthService } from '../../services/health.service';
   imports: [IonicModule, CommonModule, RouterModule, FormsModule],
 })
 export class ProfilePage implements OnInit {
+  readonly regions = clRegions;
+  readonly provinces = clProvinces;
+  readonly communes = clCommunes;
+
   user: any = null;
   isAdmin = false;
   isHealthUser = false;
   isPersonalEditMode = false;
-  personalDraft = { full_name: '', email: '', phone: '' };
+  personalDraft = {
+    full_name: '',
+    email: '',
+    phone: '',
+    address_region: '',
+    address_comuna: '',
+    address_city: '',
+    address_street: '',
+    address_number: '',
+  };
   savingPersonal = false;
   personalSuccessMsg = '';
   personalErrorMsg = '';
@@ -69,6 +83,12 @@ export class ProfilePage implements OnInit {
     full_name: '',
     email: '',
     phone: '',
+    address: '',
+    address_region: '',
+    address_comuna: '',
+    address_city: '',
+    address_street: '',
+    address_number: '',
     profession: '',
     summary: '',
     experience: '',
@@ -114,11 +134,60 @@ export class ProfilePage implements OnInit {
     private healthService: HealthService
   ) {}
 
+  get formattedAddress() {
+    const parts = [
+      String(this.profile?.address_region || '').trim(),
+      String(this.profile?.address_city || '').trim(),
+      String(this.profile?.address_comuna || '').trim(),
+    ].filter(Boolean);
+    const street = String(this.profile?.address_street || '').trim();
+    const number = String(this.profile?.address_number || '').trim();
+    const streetLine = `${street} ${number}`.trim();
+    if (streetLine) {
+      parts.push(streetLine);
+    }
+    return parts.join(', ');
+  }
+
+  get availableCities() {
+    const regionId = this.resolveRegionId(this.profile?.address_region);
+    if (!regionId) {
+      return [];
+    }
+    return this.provinces
+      .filter((p: any) => String(p.regionId) === regionId)
+      .sort((a: any, b: any) => String(a.name).localeCompare(String(b.name)));
+  }
+
+  get availableComunas() {
+    const provinceId = this.resolveProvinceId(this.profile?.address_city);
+    if (!provinceId) {
+      return [];
+    }
+    return this.communes
+      .filter((c: any) => String(c.provinceId) === provinceId)
+      .sort((a: any, b: any) => String(a.name).localeCompare(String(b.name)));
+  }
+
+  onAddressRegionChange() {
+    this.profile.address_city = '';
+    this.profile.address_comuna = '';
+  }
+
+  onAddressCityChange() {
+    this.profile.address_comuna = '';
+  }
+
   startPersonalEdit() {
     this.personalDraft = {
       full_name: this.profile.full_name || '',
       email: this.profile.email || '',
       phone: this.profile.phone || '',
+      address_region: this.profile.address_region || '',
+      address_comuna: this.profile.address_comuna || '',
+      address_city: this.profile.address_city || '',
+      address_street: this.profile.address_street || '',
+      address_number: this.profile.address_number || '',
     };
     this.isPersonalEditMode = true;
     this.personalSuccessMsg = '';
@@ -129,6 +198,11 @@ export class ProfilePage implements OnInit {
     this.profile.full_name = this.personalDraft.full_name;
     this.profile.email = this.personalDraft.email;
     this.profile.phone = this.personalDraft.phone;
+    this.profile.address_region = this.personalDraft.address_region;
+    this.profile.address_comuna = this.personalDraft.address_comuna;
+    this.profile.address_city = this.personalDraft.address_city;
+    this.profile.address_street = this.personalDraft.address_street;
+    this.profile.address_number = this.personalDraft.address_number;
     this.isPersonalEditMode = false;
     this.personalSuccessMsg = '';
     this.personalErrorMsg = '';
@@ -233,6 +307,7 @@ export class ProfilePage implements OnInit {
           this.profile = { ...this.profile, ...res };
           this.cvName = res.cv_filename || '';
         }
+        this.normalizeAddressFields();
         this.applyUserDefaults();
         this.hydrateExperienceEntries();
         this.hydrateSkillsEntries();
@@ -247,6 +322,71 @@ export class ProfilePage implements OnInit {
     }).add(() => {
       this.loadingProfile = false;
     });
+  }
+
+  private normalizeAddressFields() {
+    const region = String(this.profile?.address_region || '').trim();
+    if (region) {
+      const resolvedRegion = this.regions.find((r: any) =>
+        this.matchesIdOrName(region, r.id, [r.name, r.shortName, r.abbreviation, r.isoCode])
+      );
+      if (resolvedRegion) {
+        this.profile.address_region = resolvedRegion.name;
+      }
+    }
+
+    const city = String(this.profile?.address_city || '').trim();
+    if (city) {
+      const resolvedProvince = this.provinces.find((p: any) =>
+        this.matchesIdOrName(city, p.id, [p.name])
+      );
+      if (resolvedProvince) {
+        this.profile.address_city = resolvedProvince.name;
+      }
+    }
+
+    const comuna = String(this.profile?.address_comuna || '').trim();
+    if (comuna) {
+      const resolvedCommune = this.communes.find((c: any) =>
+        this.matchesIdOrName(comuna, c.id, [c.name])
+      );
+      if (resolvedCommune) {
+        this.profile.address_comuna = resolvedCommune.name;
+      }
+    }
+  }
+
+  private matchesIdOrName(value: string, id: any, names: string[]) {
+    const normalized = String(value || '').trim().toLowerCase();
+    if (!normalized) {
+      return false;
+    }
+    if (String(id).trim().toLowerCase() === normalized) {
+      return true;
+    }
+    return names.some(n => String(n || '').trim().toLowerCase() === normalized);
+  }
+
+  private resolveRegionId(value: any): string | null {
+    const raw = String(value || '').trim();
+    if (!raw) {
+      return null;
+    }
+    const region = this.regions.find((r: any) =>
+      this.matchesIdOrName(raw, r.id, [r.name, r.shortName, r.abbreviation, r.isoCode])
+    );
+    return region ? String(region.id) : null;
+  }
+
+  private resolveProvinceId(value: any): string | null {
+    const raw = String(value || '').trim();
+    if (!raw) {
+      return null;
+    }
+    const province = this.provinces.find((p: any) =>
+      this.matchesIdOrName(raw, p.id, [p.name])
+    );
+    return province ? String(province.id) : null;
   }
 
   applyUserDefaults() {
@@ -539,6 +679,11 @@ export class ProfilePage implements OnInit {
       full_name: this.profile.full_name,
       email: this.profile.email,
       phone: this.profile.phone,
+      address_region: this.profile.address_region,
+      address_comuna: this.profile.address_comuna,
+      address_city: this.profile.address_city,
+      address_street: this.profile.address_street,
+      address_number: this.profile.address_number,
     };
 
     this.profileService.saveProfile(payload).subscribe({
@@ -550,6 +695,11 @@ export class ProfilePage implements OnInit {
           full_name: this.profile.full_name || '',
           email: this.profile.email || '',
           phone: this.profile.phone || '',
+          address_region: this.profile.address_region || '',
+          address_comuna: this.profile.address_comuna || '',
+          address_city: this.profile.address_city || '',
+          address_street: this.profile.address_street || '',
+          address_number: this.profile.address_number || '',
         };
         this.personalSuccessMsg = 'Perfil actualizado';
         this.isPersonalEditMode = false;

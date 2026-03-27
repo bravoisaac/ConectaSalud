@@ -21,8 +21,18 @@ class JobApplication extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function jobPost()
+    {
+        return $this->belongsTo(JobPost::class, 'job_post_id');
+    }
+
     public function profile()
     {
         return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
+    }
+
+    public function healthProfile()
+    {
+        return $this->hasOne(HealthProfile::class, 'user_id', 'user_id');
     }
 }

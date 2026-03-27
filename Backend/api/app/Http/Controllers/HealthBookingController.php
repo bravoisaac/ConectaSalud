@@ -26,12 +26,26 @@ class HealthBookingController extends Controller
         }
 
         $bookings = $query
-            ->with(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location'])
+            ->with([
+                'user:id,name,email,phone',
+                'healthProfile:id,user_id,specialty,location',
+                'healthProfile.user:id,name,email,phone',
+            ])
             ->latest()
             ->paginate(20);
         $bookings->getCollection()->transform(function ($booking) use ($user) {
             if (!$this->canSeeOtp($user, $booking)) {
                 $booking->otp_code = null;
+            }
+            if ($this->isProvider($user, $booking) && !in_array($booking->status, ['in_service', 'completed'], true)) {
+                $booking->service_address = null;
+                $booking->service_region = null;
+                $booking->service_comuna = null;
+                $booking->service_city = null;
+                $booking->service_street = null;
+                $booking->service_number = null;
+                $booking->service_lat = null;
+                $booking->service_lng = null;
             }
             return $booking;
         });
@@ -50,7 +64,21 @@ class HealthBookingController extends Controller
             $booking->otp_code = null;
         }
 
-        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
+        $booking->loadMissing([
+            'user:id,name,email,phone',
+            'healthProfile:id,user_id,specialty,location',
+            'healthProfile.user:id,name,email,phone',
+        ]);
+        if ($this->isProvider($user, $booking) && !in_array($booking->status, ['in_service', 'completed'], true)) {
+            $booking->service_address = null;
+            $booking->service_region = null;
+            $booking->service_comuna = null;
+            $booking->service_city = null;
+            $booking->service_street = null;
+            $booking->service_number = null;
+            $booking->service_lat = null;
+            $booking->service_lng = null;
+        }
 
         return response()->json($booking);
     }
@@ -65,7 +93,40 @@ class HealthBookingController extends Controller
             'end_at' => 'nullable|date|after:start_at',
             'total_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:10',
+            'service_address' => 'nullable|string|max:500',
+            'service_region' => 'nullable|string|max:120',
+            'service_comuna' => 'nullable|string|max:120',
+            'service_city' => 'nullable|string|max:120',
+            'service_street' => 'nullable|string|max:180',
+            'service_number' => 'nullable|string|max:30',
+            'service_lat' => 'nullable|numeric|between:-90,90',
+            'service_lng' => 'nullable|numeric|between:-180,180',
         ]);
+
+        $serviceAddress = trim((string) ($data['service_address'] ?? ''));
+        $serviceRegion = trim((string) ($data['service_region'] ?? ''));
+        $serviceComuna = trim((string) ($data['service_comuna'] ?? ''));
+        $serviceCity = trim((string) ($data['service_city'] ?? ''));
+        $serviceStreet = trim((string) ($data['service_street'] ?? ''));
+        $serviceNumber = trim((string) ($data['service_number'] ?? ''));
+
+        if (!$serviceAddress) {
+            $missing = [];
+            if (!$serviceRegion) $missing[] = 'region';
+            if (!$serviceComuna) $missing[] = 'comuna';
+            if (!$serviceCity) $missing[] = 'ciudad';
+            if (!$serviceStreet) $missing[] = 'calle';
+            if (!$serviceNumber) $missing[] = 'numero';
+            if (count($missing)) {
+                return response()->json(['message' => 'Falta dirección: ' . implode(', ', $missing)], 422);
+            }
+            $serviceAddress = implode(', ', [
+                $serviceRegion,
+                $serviceCity,
+                $serviceComuna,
+                trim($serviceStreet . ' ' . $serviceNumber),
+            ]);
+        }
 
         $profile = HealthProfile::find($data['health_profile_id']);
         if (!$profile) {
@@ -89,9 +150,21 @@ class HealthBookingController extends Controller
             'otp_code' => str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT),
             'total_amount' => $data['total_amount'] ?? 0,
             'currency' => $data['currency'] ?? 'CLP',
+            'service_address' => $serviceAddress ?: null,
+            'service_region' => $serviceRegion ?: null,
+            'service_comuna' => $serviceComuna ?: null,
+            'service_city' => $serviceCity ?: null,
+            'service_street' => $serviceStreet ?: null,
+            'service_number' => $serviceNumber ?: null,
+            'service_lat' => $data['service_lat'] ?? null,
+            'service_lng' => $data['service_lng'] ?? null,
         ]);
 
-        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
+        $booking->loadMissing([
+            'user:id,name,email,phone',
+            'healthProfile:id,user_id,specialty,location',
+            'healthProfile.user:id,name,email,phone',
+        ]);
 
         return response()->json($booking, 201);
     }
@@ -118,7 +191,11 @@ class HealthBookingController extends Controller
 
         $booking->update($data);
 
-        $booking->loadMissing(['user:id,name,email,phone', 'healthProfile:id,user_id,specialty,location']);
+        $booking->loadMissing([
+            'user:id,name,email,phone',
+            'healthProfile:id,user_id,specialty,location',
+            'healthProfile.user:id,name,email,phone',
+        ]);
 
         return response()->json($booking);
     }

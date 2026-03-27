@@ -37,4 +37,16 @@ export class JobsService {
       cover_letter: coverLetter || null,
     });
   }
+
+  myApplications() {
+    return this.http.get(`${environment.apiBase}/job-applications`);
+  }
+
+  inboxApplications() {
+    return this.http.get(`${environment.apiBase}/job-applications/inbox`);
+  }
+
+  updateApplication(applicationId: number, status: string) {
+    return this.http.put(`${environment.apiBase}/job-applications/${applicationId}`, { status });
+  }
 }

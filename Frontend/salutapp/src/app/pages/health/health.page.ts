@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { regions as clRegions, provinces as clProvinces, communes as clCommunes } from '@clregions/data/array';
 
 import { HealthService } from '../../services/health.service';
 import { AuthService } from '../../services/auth.service';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-health',
@@ -14,6 +16,9 @@ import { AuthService } from '../../services/auth.service';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class HealthPage implements OnInit {
+  readonly regions = clRegions;
+  readonly provinces = clProvinces;
+  readonly communes = clCommunes;
   query = '';
   location = '';
   specialty = '';
@@ -37,6 +42,43 @@ export class HealthPage implements OnInit {
   bookingEndTime = '09:00';
   bookingStart = '';
   bookingEnd = '';
+  bookingRegion = '';
+  bookingComuna = '';
+  bookingCity = '';
+  bookingStreet = '';
+  bookingNumber = '';
+  bookingLat: number | null = null;
+  bookingLng: number | null = null;
+  profileAddressLoaded = false;
+
+  get availableBookingCities() {
+    const regionId = this.resolveRegionId(this.bookingRegion);
+    if (!regionId) {
+      return [];
+    }
+    return this.provinces
+      .filter((p: any) => String(p.regionId) === regionId)
+      .sort((a: any, b: any) => String(a.name).localeCompare(String(b.name)));
+  }
+
+  get availableBookingComunas() {
+    const provinceId = this.resolveProvinceId(this.bookingCity);
+    if (!provinceId) {
+      return [];
+    }
+    return this.communes
+      .filter((c: any) => String(c.provinceId) === provinceId)
+      .sort((a: any, b: any) => String(a.name).localeCompare(String(b.name)));
+  }
+
+  onBookingRegionChange() {
+    this.bookingCity = '';
+    this.bookingComuna = '';
+  }
+
+  onBookingCityChange() {
+    this.bookingComuna = '';
+  }
 
   isDateEnabled = (isoString: string) => {
     if (!this.availability.length) {
@@ -53,11 +95,34 @@ export class HealthPage implements OnInit {
   constructor(
     private healthService: HealthService,
     private authService: AuthService,
+    private profileService: ProfileService,
   ) {}
 
   async ngOnInit() {
     await this.loadCurrentUser();
+    this.loadMyProfileAddress();
     this.loadProfiles();
+  }
+
+  loadMyProfileAddress() {
+    this.profileService.getProfile().subscribe({
+      next: (res: any) => {
+        this.profileAddressLoaded = true;
+        const region = String(res?.address_region || '').trim();
+        const comuna = String(res?.address_comuna || '').trim();
+        const city = String(res?.address_city || '').trim();
+        const street = String(res?.address_street || '').trim();
+        const number = String(res?.address_number || '').trim();
+        if (!this.bookingRegion && region) this.bookingRegion = region;
+        if (!this.bookingComuna && comuna) this.bookingComuna = comuna;
+        if (!this.bookingCity && city) this.bookingCity = city;
+        if (!this.bookingStreet && street) this.bookingStreet = street;
+        if (!this.bookingNumber && number) this.bookingNumber = number;
+      },
+      error: () => {
+        this.profileAddressLoaded = true;
+      }
+    });
   }
 
   get filteredProfiles() {
@@ -206,16 +271,92 @@ export class HealthPage implements OnInit {
       return;
     }
 
+    const region = this.bookingRegion.trim();
+    const comuna = this.bookingComuna.trim();
+    const city = this.bookingCity.trim();
+    const street = this.bookingStreet.trim();
+    const number = this.bookingNumber.trim();
+    if (!region || !comuna || !city || !street || !number) {
+      this.errorMsg = 'Completa región, comuna, ciudad, calle y número';
+      return;
+    }
+    const address = `${region}, ${city}, ${comuna}, ${street} ${number}`.trim();
+
     this.healthService
-      .createBooking(this.bookingProfileId, this.bookingStart, this.bookingEnd || undefined)
+      .createBooking(
+        this.bookingProfileId,
+        this.bookingStart,
+        this.bookingEnd || undefined,
+        address,
+        region,
+        comuna,
+        city,
+        street,
+        number,
+        this.bookingLat,
+        this.bookingLng
+      )
       .subscribe({
         next: () => {
           this.successMsg = 'Reserva creada';
+          this.bookingLat = null;
+          this.bookingLng = null;
         },
         error: (err: any) => {
           this.errorMsg = this.extractApiError(err);
         }
       });
+  }
+
+  useCurrentLocation() {
+    this.errorMsg = '';
+    if (!navigator.geolocation) {
+      this.errorMsg = 'No se puede obtener la ubicación en este dispositivo';
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.bookingLat = pos.coords.latitude;
+        this.bookingLng = pos.coords.longitude;
+      },
+      () => {
+        this.errorMsg = 'No se pudo obtener la ubicación';
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  }
+
+  private matchesIdOrName(value: string, id: any, names: string[]) {
+    const normalized = String(value || '').trim().toLowerCase();
+    if (!normalized) {
+      return false;
+    }
+    if (String(id).trim().toLowerCase() === normalized) {
+      return true;
+    }
+    return names.some(n => String(n || '').trim().toLowerCase() === normalized);
+  }
+
+  private resolveRegionId(value: any): string | null {
+    const raw = String(value || '').trim();
+    if (!raw) {
+      return null;
+    }
+    const region = this.regions.find((r: any) =>
+      this.matchesIdOrName(raw, r.id, [r.name, r.shortName, r.abbreviation, r.isoCode])
+    );
+    return region ? String(region.id) : null;
+  }
+
+  private resolveProvinceId(value: any): string | null {
+    const raw = String(value || '').trim();
+    if (!raw) {
+      return null;
+    }
+    const province = this.provinces.find((p: any) =>
+      this.matchesIdOrName(raw, p.id, [p.name])
+    );
+    return province ? String(province.id) : null;
   }
 
   get canBookSelectedProfile() {

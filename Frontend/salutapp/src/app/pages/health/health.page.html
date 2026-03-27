@@ -210,6 +210,52 @@
               <ion-input [(ngModel)]="bookingEndTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
             </ion-item>
 
+            <ion-item>
+              <ion-label position="stacked">Región</ion-label>
+              <ion-select [(ngModel)]="bookingRegion" (ionChange)="onBookingRegionChange()">
+                <ion-select-option *ngFor="let r of regions" [value]="r.name">
+                  {{ r.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Ciudad</ion-label>
+              <ion-select
+                [(ngModel)]="bookingCity"
+                [disabled]="!availableBookingCities.length"
+                (ionChange)="onBookingCityChange()"
+              >
+                <ion-select-option *ngFor="let p of availableBookingCities" [value]="p.name">
+                  {{ p.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Comuna</ion-label>
+              <ion-select [(ngModel)]="bookingComuna" [disabled]="!availableBookingComunas.length">
+                <ion-select-option *ngFor="let c of availableBookingComunas" [value]="c.name">
+                  {{ c.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Calle</ion-label>
+              <ion-input [(ngModel)]="bookingStreet" placeholder="Ej: Av. Siempre Viva"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Número</ion-label>
+              <ion-input [(ngModel)]="bookingNumber" placeholder="Ej: 123"></ion-input>
+            </ion-item>
+            <ion-button expand="block" fill="outline" (click)="useCurrentLocation()">
+              Usar ubicación actual (para mapa)
+            </ion-button>
+            <ion-text color="medium" *ngIf="bookingLat !== null && bookingLng !== null">
+              Ubicación guardada: {{ bookingLat.toFixed(5) }}, {{ bookingLng.toFixed(5) }}
+            </ion-text>
+            <ion-text color="medium" *ngIf="profileAddressLoaded && (!bookingRegion || !bookingComuna || !bookingCity || !bookingStreet || !bookingNumber)">
+              Puedes guardar tu dirección en Perfil para no escribirla cada vez.
+            </ion-text>
+
             <ion-note color="medium">
               Dias habilitados segun calendario del profesional.
               Horarios del dia: {{ selectedDayRangesText }}

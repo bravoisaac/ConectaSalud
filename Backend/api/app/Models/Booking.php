@@ -24,6 +24,14 @@ class Booking extends Model
         'penalty_percent',
         'total_amount',
         'currency',
+        'service_address',
+        'service_region',
+        'service_comuna',
+        'service_city',
+        'service_street',
+        'service_number',
+        'service_lat',
+        'service_lng',
     ];
 
     public function user()

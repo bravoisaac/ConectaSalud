@@ -1,0 +1,224 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mis propuestas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
+    <ion-segment-button value="my">
+      <ion-label>Mis postulaciones</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="inbox">
+      <ion-label>Recibidas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container *ngIf="proposalsSection === 'my'">
+    <ion-text color="danger" *ngIf="myErrorMsg">{{ myErrorMsg }}</ion-text>
+    <ion-text color="success" *ngIf="mySuccessMsg">{{ mySuccessMsg }}</ion-text>
+
+    <ion-item *ngIf="myLoading">
+      <ion-label>Cargando propuestas...</ion-label>
+    </ion-item>
+
+    <h3 class="section-title" *ngIf="!myLoading && myCurrent.length">En proceso</h3>
+    <div class="booking-list" *ngIf="!myLoading && myCurrent.length">
+      <ion-card *ngFor="let app of myCurrent" class="booking-card" button="true" (click)="openApplicationJob(app)">
+        <ion-card-content>
+          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
+          <p class="booking-meta">Estado: {{ myStatusLabel(app.status) }}</p>
+          <div class="actions" *ngIf="canRespondToOffer(app)">
+            <ion-button
+              size="small"
+              color="success"
+              [disabled]="myUpdatingId === app.id"
+              (click)="$event.stopPropagation(); acceptOffer(app)"
+            >
+              Aceptar propuesta
+            </ion-button>
+            <ion-button
+              size="small"
+              color="danger"
+              fill="outline"
+              [disabled]="myUpdatingId === app.id"
+              (click)="$event.stopPropagation(); declineOffer(app)"
+            >
+              Rechazar
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <h3 class="section-title" *ngIf="!myLoading && myFinalized.length">Finalizadas</h3>
+    <div class="booking-list" *ngIf="!myLoading && myFinalized.length">
+      <ion-card *ngFor="let app of myFinalized" class="booking-card history-card" button="true" (click)="openApplicationJob(app)">
+        <ion-card-content>
+          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
+          <p class="booking-meta">Estado: {{ myStatusLabel(app.status) }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-text color="medium" *ngIf="!myLoading && !myApplications.length">
+      Aun no tienes postulaciones.
+    </ion-text>
+  </ng-container>
+
+  <ng-container *ngIf="proposalsSection === 'inbox'">
+    <ion-text color="danger" *ngIf="inboxErrorMsg">{{ inboxErrorMsg }}</ion-text>
+    <ion-text color="success" *ngIf="inboxSuccessMsg">{{ inboxSuccessMsg }}</ion-text>
+
+    <ion-item *ngIf="inboxLoading">
+      <ion-label>Cargando propuestas recibidas...</ion-label>
+    </ion-item>
+
+    <h3 class="section-title" *ngIf="!inboxLoading && inboxCurrent.length">En proceso</h3>
+    <div class="booking-list" *ngIf="!inboxLoading && inboxCurrent.length">
+      <ion-card *ngFor="let app of inboxCurrent" class="booking-card" button="true" (click)="openApplicantProfile(app)">
+        <ion-card-content>
+          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+          <p class="booking-meta">Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}</p>
+          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
+          <p class="booking-meta">Estado: {{ inboxStatusLabel(app.status) }}</p>
+          <p class="booking-meta" *ngIf="app.cover_letter">Mensaje: {{ app.cover_letter }}</p>
+          <div class="actions" *ngIf="canEmployerRespond(app)">
+            <ion-button
+              size="small"
+              color="success"
+              [disabled]="inboxUpdatingId === app.id"
+              (click)="$event.stopPropagation(); acceptCandidate(app)"
+            >
+              Aceptar
+            </ion-button>
+            <ion-button
+              size="small"
+              color="danger"
+              fill="outline"
+              [disabled]="inboxUpdatingId === app.id"
+              (click)="$event.stopPropagation(); rejectCandidate(app)"
+            >
+              Rechazar
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <h3 class="section-title" *ngIf="!inboxLoading && inboxFinalized.length">Finalizadas</h3>
+    <div class="booking-list" *ngIf="!inboxLoading && inboxFinalized.length">
+      <ion-card *ngFor="let app of inboxFinalized" class="booking-card history-card" button="true" (click)="openApplicantProfile(app)">
+        <ion-card-content>
+          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+          <p class="booking-meta">Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}</p>
+          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
+          <p class="booking-meta">Estado: {{ inboxStatusLabel(app.status) }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-text color="medium" *ngIf="!inboxLoading && !inboxApplications.length">
+      Aun no tienes propuestas recibidas.
+    </ion-text>
+  </ng-container>
+
+  <ion-modal [isOpen]="!!selectedApplication" (didDismiss)="closeApplicantProfile()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ selectedApplication?.user?.name || 'Perfil del postulante' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeApplicantProfile()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Contacto</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Email:</strong> {{ selectedApplication?.user?.email || 'Sin email' }}</p>
+            <p><strong>Telefono:</strong> {{ selectedApplication?.user?.phone || 'Sin telefono' }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="applicationHealthProfile(selectedApplication)">
+          <ion-card-header>
+            <ion-card-title>Perfil de salud</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Especialidad:</strong> {{ applicationHealthProfile(selectedApplication)?.specialty || 'Sin especialidad' }}</p>
+            <p><strong>Experiencia:</strong> {{ applicationHealthProfile(selectedApplication)?.experience_years || 0 }} anos</p>
+            <p><strong>Tarifa:</strong> {{ applicationHealthProfile(selectedApplication)?.rate_hour || 0 }} CLP/h</p>
+            <p><strong>Ubicacion:</strong> {{ applicationHealthProfile(selectedApplication)?.location || 'Sin ubicacion' }}</p>
+            <p *ngIf="applicationHealthProfile(selectedApplication)?.bio"><strong>Descripcion:</strong> {{ applicationHealthProfile(selectedApplication)?.bio }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="applicationProfile(selectedApplication)">
+          <ion-card-header>
+            <ion-card-title>Curriculum</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Profesion:</strong> {{ applicationProfile(selectedApplication)?.profession || 'Sin profesion' }}</p>
+            <p *ngIf="applicationProfile(selectedApplication)?.summary"><strong>Resumen:</strong> {{ applicationProfile(selectedApplication)?.summary }}</p>
+
+            <div *ngIf="experienceEntries(applicationProfile(selectedApplication)).length">
+              <h3>Experiencia</h3>
+              <ion-list>
+                <ion-item *ngFor="let exp of experienceEntries(applicationProfile(selectedApplication))">
+                  <ion-label>
+                    <h3>{{ exp.role || 'Cargo' }} - {{ exp.company || 'Empresa' }}</h3>
+                    <p *ngIf="exp.startDate || exp.endDate">{{ exp.startDate || '-' }} - {{ exp.endDate || '-' }}</p>
+                    <p *ngIf="exp.description">{{ exp.description }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+
+            <div *ngIf="skillsEntries(applicationProfile(selectedApplication)).length">
+              <h3>Habilidades</h3>
+              <ion-list>
+                <ion-item *ngFor="let skill of skillsEntries(applicationProfile(selectedApplication))">
+                  <ion-label>{{ skill }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+
+            <div *ngIf="educationEntries(applicationProfile(selectedApplication)).length">
+              <h3>Educacion</h3>
+              <ion-list>
+                <ion-item *ngFor="let edu of educationEntries(applicationProfile(selectedApplication))">
+                  <ion-label>
+                    <h3>{{ edu.degree || 'Grado' }}</h3>
+                    <p>{{ edu.institution || 'Institucion' }}</p>
+                    <p *ngIf="edu.startDate || edu.endDate">{{ edu.startDate || '-' }} - {{ edu.endDate || '-' }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+
+            <ion-button
+              expand="block"
+              fill="outline"
+              *ngIf="cvUrl(selectedApplication)"
+              [href]="cvUrl(selectedApplication)"
+              target="_blank"
+              rel="noopener"
+            >
+              Descargar CV (PDF)
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-text color="medium" *ngIf="!applicationProfile(selectedApplication)">
+          Este usuario aun no tiene curriculum cargado.
+        </ion-text>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

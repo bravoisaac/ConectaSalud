@@ -14,24 +14,29 @@
 
   <h3 class="section-title" *ngIf="!loading && currentBookings.length">Estado actual</h3>
   <div class="booking-list" *ngIf="!loading && currentBookings.length">
-    <ion-card *ngFor="let booking of currentBookings" class="booking-card">
+    <ion-card
+      *ngFor="let booking of currentBookings"
+      class="booking-card"
+      button="true"
+      (click)="openBookingDetails(booking)"
+    >
       <ion-card-content>
-        <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
+        <h2 class="booking-title">{{ bookingCounterpartName(booking) }}</h2>
         <p class="booking-meta">Reserva #{{ booking.id }}</p>
         <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
         <p class="booking-meta">
           Hora: {{ booking.start_at | date:'shortTime' }} - {{ booking.end_at | date:'shortTime' }}
         </p>
         <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
-        <p class="booking-meta">
-          Contacto: {{ booking?.user?.phone || 'Sin telefono' }} / {{ booking?.user?.email || 'Sin correo' }}
+        <p class="booking-meta" *ngIf="canSeeCounterpartContact(booking)">
+          Contacto: {{ counterpartUser(booking)?.phone || 'Sin telefono' }} / {{ counterpartUser(booking)?.email || 'Sin correo' }}
         </p>
         <div class="actions" *ngIf="isHealthUser">
           <ion-button
             size="small"
             color="success"
             [disabled]="!canManageBooking(booking) || updatingId === booking.id"
-            (click)="acceptBooking(booking)"
+            (click)="$event.stopPropagation(); acceptBooking(booking)"
           >
             Aceptar
           </ion-button>
@@ -40,7 +45,7 @@
             color="danger"
             fill="outline"
             [disabled]="!canManageBooking(booking) || updatingId === booking.id"
-            (click)="rejectBooking(booking)"
+            (click)="$event.stopPropagation(); rejectBooking(booking)"
           >
             Rechazar
           </ion-button>
@@ -51,9 +56,14 @@
 
   <h3 class="section-title" *ngIf="!loading && finalizedBookings.length">Finalizadas</h3>
   <div class="booking-list" *ngIf="!loading && finalizedBookings.length">
-    <ion-card *ngFor="let booking of finalizedBookings" class="booking-card history-card">
+    <ion-card
+      *ngFor="let booking of finalizedBookings"
+      class="booking-card history-card"
+      button="true"
+      (click)="openBookingDetails(booking)"
+    >
       <ion-card-content>
-        <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
+        <h2 class="booking-title">{{ bookingCounterpartName(booking) }}</h2>
         <p class="booking-meta">Reserva #{{ booking.id }}</p>
         <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
         <p class="booking-meta">
@@ -67,4 +77,73 @@
   <ion-text color="medium" *ngIf="!loading && !bookings.length">
     {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
   </ion-text>
+
+  <ion-modal [isOpen]="!!selectedBooking" (didDismiss)="closeBookingDetails()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Detalle de la reserva</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeBookingDetails()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ counterpartTitle }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Nombre:</strong> {{ selectedCounterpartUser?.name || 'Sin nombre' }}</p>
+            <p *ngIf="counterpartSpecialty"><strong>Especialidad:</strong> {{ counterpartSpecialty }}</p>
+            <ng-container *ngIf="canSeeCounterpartContact(selectedBooking)">
+              <p><strong>Telefono:</strong> {{ selectedCounterpartUser?.phone || 'Sin telefono' }}</p>
+              <p><strong>Correo:</strong> {{ selectedCounterpartUser?.email || 'Sin correo' }}</p>
+            </ng-container>
+            <ion-text color="medium" *ngIf="!canSeeCounterpartContact(selectedBooking)">
+              El contacto se muestra cuando la reserva estÃ¡ aceptada.
+            </ion-text>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Propuesta</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Fecha:</strong> {{ selectedBooking?.start_at | date:'fullDate' }}</p>
+            <p><strong>Hora:</strong> {{ selectedBooking?.start_at | date:'shortTime' }} - {{ selectedBooking?.end_at | date:'shortTime' }}</p>
+            <p><strong>Región:</strong> {{ bookingAddressParts.region || '-' }}</p>
+            <p><strong>Ciudad:</strong> {{ bookingAddressParts.city || '-' }}</p>
+            <p><strong>Comuna:</strong> {{ bookingAddressParts.comuna || '-' }}</p>
+            <p><strong>Calle:</strong> {{ bookingAddressParts.street || '-' }}</p>
+            <p><strong>Número:</strong> {{ bookingAddressParts.number || '-' }}</p>
+            <p><strong>Dirección completa:</strong> {{ formattedServiceAddress || 'Sin dirección' }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="mapEmbedUrl">
+          <ion-card-header>
+            <ion-card-title>Mapa</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <iframe [src]="mapEmbedUrl" width="100%" height="260" style="border:0;" loading="lazy"></iframe>
+            <ion-button
+              expand="block"
+              fill="outline"
+              *ngIf="mapsLink"
+              [href]="mapsLink"
+              target="_blank"
+              rel="noopener"
+            >
+              Abrir en Maps
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+        <ion-text color="medium" *ngIf="!mapEmbedUrl">
+          No hay coordenadas guardadas para mostrar un mapa exacto. Puedes abrir la dirección en Maps.
+        </ion-text>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

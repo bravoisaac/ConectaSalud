@@ -33,6 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('jobs', JobPostController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::post('jobs/{job}/apply', [JobApplicationController::class, 'store']);
     Route::get('jobs/{job}/applications', [JobApplicationController::class, 'index']);
+    Route::get('job-applications', [JobApplicationController::class, 'myIndex']);
+    Route::get('job-applications/inbox', [JobApplicationController::class, 'inboxIndex']);
+    Route::put('job-applications/{application}', [JobApplicationController::class, 'update']);
 
     Route::apiResource('health/profiles', HealthProfileController::class)->only(['index', 'show', 'store', 'update']);
     Route::get('health/profiles/{profile}/availability', [HealthAvailabilityController::class, 'index']);

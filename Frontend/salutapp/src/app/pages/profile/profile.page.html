@@ -20,6 +20,7 @@
         <p><strong>Nombre completo:</strong> {{ profile.full_name || user?.name || 'Sin nombre' }}</p>
         <p><strong>Email:</strong> {{ profile.email || user?.email || 'Sin email' }}</p>
         <p><strong>Telefono:</strong> {{ profile.phone || user?.phone || 'Sin telefono' }}</p>
+        <p><strong>Dirección:</strong> {{ formattedAddress || profile.address || 'Sin dirección' }}</p>
         <ion-button expand="block" (click)="startPersonalEdit()">Editar perfil</ion-button>
       </ng-container>
 
@@ -35,6 +36,42 @@
         <ion-item>
           <ion-label position="stacked">Telefono</ion-label>
           <ion-input [(ngModel)]="profile.phone" inputmode="tel" placeholder="+56 9 1234 5678"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Región</ion-label>
+          <ion-select [(ngModel)]="profile.address_region" (ionChange)="onAddressRegionChange()">
+            <ion-select-option *ngFor="let r of regions" [value]="r.name">
+              {{ r.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Ciudad</ion-label>
+          <ion-select
+            [(ngModel)]="profile.address_city"
+            [disabled]="!availableCities.length"
+            (ionChange)="onAddressCityChange()"
+          >
+            <ion-select-option *ngFor="let p of availableCities" [value]="p.name">
+              {{ p.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Comuna</ion-label>
+          <ion-select [(ngModel)]="profile.address_comuna" [disabled]="!availableComunas.length">
+            <ion-select-option *ngFor="let c of availableComunas" [value]="c.name">
+              {{ c.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Calle</ion-label>
+          <ion-input [(ngModel)]="profile.address_street" placeholder="Ej: Av. Siempre Viva"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Número</ion-label>
+          <ion-input [(ngModel)]="profile.address_number" placeholder="Ej: 123"></ion-input>
         </ion-item>
         <ion-button expand="block" (click)="savePersonalProfile()" [disabled]="savingPersonal">
           {{ savingPersonal ? 'Guardando...' : 'Guardar perfil' }}
