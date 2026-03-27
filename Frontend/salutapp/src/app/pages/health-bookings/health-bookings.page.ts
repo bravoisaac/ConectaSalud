@@ -74,15 +74,17 @@ export class HealthBookingsPage implements OnInit {
   }
 
   canManageBooking(booking: any) {
-    return String(booking?.status || '').toLowerCase() === 'requested';
+    return this.isHealthUser && String(booking?.status || '').toLowerCase() === 'requested';
   }
 
-  get activeBookings() {
-    return this.bookings.filter(item => this.statusKey(item?.status) !== 'cancelled');
+  get currentBookings() {
+    const currentStatuses = new Set(['requested', 'in_service']);
+    return this.bookings.filter(item => currentStatuses.has(this.statusKey(item?.status)));
   }
 
-  get rejectedHistoryBookings() {
-    return this.bookings.filter(item => this.statusKey(item?.status) === 'cancelled');
+  get finalizedBookings() {
+    const finalizedStatuses = new Set(['completed', 'cancelled']);
+    return this.bookings.filter(item => finalizedStatuses.has(this.statusKey(item?.status)));
   }
 
   bookingUserName(booking: any) {

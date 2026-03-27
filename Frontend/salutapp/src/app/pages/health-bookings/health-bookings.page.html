@@ -1,9 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/profile"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Reservas de salud</ion-title>
+    <ion-title>Reservas</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,9 +12,9 @@
     <ion-label>Cargando reservas...</ion-label>
   </ion-item>
 
-  <h3 class="section-title" *ngIf="!loading && activeBookings.length">Reservas activas</h3>
-  <div class="booking-list" *ngIf="!loading && activeBookings.length">
-    <ion-card *ngFor="let booking of activeBookings" class="booking-card">
+  <h3 class="section-title" *ngIf="!loading && currentBookings.length">Estado actual</h3>
+  <div class="booking-list" *ngIf="!loading && currentBookings.length">
+    <ion-card *ngFor="let booking of currentBookings" class="booking-card">
       <ion-card-content>
         <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
         <p class="booking-meta">Reserva #{{ booking.id }}</p>
@@ -29,7 +26,7 @@
         <p class="booking-meta">
           Contacto: {{ booking?.user?.phone || 'Sin telefono' }} / {{ booking?.user?.email || 'Sin correo' }}
         </p>
-        <div class="actions">
+        <div class="actions" *ngIf="isHealthUser">
           <ion-button
             size="small"
             color="success"
@@ -52,9 +49,9 @@
     </ion-card>
   </div>
 
-  <h3 class="section-title" *ngIf="!loading && rejectedHistoryBookings.length">Historial de rechazadas</h3>
-  <div class="booking-list" *ngIf="!loading && rejectedHistoryBookings.length">
-    <ion-card *ngFor="let booking of rejectedHistoryBookings" class="booking-card history-card">
+  <h3 class="section-title" *ngIf="!loading && finalizedBookings.length">Finalizadas</h3>
+  <div class="booking-list" *ngIf="!loading && finalizedBookings.length">
+    <ion-card *ngFor="let booking of finalizedBookings" class="booking-card history-card">
       <ion-card-content>
         <h2 class="booking-title">{{ bookingUserName(booking) }}</h2>
         <p class="booking-meta">Reserva #{{ booking.id }}</p>
