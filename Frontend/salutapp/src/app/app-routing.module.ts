@@ -43,16 +43,6 @@ const routes: Routes = [
           import('./pages/health/health.page').then(m => m.HealthPage),
       },
       {
-        path: 'social',
-        loadComponent: () =>
-          import('./pages/social/social.page').then(m => m.SocialPage),
-      },
-      {
-        path: 'chat',
-        loadComponent: () =>
-          import('./pages/chat/chat.page').then(m => m.ChatPage),
-      },
-      {
         path: 'profile',
         loadComponent: () =>
           import('./pages/profile/profile.page').then(m => m.ProfilePage),
