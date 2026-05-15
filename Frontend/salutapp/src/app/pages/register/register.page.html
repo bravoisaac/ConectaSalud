@@ -1,53 +1,113 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Registro</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="auth-content" [fullscreen]="true">
+  <div class="auth-shell">
+    <header class="auth-top">
+      <div class="auth-top-inner">
+        <h1 class="auth-title">Crear cuenta</h1>
+        <p class="auth-subtitle">Completa el formulario</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="floating">Nombre</ion-label>
-    <ion-input [(ngModel)]="name"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Email</ion-label>
-    <ion-input [(ngModel)]="email" type="email"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Telefono</ion-label>
-    <ion-input [(ngModel)]="phone" type="tel"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Contrasena</ion-label>
-    <ion-input [(ngModel)]="password" type="password"></ion-input>
-  </ion-item>
+    <section class="auth-card" aria-label="Formulario de registro">
+      <form (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label class="field-label" for="register-name">Nombre completo</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="register-name"
+              name="name"
+              [(ngModel)]="name"
+              autocomplete="name"
+              placeholder="Tu nombre"
+            ></ion-input>
+          </ion-item>
+        </div>
 
-  <ion-item>
-    <ion-label>Rol</ion-label>
-    <ion-select [(ngModel)]="role">
-      <ion-select-option value="user">Usuario</ion-select-option>
-      <ion-select-option value="health">Salud</ion-select-option>
-      <ion-select-option value="company">Empresa</ion-select-option>
-    </ion-select>
-  </ion-item>
+        <div class="field">
+          <label class="field-label" for="register-email">Email</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="register-email"
+              name="email"
+              [(ngModel)]="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="email@ejemplo.com"
+            ></ion-input>
+          </ion-item>
+        </div>
 
-  <ion-item>
-    <ion-label>Idioma</ion-label>
-    <ion-select [(ngModel)]="locale">
-      <ion-select-option value="es">Espanol</ion-select-option>
-      <ion-select-option value="en">Ingles</ion-select-option>
-    </ion-select>
-  </ion-item>
+        <div class="field">
+          <label class="field-label" for="register-phone">Teléfono</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="register-phone"
+              name="phone"
+              [(ngModel)]="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="+56 9 XXXX XXXX"
+            ></ion-input>
+          </ion-item>
+        </div>
 
-  <ion-button expand="block" (click)="submit()" [disabled]="loading">
-    {{ loading ? 'Registrando...' : 'Registrar' }}
-  </ion-button>
+        <div class="field">
+          <label class="field-label" for="register-password">Contraseña</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="register-password"
+              name="password"
+              [(ngModel)]="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder="••••••••"
+            ></ion-input>
+          </ion-item>
+        </div>
 
-  <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+        <div class="field-row">
+          <div class="field col">
+            <label class="field-label" for="register-role">Rol</label>
+            <ion-item class="auth-item" lines="none">
+              <ion-select id="register-role" name="role" [(ngModel)]="role" interface="popover">
+                <ion-select-option value="user">Usuario</ion-select-option>
+                <ion-select-option value="health">Salud</ion-select-option>
+                <ion-select-option value="company">Empresa</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
 
-  <div class="errors" *ngIf="errors | keyvalue as errs">
-    <p *ngFor="let err of errs">{{ $any(err.value)[0] }}</p>
+          <div class="field col">
+            <label class="field-label" for="register-locale">Idioma</label>
+            <ion-item class="auth-item" lines="none">
+              <ion-select id="register-locale" name="locale" [(ngModel)]="locale" interface="popover">
+                <ion-select-option value="es">ES</ion-select-option>
+                <ion-select-option value="en">EN</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+        </div>
+
+        <ion-button class="primary" expand="block" type="submit" [disabled]="loading">
+          {{ loading ? 'Registrando...' : 'Registrar' }}
+        </ion-button>
+
+        <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+
+        <div class="errors" *ngIf="errors | keyvalue as errs">
+          <p *ngFor="let err of errs">{{ $any(err.value)[0] }}</p>
+        </div>
+
+        <div class="hint" *ngIf="!successMsg && !hasErrors">
+          <ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+          <span>Completa todos los campos</span>
+        </div>
+
+        <ion-button class="link" fill="clear" routerLink="/login" type="button">
+          Volver a login
+        </ion-button>
+      </form>
+    </section>
   </div>
-
-  <ion-button fill="clear" routerLink="/login">Volver a login</ion-button>
 </ion-content>

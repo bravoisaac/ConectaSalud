@@ -25,6 +25,10 @@ export class RegisterPage {
   errors: any = {};
   successMsg = '';
 
+  get hasErrors() {
+    return !!this.errors && Object.keys(this.errors).length > 0;
+  }
+
   constructor(
     private auth: AuthService,
     private router: Router
