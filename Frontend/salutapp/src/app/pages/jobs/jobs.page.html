@@ -1,10 +1,13 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Empleos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Empleos</h1>
+        <p class="feed-subtitle">Encuentra tu próxima oportunidad</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
+    <section class="feed-body" aria-label="Listado de empleos">
   <ion-text color="success" *ngIf="showSuccess" class="success-message">
     Postulacion exitosa ✓
   </ion-text>
@@ -13,40 +16,21 @@
     Empleo publicado ✓
   </ion-text>
 
-  <ion-searchbar [(ngModel)]="query" placeholder="Buscar empleo"></ion-searchbar>
+      <ion-searchbar class="feed-search" [(ngModel)]="query" placeholder="Buscar empleo..."></ion-searchbar>
 
   <div class="filters-row">
     <ion-button id="filter-sort" size="small" fill="outline" class="filter-pill">
+      <ion-icon slot="start" name="options-outline"></ion-icon>
       Ordenar
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
     </ion-button>
-    <ion-button id="filter-date" size="small" fill="outline" class="filter-pill">
-      Fecha
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-location" size="small" fill="outline" class="filter-pill">
-      Ubicacion
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-profession" size="small" fill="outline" class="filter-pill">
-      Profesion
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-experience" size="small" fill="outline" class="filter-pill">
-      Experiencia
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-salary" size="small" fill="outline" class="filter-pill">
-      Sueldo
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-shift" size="small" fill="outline" class="filter-pill">
-      Jornada
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
+    <ion-button id="filter-location" size="small" fill="outline" class="filter-pill">Ubicación</ion-button>
+    <ion-button id="filter-profession" size="small" fill="outline" class="filter-pill">Profesión</ion-button>
+    <ion-button id="filter-salary" size="small" fill="outline" class="filter-pill">Sueldo</ion-button>
+    <ion-button id="filter-shift" size="small" fill="outline" class="filter-pill">Jornada</ion-button>
+    <ion-button id="filter-date" size="small" fill="outline" class="filter-pill">Fecha</ion-button>
+    <ion-button id="filter-experience" size="small" fill="outline" class="filter-pill">Experiencia</ion-button>
     <ion-button id="filter-contract" size="small" fill="outline" class="filter-pill">
       Contrato
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
     </ion-button>
   </div>
 
@@ -194,48 +178,57 @@
     </ng-template>
   </ion-popover>
 
-  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+      <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
 
-  <ion-list *ngIf="!loading">
-    <ion-item
-      *ngFor="let job of filteredJobs"
-      lines="full"
-      button
-      detail
-      [routerLink]="['/app/jobs', job.id]"
-      [queryParams]="{
-        query: query || null,
-        modality: modality !== 'todas' ? modality : null,
-        location: location || null,
-        profession: profession || null,
-        specialty: specialty || null,
-        contract: contract || null,
-        salaryMin: salaryMin || null,
-        salaryMax: salaryMax || null,
-        sortBy: sortBy || null,
-        dateRange: dateRange !== 'any' ? dateRange : null
-      }"
-    >
-      <ion-label>
-        <h2>{{ job.title }}</h2>
-        <p>
-          {{ jobPosterText(job) }}
-          <ng-container *ngIf="jobPosterTrust(job)">({{ jobPosterTrust(job) }})</ng-container>
-          • {{ job.location || 'Sin ubicacion' }}
-        </p>
-        <p>{{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</p>
-      </ion-label>
-      <ion-note slot="end">Ver</ion-note>
-    </ion-item>
-  </ion-list>
+      <div class="job-list" *ngIf="!loading">
+        <ion-item
+          *ngFor="let job of filteredJobs"
+          class="job-card"
+          lines="none"
+          button
+          detail="false"
+          [routerLink]="['/app/jobs', job.id]"
+          [queryParams]="{
+            query: query || null,
+            modality: modality !== 'todas' ? modality : null,
+            location: location || null,
+            profession: profession || null,
+            specialty: specialty || null,
+            contract: contract || null,
+            salaryMin: salaryMin || null,
+            salaryMax: salaryMax || null,
+            sortBy: sortBy || null,
+            dateRange: dateRange !== 'any' ? dateRange : null
+          }"
+        >
+          <ion-label>
+            <div class="job-title-row">
+              <h2 class="job-title">{{ job.title }}</h2>
+              <span class="badge" [ngClass]="'badge--' + jobBadgeTone(job)">{{ jobBadgeLabel(job) }}</span>
+            </div>
+            <p class="job-sub">
+              {{ jobPosterText(job) }}
+              <ng-container *ngIf="jobPosterTrust(job)">({{ jobPosterTrust(job) }})</ng-container>
+              • {{ job.location || 'Sin ubicación' }}
+            </p>
+            <p class="job-salary">
+              <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+              {{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP
+            </p>
+          </ion-label>
+        </ion-item>
+      </div>
 
-  <ion-item *ngIf="loading">
-    <ion-label>Cargando...</ion-label>
-  </ion-item>
+      <div class="loading" *ngIf="loading">
+        <ion-spinner></ion-spinner>
+        <span>Cargando...</span>
+      </div>
 
-  <ion-fab *ngIf="canCreateJob" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/app/jobs/new" aria-label="Crear empleo">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+      <ion-fab *ngIf="canCreateJob" vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button class="fab" routerLink="/app/jobs/new" aria-label="Crear empleo">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </section>
+  </div>
 </ion-content>

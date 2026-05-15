@@ -308,4 +308,32 @@ export class JobsPage implements OnInit {
   private compareText(a?: string, b?: string) {
     return (a || '').localeCompare(b || '');
   }
+
+  jobBadgeLabel(job: any) {
+    const status = String(job?.status || 'open').toLowerCase();
+    if (status === 'open') {
+      return 'Activo';
+    }
+    if (status === 'closed') {
+      return 'Cerrado';
+    }
+    if (status === 'paused') {
+      return 'Pausado';
+    }
+    return status ? status : 'Activo';
+  }
+
+  jobBadgeTone(job: any) {
+    const status = String(job?.status || 'open').toLowerCase();
+    if (status === 'open') {
+      return 'success';
+    }
+    if (status === 'closed') {
+      return 'neutral';
+    }
+    if (status === 'paused') {
+      return 'warning';
+    }
+    return 'info';
+  }
 }

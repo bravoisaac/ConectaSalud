@@ -1,11 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mis propuestas</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Propuestas</h1>
+        <p class="feed-subtitle">Postulaciones y ofertas</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-segment *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
+    <section class="feed-body" aria-label="Propuestas">
+      <ion-segment *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
     <ion-segment-button value="my">
       <ion-label>Mis postulaciones</ion-label>
     </ion-segment-button>
@@ -221,4 +224,6 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+    </section>
+  </div>
 </ion-content>

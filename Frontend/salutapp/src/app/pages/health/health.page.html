@@ -1,34 +1,28 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Servicios de salud</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Servicios de salud</h1>
+        <p class="feed-subtitle">Encuentra un profesional</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-searchbar [(ngModel)]="query" placeholder="Buscar profesional o servicio"></ion-searchbar>
+    <section class="feed-body" aria-label="Búsqueda de profesionales">
+      <ion-searchbar
+        class="feed-search"
+        [(ngModel)]="query"
+        placeholder="Buscar especialidad..."
+      ></ion-searchbar>
 
-  <div class="filters-row">
-    <ion-button id="filter-sort-health" size="small" fill="outline" class="filter-pill">
-      Ordenar
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-location-health" size="small" fill="outline" class="filter-pill">
-      Ubicacion
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill">
-      Especialidad
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-experience-health" size="small" fill="outline" class="filter-pill">
-      Experiencia
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="filter-rate-health" size="small" fill="outline" class="filter-pill">
-      Tarifa
-      <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-  </div>
+      <div class="filters-row">
+        <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill">Especialidad</ion-button>
+        <ion-button id="filter-location-health" size="small" fill="outline" class="filter-pill">Ubicación</ion-button>
+        <ion-button id="filter-rate-health" size="small" fill="outline" class="filter-pill">Tarifa</ion-button>
+        <ion-button id="filter-sort-health" size="small" fill="outline" class="filter-pill">
+          <ion-icon slot="start" name="options-outline"></ion-icon>
+          Más
+        </ion-button>
+      </div>
 
   <ion-popover trigger="filter-sort-health" side="bottom" alignment="start" class="filter-popover">
     <ng-template>
@@ -61,6 +55,13 @@
             </ion-item>
           </ion-radio-group>
         </ion-list>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Experiencia mínima (años)</ion-label>
+          <ion-input [(ngModel)]="experienceMin" type="number" inputmode="numeric" placeholder="Ej: 2"></ion-input>
+        </ion-item>
       </ion-content>
     </ng-template>
   </ion-popover>
@@ -113,71 +114,130 @@
     </ng-template>
   </ion-popover>
 
-  <ion-list>
-    <ion-list-header>
-      <ion-label>Profesionales de salud</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let specialist of filteredProfiles" button (click)="openProfile(specialist)">
-      <ion-label>
-        <h2>{{ displayName(specialist) }}</h2>
-        <p>Profesion: {{ specialist.specialty || 'Sin especialidad' }}</p>
-        <p>Sueldo por hora: {{ specialist.rate_hour || 0 }} CLP</p>
-        <p>Ubicacion: {{ specialist.location || 'Sin ubicacion' }}</p>
-      </ion-label>
-    </ion-item>
-    <ion-item *ngIf="!loading && !filteredProfiles.length">
-      <ion-label>No hay resultados con esos filtros.</ion-label>
-    </ion-item>
-  </ion-list>
+      <div class="profile-list" *ngIf="!loading">
+        <ion-item
+          *ngFor="let specialist of filteredProfiles"
+          class="profile-card-item"
+          lines="none"
+          button
+          detail="false"
+          (click)="openProfile(specialist)"
+        >
+          <ion-label class="prof-label">
+            <div class="prof-row">
+              <div class="avatar" aria-hidden="true">{{ initials(displayName(specialist)) }}</div>
+              <div class="prof-main">
+                <h2 class="prof-name">{{ displayName(specialist) }}</h2>
+                <p class="prof-sub">
+                  {{ specialist.specialty || 'Sin especialidad' }} • {{ specialist.location || 'Sin ubicación' }}
+                </p>
+                <div class="prof-meta-row">
+                  <span class="badge badge--info">${{ specialist.rate_hour || 0 }} CLP/h</span>
+                  <span class="prof-exp">{{ specialist.experience_years || 0 }} años exp.</span>
+                  <ng-container *ngIf="ratingValue(specialist) as r">
+                    <span class="rating">
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                      {{ r | number:'1.1-1' }}
+                    </span>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ion-label>
+        </ion-item>
 
-  <ion-modal [isOpen]="!!selectedProfile" (didDismiss)="closeProfile()">
+        <div class="empty" *ngIf="!filteredProfiles.length">
+          No hay resultados con esos filtros.
+        </div>
+      </div>
+
+<ion-modal [isOpen]="!!selectedProfile" (didDismiss)="closeProfile()" class="health-modal">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar class="modal-toolbar">
           <ion-title>{{ displayName(selectedProfile) }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeProfile()">Cerrar</ion-button>
+            <ion-button fill="clear" class="modal-close" (click)="closeProfile()">Cerrar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <ion-card class="profile-card">
-          <ion-card-header>
-            <ion-card-title>Informacion del profesional</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p><strong>Profesion:</strong> {{ selectedProfile?.specialty || 'Sin especialidad' }}</p>
-            <p><strong>Experiencia:</strong> {{ selectedProfile?.experience_years || 0 }} anos</p>
-            <p><strong>Tarifa por hora:</strong> {{ selectedProfile?.rate_hour || 0 }} CLP</p>
-            <p><strong>Ubicacion:</strong> {{ selectedProfile?.location || 'Sin ubicacion' }}</p>
-            <p><strong>Telefono:</strong> {{ selectedProfile?.user?.phone || 'Sin telefono' }}</p>
-            <p><strong>Correo:</strong> {{ selectedProfile?.user?.email || 'Sin correo' }}</p>
-          </ion-card-content>
-        </ion-card>
+      <ion-content class="feed-content modal-content">
+        <div class="modal-body">
+          <ion-card class="detail-card">
+            <ion-card-content>
+              <div class="prof-row">
+                <div class="avatar" aria-hidden="true">{{ initials(displayName(selectedProfile)) }}</div>
+                <div class="prof-main">
+                  <p class="section-title">Información del profesional</p>
+                  <p class="prof-sub">
+                    {{ selectedProfile?.specialty || 'Sin especialidad' }}
+                    <span class="dot">•</span>
+                    {{ selectedProfile?.location || 'Sin ubicación' }}
+                  </p>
+                  <div class="prof-meta-row">
+                    <span class="badge badge--info">${{ selectedProfile?.rate_hour || 0 }} CLP/h</span>
+                    <span class="prof-exp">{{ selectedProfile?.experience_years || 0 }} años exp.</span>
+                    <ng-container *ngIf="ratingValue(selectedProfile) as r">
+                      <span class="rating">
+                        <ion-icon name="star" aria-hidden="true"></ion-icon>
+                        {{ r | number:'1.1-1' }}
+                      </span>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
 
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Calendario de horas</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list *ngIf="!availabilityLoading && availability.length">
-              <ion-item *ngFor="let slot of availability">
-                <ion-label>
-                  <h3>{{ dayLabel(slot.day_of_week) }}</h3>
-                  <p>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.timezone || 'America/Santiago' }})</p>
-                </ion-label>
-              </ion-item>
-            </ion-list>
-            <ion-text color="medium" *ngIf="!availabilityLoading && !availability.length">
-              Sin disponibilidad registrada
-            </ion-text>
-            <ion-item *ngIf="availabilityLoading">
-              <ion-label>Cargando disponibilidad...</ion-label>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
+              <div class="info-list" role="list">
+                <div class="info-row" role="listitem">
+                  <ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Profesión</span>
+                  <span class="info-value">{{ selectedProfile?.specialty || 'Sin especialidad' }}</span>
+                </div>
+                <div class="info-row" role="listitem">
+                  <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Experiencia</span>
+                  <span class="info-value">{{ selectedProfile?.experience_years || 0 }} años</span>
+                </div>
+                <div class="info-row" role="listitem">
+                  <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Tarifa por hora</span>
+                  <span class="info-value">${{ selectedProfile?.rate_hour || 0 }} CLP</span>
+                </div>
+                <div class="info-row" role="listitem">
+                  <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Ubicación</span>
+                  <span class="info-value">{{ selectedProfile?.location || 'Sin ubicación' }}</span>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
 
-        <ion-card class="booking-card">
+          <ion-card class="detail-card">
+            <ion-card-content>
+              <p class="section-title">Calendario de horas</p>
+              <div class="availability-row" *ngIf="availabilityDayCodes().length; else availabilityEmpty">
+                <span class="day-chip" *ngFor="let d of availabilityDayCodes()">{{ d }}</span>
+              </div>
+              <ng-template #availabilityEmpty>
+                <div class="empty" *ngIf="!availabilityLoading">Sin disponibilidad registrada</div>
+              </ng-template>
+              <div class="loading" *ngIf="availabilityLoading">
+                <ion-spinner></ion-spinner>
+                <span>Cargando disponibilidad...</span>
+              </div>
+
+              <ion-list class="availability-list" *ngIf="!availabilityLoading && availability.length">
+                <ion-item lines="none" *ngFor="let slot of availability">
+                  <ion-label>
+                    <h3>{{ dayLabel(slot.day_of_week) }}</h3>
+                    <p>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.timezone || 'America/Santiago' }})</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="detail-card booking-card">
           <ion-card-header>
             <ion-card-title>Nueva reserva</ion-card-title>
             <ion-card-subtitle>
@@ -274,12 +334,16 @@
               </ion-text>
             </ion-card-content>
           </ng-template>
-        </ion-card>
+          </ion-card>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>
 
-  <ion-item *ngIf="loading">
-    <ion-label>Cargando...</ion-label>
-  </ion-item>
+      <div class="loading" *ngIf="loading">
+        <ion-spinner></ion-spinner>
+        <span>Cargando...</span>
+      </div>
+    </section>
+  </div>
 </ion-content>

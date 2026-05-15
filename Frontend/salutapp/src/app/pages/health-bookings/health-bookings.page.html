@@ -1,12 +1,15 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Reservas</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Reservas</h1>
+        <p class="feed-subtitle">Gestiona tus reservas</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
-  <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+    <section class="feed-body" aria-label="Reservas">
+      <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
+      <ion-text color="success" *ngIf="successMsg" class="success-message">{{ successMsg }}</ion-text>
 
   <ion-item *ngIf="loading">
     <ion-label>Cargando reservas...</ion-label>
@@ -74,9 +77,9 @@
     </ion-card>
   </div>
 
-  <ion-text color="medium" *ngIf="!loading && !bookings.length">
-    {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
-  </ion-text>
+      <ion-text color="medium" *ngIf="!loading && !bookings.length" class="empty">
+        {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
+      </ion-text>
 
   <ion-modal [isOpen]="!!selectedBooking" (didDismiss)="closeBookingDetails()">
     <ng-template>
@@ -146,4 +149,6 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+    </section>
+  </div>
 </ion-content>

@@ -1,10 +1,13 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Perfil</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Perfil</h1>
+        <p class="feed-subtitle">Gestiona tu información</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
+    <section class="feed-body" aria-label="Perfil">
   <ion-card>
     <ion-card-header>
       <ion-card-title>{{ user?.name || 'Usuario' }}</ion-card-title>
@@ -448,4 +451,6 @@
       <ion-label>Cerrar sesion</ion-label>
     </ion-item>
   </ion-list>
+    </section>
+  </div>
 </ion-content>

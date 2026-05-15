@@ -109,6 +109,84 @@ export class JobDetailPage implements OnInit {
     return !!this.job && (this.job.status || 'open') === 'open';
   }
 
+  backToJobs() {
+    const queryParams: Record<string, string> = {};
+
+    const query = this.returnQuery;
+    const modality = this.returnModality;
+    if (query) {
+      queryParams['query'] = query;
+    }
+    if (modality !== 'todas') {
+      queryParams['modality'] = modality;
+    }
+    if (this.returnLocation) {
+      queryParams['location'] = this.returnLocation;
+    }
+    if (this.returnProfession) {
+      queryParams['profession'] = this.returnProfession;
+    }
+    if (this.returnSpecialty) {
+      queryParams['specialty'] = this.returnSpecialty;
+    }
+    if (this.returnContract) {
+      queryParams['contract'] = this.returnContract;
+    }
+    if (this.returnSalaryMin) {
+      queryParams['salaryMin'] = this.returnSalaryMin;
+    }
+    if (this.returnSalaryMax) {
+      queryParams['salaryMax'] = this.returnSalaryMax;
+    }
+    if (this.returnSortBy && this.returnSortBy !== 'recent') {
+      queryParams['sortBy'] = this.returnSortBy;
+    }
+    if (this.returnDateRange && this.returnDateRange !== 'any') {
+      queryParams['dateRange'] = this.returnDateRange;
+    }
+
+    this.router.navigate(['/app/jobs'], { queryParams });
+  }
+
+  jobBadgeLabel(job: any) {
+    const status = String(job?.status || 'open').toLowerCase();
+    if (status === 'open') {
+      return 'Activo';
+    }
+    if (status === 'closed') {
+      return 'Cerrado';
+    }
+    if (status === 'paused') {
+      return 'Pausado';
+    }
+    return status ? status : 'Activo';
+  }
+
+  jobBadgeTone(job: any) {
+    const status = String(job?.status || 'open').toLowerCase();
+    if (status === 'open') {
+      return 'success';
+    }
+    if (status === 'closed') {
+      return 'neutral';
+    }
+    if (status === 'paused') {
+      return 'warning';
+    }
+    return 'info';
+  }
+
+  companyInitials() {
+    const name = String(this.job?.company?.name || this.job?.company_name || '').trim();
+    if (!name) {
+      return 'E';
+    }
+    const parts = name.split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] || 'E';
+    const second = (parts[1]?.[0] || parts[0]?.[1] || '').toString();
+    return (first + second).toUpperCase();
+  }
+
   loadJob() {
     if (!this.jobId) {
       return;

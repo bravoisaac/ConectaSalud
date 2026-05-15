@@ -1,11 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Panel admin</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Panel Admin</h1>
+        <p class="feed-subtitle">Acceso restringido</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-card>
+    <section class="feed-body" aria-label="Panel admin">
+      <ion-card>
     <ion-card-header>
       <ion-card-title>Verificaciones</ion-card-title>
     </ion-card-header>
@@ -22,7 +25,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+      <ion-card>
     <ion-card-header>
       <ion-card-title>Reportes</ion-card-title>
     </ion-card-header>
@@ -37,5 +40,7 @@
         </ion-item>
       </ion-list>
     </ion-card-content>
-  </ion-card>
+      </ion-card>
+    </section>
+  </div>
 </ion-content>

@@ -208,6 +208,48 @@ export class HealthPage implements OnInit {
     return profile?.user?.name || profile?.user?.email || 'Profesional';
   }
 
+  initials(text: string) {
+    const value = String(text || '').trim();
+    if (!value) {
+      return 'PR';
+    }
+    const parts = value.split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] || value[0] || 'P';
+    const second = parts[1]?.[0] || parts[0]?.[1] || '';
+    return (first + second).toUpperCase();
+  }
+
+  ratingValue(profile: any): number | null {
+    const candidates = [
+      profile?.rating,
+      profile?.avg_rating,
+      profile?.avgRating,
+      profile?.user?.rating,
+      profile?.user?.avg_rating,
+    ];
+    for (const candidate of candidates) {
+      const num = Number(candidate);
+      if (Number.isFinite(num) && num > 0) {
+        return num;
+      }
+    }
+    return null;
+  }
+
+  availabilityDayCodes() {
+    const map: Record<number, string> = { 1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V', 6: 'S', 0: 'D' };
+    const order: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 0: 7 };
+    const days = new Set<number>();
+    for (const slot of this.availability || []) {
+      const day = Number((slot as any)?.day_of_week);
+      if (!Number.isFinite(day)) continue;
+      days.add(day);
+    }
+    return Array.from(days.values())
+      .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99))
+      .map(d => map[d] || 'D');
+  }
+
   dayLabel(day: number) {
     const labels = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
     return labels[day] || 'Dia';

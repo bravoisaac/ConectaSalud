@@ -1,70 +1,96 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/jobs"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Detalle empleo</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header detail-header">
+      <div class="feed-header-inner">
+        <div class="detail-toprow">
+          <ion-button class="back-btn" fill="clear" type="button" (click)="backToJobs()" aria-label="Volver">
+            <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+          </ion-button>
 
-<ion-content class="ion-padding">
-  <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
-  <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+          <div class="detail-titles">
+            <h1 class="feed-title detail-title">{{ job?.title || 'Detalle empleo' }}</h1>
+            <p class="feed-subtitle detail-subtitle">{{ posterTitle }}</p>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  <ion-item *ngIf="loading">
-    <ion-label>Cargando...</ion-label>
-  </ion-item>
+    <section class="feed-body" aria-label="Detalle de empleo">
+      <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
+      <ion-text color="success" *ngIf="successMsg" class="success-message">{{ successMsg }}</ion-text>
 
-  <ng-container *ngIf="!loading && job">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>{{ job.title }}</ion-card-title>
-        <ion-card-subtitle>
-          {{ posterTitle }}
-          <ng-container *ngIf="companyTrustLabel">({{ companyTrustLabel }})</ng-container>
-        </ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <p class="meta"><strong>Ubicacion:</strong> {{ job.location || 'Sin ubicacion' }}</p>
-        <p class="meta"><strong>Modalidad:</strong> {{ job.modality || 'Sin especificar' }}</p>
-        <p class="meta"><strong>Salario:</strong> {{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</p>
-        <p class="meta"><strong>Estado:</strong> {{ job.status || 'sin estado' }}</p>
-        <p class="meta" *ngIf="job.published_at"><strong>Publicado:</strong> {{ job.published_at | date:'mediumDate' }}</p>
-        <div class="description">{{ descriptionText }}</div>
-      </ion-card-content>
-    </ion-card>
+      <div class="loading" *ngIf="loading">
+        <ion-spinner></ion-spinner>
+        <span>Cargando...</span>
+      </div>
 
-    <ion-card *ngIf="!isPersonalJob && job.company">
-      <ion-card-header>
-        <ion-card-title>Empresa</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p class="meta"><strong>Nombre:</strong> {{ job.company?.name || 'Sin nombre' }}</p>
-        <p class="meta"><strong>RUT:</strong> {{ job.company?.rut || 'Sin RUT' }}</p>
-        <p class="meta" *ngIf="job.company?.legal_name"><strong>Razon social:</strong> {{ job.company.legal_name }}</p>
-        <p class="meta" *ngIf="job.company?.verification_status"><strong>Verificacion:</strong> {{ job.company.verification_status }}</p>
-      </ion-card-content>
-    </ion-card>
+      <ng-container *ngIf="!loading && job">
+        <ion-card class="detail-card">
+          <ion-card-content>
+            <p class="section-title">Detalles del empleo</p>
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Postular</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item lines="none">
-          <ion-label position="stacked">Carta de presentacion (opcional)</ion-label>
-          <ion-textarea
-            [placeholder]="isPersonalJob ? 'Escribe un mensaje para el anunciante' : 'Escribe un mensaje para la empresa'"
-            [(ngModel)]="coverLetter">
-          </ion-textarea>
-        </ion-item>
+            <div class="detail-meta">
+              <div class="detail-pill">
+                <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                <span>{{ job.location || 'Sin ubicación' }}</span>
+              </div>
+              <div class="detail-pill">
+                <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
+                <span>{{ job.modality || 'Sin especificar' }}</span>
+              </div>
+            </div>
 
-        <ion-button expand="block" [disabled]="applyLoading || !canApply" (click)="apply()">
-          {{ applyLoading ? 'Enviando...' : 'Enviar postulacion' }}
-        </ion-button>
+            <div class="detail-row">
+              <div class="detail-salary">
+                <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                <span>{{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP</span>
+              </div>
+              <span class="badge" [ngClass]="'badge--' + jobBadgeTone(job)">{{ jobBadgeLabel(job) }}</span>
+            </div>
 
-        <ion-text color="medium" *ngIf="!canApply">Esta oferta no esta disponible.</ion-text>
-      </ion-card-content>
-    </ion-card>
-  </ng-container>
+            <div class="description" *ngIf="descriptionText">{{ descriptionText }}</div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="detail-card" *ngIf="!isPersonalJob && job.company">
+          <ion-card-content>
+            <p class="section-title">Empresa</p>
+            <div class="company-row">
+              <div class="avatar" aria-hidden="true">{{ companyInitials() }}</div>
+              <div class="company-body">
+                <p class="company-name">{{ job.company?.name || posterTitle }}</p>
+                <p class="company-sub">
+                  <ng-container *ngIf="job.company?.legal_name">{{ job.company.legal_name }}</ng-container>
+                  <ng-container *ngIf="job.company?.rut">
+                    <span class="dot">•</span>
+                    RUT {{ job.company.rut }}
+                  </ng-container>
+                </p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="detail-card">
+          <ion-card-content>
+            <p class="section-title">Postular</p>
+
+            <ion-item class="apply-item" lines="none">
+              <ion-textarea
+                [placeholder]="isPersonalJob ? 'Mensaje opcional para el anunciante…' : 'Mensaje opcional para el reclutador…'"
+                autoGrow="true"
+                [(ngModel)]="coverLetter"
+              ></ion-textarea>
+            </ion-item>
+
+            <ion-button class="primary" expand="block" [disabled]="applyLoading || !canApply" (click)="apply()">
+              {{ applyLoading ? 'Enviando...' : 'Enviar postulación' }}
+            </ion-button>
+
+            <ion-text color="medium" *ngIf="!canApply" class="empty">Esta oferta no está disponible.</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </section>
+  </div>
 </ion-content>

@@ -1,105 +1,3 @@
-.auth-content {
-  --background: #1f1f1f;
-}
-
-ion-content::part(scroll) {
-  max-width: none;
-  margin: 0;
-}
-
-.auth-shell {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.auth-top {
-  background: linear-gradient(180deg, #1558a6 0%, #0f4f9c 100%);
-  padding: calc(env(safe-area-inset-top) + 56px) 20px 40px;
-}
-
-.auth-top-inner {
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.auth-title {
-  margin: 0;
-  font-size: 26px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-}
-
-.auth-subtitle {
-  margin: 6px 0 0;
-  font-size: 14px;
-  line-height: 1.3;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.auth-card {
-  flex: 1;
-  max-width: 520px;
-  width: 100%;
-  margin: -18px auto 0;
-  padding: 18px 18px 24px;
-  background: #2a2a2a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-}
-
-.field {
-  margin-top: 14px;
-}
-
-.field:first-child {
-  margin-top: 0;
-}
-
-.field-label {
-  display: block;
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.auth-item {
-  --background: transparent;
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  --min-height: 0;
-  --border-color: transparent;
-  --highlight-color-focused: transparent;
-}
-
-.auth-item::part(native) {
-  padding: 6px 8px 6px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 14px;
-}
-
-.auth-item ion-input::part(native) {
-  width: 100%;
-  padding: 10px 0;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
-}
-
-.auth-item.item-has-focus::part(native) {
-  border-color: rgba(59, 130, 246, 0.9);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22);
-}
-
-.auth-item ion-input::part(native)::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-}
-
 .eye-btn {
   margin-left: 6px;
   height: 40px;
@@ -115,13 +13,6 @@ ion-content::part(scroll) {
 
 ion-button.primary {
   margin-top: 18px;
-  --background: #1b63bd;
-  --background-hover: #1a5bb0;
-  --background-activated: #184f99;
-  --border-radius: 14px;
-  --box-shadow: none;
-  height: 44px;
-  font-weight: 700;
 }
 
 .error {
@@ -142,19 +33,5 @@ ion-button.primary {
 }
 
 ion-button.secondary {
-  --border-radius: 14px;
-  --border-color: rgba(255, 255, 255, 0.18);
-  --color: rgba(255, 255, 255, 0.85);
-  height: 44px;
-}
-
-@media (min-width: 768px) {
-  .auth-top {
-    padding-top: calc(env(safe-area-inset-top) + 72px);
-    padding-bottom: 34px;
-  }
-
-  .auth-card {
-    margin-top: -22px;
-  }
+  margin-top: 0;
 }
