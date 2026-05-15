@@ -215,8 +215,23 @@
           <ion-card class="detail-card">
             <ion-card-content>
               <p class="section-title">Calendario de horas</p>
-              <div class="availability-row" *ngIf="availabilityDayCodes().length; else availabilityEmpty">
-                <span class="day-chip" *ngFor="let d of availabilityDayCodes()">{{ d }}</span>
+              <div class="availability-mini" *ngIf="availability.length; else availabilityEmpty" aria-label="Disponibilidad semanal">
+                <ng-container *ngIf="availabilityWeekStrip() as strip">
+                  <div class="mini-row mini-row--labels" aria-hidden="true">
+                    <span class="mini-label" *ngFor="let d of strip">{{ d.code }}</span>
+                  </div>
+                  <div class="mini-row mini-row--dates">
+                    <span
+                      class="mini-date"
+                      *ngFor="let d of strip"
+                      [class.is-enabled]="d.enabled"
+                      [class.is-selected]="d.selected"
+                      aria-hidden="true"
+                    >
+                      {{ d.date }}
+                    </span>
+                  </div>
+                </ng-container>
               </div>
               <ng-template #availabilityEmpty>
                 <div class="empty" *ngIf="!availabilityLoading">Sin disponibilidad registrada</div>
@@ -245,85 +260,106 @@
             </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content *ngIf="canBookSelectedProfile; else ownProfileBookingBlock">
-            <ion-item>
-              <ion-label position="stacked">Profesional</ion-label>
-              <ion-input [value]="displayName(selectedProfile)" readonly></ion-input>
-            </ion-item>
+            <div class="booking-sheet" aria-label="Formulario de reserva">
+              <div class="booking-field booking-field--static">
+                <div class="booking-field-label">Profesional</div>
+                <div class="booking-field-value">{{ displayName(selectedProfile) }}</div>
+              </div>
 
-            <ion-item>
-              <ion-label position="stacked">Dia de reserva</ion-label>
-              <ion-datetime
-                presentation="date"
-                [(ngModel)]="bookingDate"
-                [isDateEnabled]="isDateEnabled"
-                (ngModelChange)="onBookingDateChange($event)"
-              ></ion-datetime>
-            </ion-item>
+              <div class="booking-field booking-field--datetime">
+                <div class="booking-field-label">Día de reserva</div>
+                <ion-datetime
+                  class="booking-datetime"
+                  presentation="date"
+                  [(ngModel)]="bookingDate"
+                  [isDateEnabled]="isDateEnabled"
+                  (ngModelChange)="onBookingDateChange($event)"
+                ></ion-datetime>
+              </div>
 
-            <ion-item>
-              <ion-label position="stacked">Hora de inicio</ion-label>
-              <ion-input [(ngModel)]="bookingStartTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
-            </ion-item>
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Hora de inicio</ion-label>
+                <ion-input [(ngModel)]="bookingStartTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
+                <ion-icon slot="end" name="time-outline" aria-hidden="true"></ion-icon>
+              </ion-item>
 
-            <ion-item>
-              <ion-label position="stacked">Hora de fin</ion-label>
-              <ion-input [(ngModel)]="bookingEndTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
-            </ion-item>
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Hora de fin</ion-label>
+                <ion-input [(ngModel)]="bookingEndTime" type="time" (ngModelChange)="onBookingTimeChange()"></ion-input>
+                <ion-icon slot="end" name="time-outline" aria-hidden="true"></ion-icon>
+              </ion-item>
 
-            <ion-item>
-              <ion-label position="stacked">Región</ion-label>
-              <ion-select [(ngModel)]="bookingRegion" (ionChange)="onBookingRegionChange()">
-                <ion-select-option *ngFor="let r of regions" [value]="r.name">
-                  {{ r.name }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Ciudad</ion-label>
-              <ion-select
-                [(ngModel)]="bookingCity"
-                [disabled]="!availableBookingCities.length"
-                (ionChange)="onBookingCityChange()"
-              >
-                <ion-select-option *ngFor="let p of availableBookingCities" [value]="p.name">
-                  {{ p.name }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Comuna</ion-label>
-              <ion-select [(ngModel)]="bookingComuna" [disabled]="!availableBookingComunas.length">
-                <ion-select-option *ngFor="let c of availableBookingComunas" [value]="c.name">
-                  {{ c.name }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Calle</ion-label>
-              <ion-input [(ngModel)]="bookingStreet" placeholder="Ej: Av. Siempre Viva"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Número</ion-label>
-              <ion-input [(ngModel)]="bookingNumber" placeholder="Ej: 123"></ion-input>
-            </ion-item>
-            <ion-button expand="block" fill="outline" (click)="useCurrentLocation()">
-              Usar ubicación actual (para mapa)
-            </ion-button>
-            <ion-text color="medium" *ngIf="bookingLat !== null && bookingLng !== null">
-              Ubicación guardada: {{ bookingLat.toFixed(5) }}, {{ bookingLng.toFixed(5) }}
-            </ion-text>
-            <ion-text color="medium" *ngIf="profileAddressLoaded && (!bookingRegion || !bookingComuna || !bookingCity || !bookingStreet || !bookingNumber)">
-              Puedes guardar tu dirección en Perfil para no escribirla cada vez.
-            </ion-text>
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Región</ion-label>
+                <ion-select [(ngModel)]="bookingRegion" (ionChange)="onBookingRegionChange()">
+                  <ion-select-option *ngFor="let r of regions" [value]="r.name">
+                    {{ r.name }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
 
-            <ion-note color="medium">
-              Dias habilitados segun calendario del profesional.
-              Horarios del dia: {{ selectedDayRangesText }}
-            </ion-note>
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Ciudad</ion-label>
+                <ion-select
+                  [(ngModel)]="bookingCity"
+                  [disabled]="!availableBookingCities.length"
+                  (ionChange)="onBookingCityChange()"
+                >
+                  <ion-select-option *ngFor="let p of availableBookingCities" [value]="p.name">
+                    {{ p.name }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
 
-            <ion-button expand="block" (click)="createBooking()" [disabled]="!hasSelectedDaySlots">
-              Crear reserva
-            </ion-button>
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Comuna</ion-label>
+                <ion-select [(ngModel)]="bookingComuna" [disabled]="!availableBookingComunas.length">
+                  <ion-select-option *ngFor="let c of availableBookingComunas" [value]="c.name">
+                    {{ c.name }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Calle</ion-label>
+                <ion-input [(ngModel)]="bookingStreet" placeholder="Ej: Av. Siempre Viva"></ion-input>
+              </ion-item>
+
+              <ion-item class="booking-item" lines="none">
+                <ion-label position="stacked">Número</ion-label>
+                <ion-input [(ngModel)]="bookingNumber" placeholder="Ej: 123"></ion-input>
+              </ion-item>
+
+              <div class="booking-actions">
+                <ion-button class="secondary" expand="block" fill="outline" (click)="useCurrentLocation()">
+                  <ion-icon slot="start" name="navigate-outline" aria-hidden="true"></ion-icon>
+                  Usar ubicación actual (para mapa)
+                </ion-button>
+
+                <ion-text class="booking-helper" color="medium" *ngIf="bookingLat !== null && bookingLng !== null">
+                  Ubicación guardada: {{ bookingLat.toFixed(5) }}, {{ bookingLng.toFixed(5) }}
+                </ion-text>
+                <ion-text
+                  class="booking-helper"
+                  color="medium"
+                  *ngIf="profileAddressLoaded && (!bookingRegion || !bookingComuna || !bookingCity || !bookingStreet || !bookingNumber)"
+                >
+                  Puedes guardar tu dirección en Perfil para no escribirla cada vez.
+                </ion-text>
+
+                <div class="booking-note" aria-label="Reglas de horario">
+                  <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+                  <div class="booking-note-text">
+                    <div class="booking-note-title">Días habilitados según calendario del profesional</div>
+                    <div class="booking-note-sub">Horarios del día: {{ selectedDayRangesText }}</div>
+                  </div>
+                </div>
+
+                <ion-button class="primary" expand="block" (click)="createBooking()" [disabled]="!hasSelectedDaySlots">
+                  Crear reserva
+                </ion-button>
+              </div>
+            </div>
             <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
             <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
           </ion-card-content>

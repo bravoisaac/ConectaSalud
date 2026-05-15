@@ -250,6 +250,44 @@ export class HealthPage implements OnInit {
       .map(d => map[d] || 'D');
   }
 
+  availabilityWeekStrip() {
+    const map: Record<number, string> = { 1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V', 6: 'S', 0: 'D' };
+    const availableDays = new Set<number>();
+    for (const slot of this.availability || []) {
+      const day = Number((slot as any)?.day_of_week);
+      if (!Number.isFinite(day)) continue;
+      availableDays.add(day);
+    }
+
+    const baseDatePart = this.extractDatePart(this.bookingDate || new Date().toISOString());
+    const base = baseDatePart ? new Date(`${baseDatePart}T12:00:00`) : new Date();
+    const day = base.getDay(); // 0..6 (Dom..Sab)
+    const mondayOffset = (day + 6) % 7; // Lunes = 0
+    const monday = new Date(base);
+    monday.setDate(base.getDate() - mondayOffset);
+
+    const selectedDatePart = this.extractDatePart(this.bookingDate);
+    const toDatePart = (d: Date) => {
+      const yyyy = d.getFullYear().toString();
+      const mm = (d.getMonth() + 1).toString().padStart(2, '0');
+      const dd = d.getDate().toString().padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    };
+
+    return Array.from({ length: 7 }).map((_, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+      const dow = date.getDay();
+      const datePart = toDatePart(date);
+      return {
+        code: map[dow] || 'D',
+        date: date.getDate(),
+        enabled: availableDays.has(dow),
+        selected: !!selectedDatePart && selectedDatePart === datePart,
+      };
+    });
+  }
+
   dayLabel(day: number) {
     const labels = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
     return labels[day] || 'Dia';

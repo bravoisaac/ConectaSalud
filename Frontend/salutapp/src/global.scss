@@ -390,25 +390,53 @@ ion-modal.health-modal .info-value {
   overflow-wrap: anywhere;
 }
 
-ion-modal.health-modal .availability-row {
-  display: flex;
-  gap: 6px;
+ion-modal.health-modal .availability-mini {
   margin-top: 10px;
-  flex-wrap: wrap;
+  padding: 12px 12px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-ion-modal.health-modal .day-chip {
-  width: 28px;
-  height: 28px;
+ion-modal.health-modal .mini-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+ion-modal.health-modal .mini-row--labels {
+  margin-bottom: 6px;
+}
+
+ion-modal.health-modal .mini-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+ion-modal.health-modal .mini-date {
+  height: 26px;
   border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+ion-modal.health-modal .mini-date.is-enabled {
+  color: rgba(255, 255, 255, 0.92);
   background: rgba(26, 86, 160, 0.22);
-  border: 1px solid rgba(26, 86, 160, 0.38);
+  border-color: rgba(26, 86, 160, 0.38);
+}
+
+ion-modal.health-modal .mini-date.is-selected {
+  background: var(--salut-primary);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 ion-modal.health-modal ion-list.availability-list {
@@ -443,6 +471,140 @@ ion-modal.health-modal ion-list.availability-list ion-label p {
   font-size: 12px;
   font-weight: 650;
   color: rgba(255, 255, 255, 0.62);
+}
+
+ion-modal.health-modal .booking-sheet {
+  margin-top: 6px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+ion-modal.health-modal .booking-field {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+ion-modal.health-modal .booking-field:last-child {
+  border-bottom: 0;
+}
+
+ion-modal.health-modal .booking-field-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+ion-modal.health-modal .booking-field-value {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.01em;
+}
+
+ion-modal.health-modal .booking-field--datetime {
+  padding-bottom: 12px;
+}
+
+ion-modal.health-modal ion-datetime.booking-datetime {
+  margin-top: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+ion-modal.health-modal ion-datetime.booking-datetime::part(calendar-day) {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 800;
+}
+
+ion-modal.health-modal ion-datetime.booking-datetime::part(calendar-day-active) {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+ion-modal.health-modal ion-datetime.booking-datetime::part(calendar-day-today) {
+  color: rgba(191, 219, 254, 0.95);
+}
+
+ion-modal.health-modal ion-item.booking-item {
+  --background: transparent;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --min-height: 0;
+  margin: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+ion-modal.health-modal ion-item.booking-item:last-of-type {
+  border-bottom: 0;
+}
+
+ion-modal.health-modal ion-item.booking-item ion-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+ion-modal.health-modal ion-item.booking-item ion-input::part(native),
+ion-modal.health-modal ion-item.booking-item ion-select::part(text) {
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+ion-modal.health-modal ion-item.booking-item ion-icon[slot='end'] {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 18px;
+  padding: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+ion-modal.health-modal .booking-actions {
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+ion-modal.health-modal .booking-helper {
+  display: block;
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+ion-modal.health-modal .booking-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.10);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+}
+
+ion-modal.health-modal .booking-note ion-icon {
+  font-size: 18px;
+  color: rgba(191, 219, 254, 0.95);
+  margin-top: 1px;
+}
+
+ion-modal.health-modal .booking-note-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+ion-modal.health-modal .booking-note-sub {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.68);
 }
 
 /* Proposals / bookings cards */
