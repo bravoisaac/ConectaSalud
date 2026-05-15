@@ -1,24 +1,66 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="auth-content" [fullscreen]="true">
+  <div class="auth-shell">
+    <header class="auth-top">
+      <div class="auth-top-inner">
+        <h1 class="auth-title">Bienvenido</h1>
+        <p class="auth-subtitle">Accede a tu cuenta</p>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="floating">Email</ion-label>
-    <ion-input [(ngModel)]="email" type="email"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Contrasena</ion-label>
-    <ion-input [(ngModel)]="password" type="password"></ion-input>
-  </ion-item>
+    <section class="auth-card" aria-label="Formulario de login">
+      <form (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label class="field-label" for="login-email">Correo electrónico</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="login-email"
+              name="email"
+              [(ngModel)]="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="usuario@email.com"
+            ></ion-input>
+          </ion-item>
+        </div>
 
-  <ion-button expand="block" (click)="submit()" [disabled]="loading">
-    {{ loading ? 'Entrando...' : 'Entrar' }}
-  </ion-button>
+        <div class="field">
+          <label class="field-label" for="login-password">Contraseña</label>
+          <ion-item class="auth-item" lines="none">
+            <ion-input
+              id="login-password"
+              name="password"
+              [(ngModel)]="password"
+              [type]="showPassword ? 'text' : 'password'"
+              autocomplete="current-password"
+              placeholder="••••••••"
+            ></ion-input>
+            <ion-button
+              class="eye-btn"
+              fill="clear"
+              size="small"
+              type="button"
+              aria-label="Mostrar u ocultar contraseña"
+              (click)="togglePassword()"
+            >
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </div>
 
-  <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+        <ion-button class="primary" expand="block" type="submit" [disabled]="loading">
+          {{ loading ? 'Entrando...' : 'Entrar' }}
+        </ion-button>
 
-  <ion-button fill="clear" routerLink="/register">Crear cuenta</ion-button>
+        <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+        <div class="cta">
+          <p class="cta-text">¿No tienes cuenta?</p>
+          <ion-button class="secondary" expand="block" fill="outline" routerLink="/register" type="button">
+            Crear cuenta
+          </ion-button>
+        </div>
+      </form>
+    </section>
+  </div>
 </ion-content>

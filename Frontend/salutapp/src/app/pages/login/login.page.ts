@@ -18,11 +18,16 @@ export class LoginPage {
   password = '';
   errorMsg = '';
   loading = false;
+  showPassword = false;
 
   constructor(
     private auth: AuthService,
     private router: Router
   ) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   submit() {
     this.loading = true;
