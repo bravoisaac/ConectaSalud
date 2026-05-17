@@ -23,7 +23,7 @@ ion-card.health-booking-card ion-card-content {
   margin: 4px 0 0;
   font-size: 12px;
   font-weight: 650;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--salut-text-2);
 }
 
 .booking-meta-row {
@@ -32,9 +32,9 @@ ion-card.health-booking-card ion-card-content {
   gap: 8px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.72);
+  background: var(--salut-card-bg);
+  border: 1px solid var(--salut-card-border);
+  color: var(--salut-text-2);
   font-size: 12px;
   font-weight: 700;
   width: fit-content;
@@ -59,7 +59,7 @@ ion-card.health-booking-card ion-card-content {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--salut-text-2);
   font-size: 12px;
   font-weight: 650;
 }
@@ -75,8 +75,8 @@ ion-card.health-booking-card ion-card-content {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(26, 86, 160, 0.18);
-  border: 1px solid rgba(26, 86, 160, 0.35);
+  background: rgba(26, 86, 160, 0.16);
+  border: 1px solid rgba(26, 86, 160, 0.32);
   color: rgba(191, 219, 254, 0.95);
   font-size: 12px;
   font-weight: 900;
@@ -92,6 +92,20 @@ ion-card.health-booking-card ion-card-content {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+html.ui-theme-light :host .contact-pill {
+  background: rgba(26, 86, 160, 0.10);
+  border-color: rgba(26, 86, 160, 0.22);
+  color: rgba(26, 86, 160, 0.92);
+}
+
+@media (prefers-color-scheme: light) {
+  html:not(.ui-theme-dark):not(.ui-theme-light) :host .contact-pill {
+    background: rgba(26, 86, 160, 0.10);
+    border-color: rgba(26, 86, 160, 0.22);
+    color: rgba(26, 86, 160, 0.92);
+  }
 }
 
 .actions {

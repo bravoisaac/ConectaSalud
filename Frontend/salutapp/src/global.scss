@@ -281,7 +281,8 @@ ion-button.secondary {
 }
 
 .feed-header {
-  padding: calc(env(safe-area-inset-top) + 22px) 16px 12px;
+  background: var(--salut-primary);
+  padding: calc(env(safe-area-inset-top) + 22px) 16px 18px;
 }
 
 .feed-header-inner {
@@ -304,6 +305,14 @@ ion-button.secondary {
   line-height: 1.3;
   color: var(--salut-text-2);
   font-weight: 600;
+}
+
+.feed-header .feed-title {
+  color: #ffffff;
+}
+
+.feed-header .feed-subtitle {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .feed-body {
@@ -409,6 +418,56 @@ ion-searchbar.feed-search {
   color: rgba(226, 232, 240, 0.9);
 }
 
+html.ui-theme-light .badge--success {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  color: rgba(21, 128, 61, 0.95);
+}
+
+html.ui-theme-light .badge--warning {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  color: rgba(180, 83, 9, 0.95);
+}
+
+html.ui-theme-light .badge--danger {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: rgba(185, 28, 28, 0.95);
+}
+
+html.ui-theme-light .badge--neutral {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: rgba(51, 65, 85, 0.95);
+}
+
+@media (prefers-color-scheme: light) {
+  html:not(.ui-theme-dark):not(.ui-theme-light) .badge--success {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.22);
+    color: rgba(21, 128, 61, 0.95);
+  }
+
+  html:not(.ui-theme-dark):not(.ui-theme-light) .badge--warning {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    color: rgba(180, 83, 9, 0.95);
+  }
+
+  html:not(.ui-theme-dark):not(.ui-theme-light) .badge--danger {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: rgba(185, 28, 28, 0.95);
+  }
+
+  html:not(.ui-theme-dark):not(.ui-theme-light) .badge--neutral {
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    color: rgba(51, 65, 85, 0.95);
+  }
+}
+
 .badge--info {
   background: rgba(59, 130, 246, 0.16);
   border: 1px solid rgba(59, 130, 246, 0.28);
@@ -434,7 +493,7 @@ html.ui-theme-light .badge--info {
   align-items: center;
   gap: 10px;
   padding: 10px 2px 0;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--salut-text-2);
   font-weight: 600;
 }
 
@@ -1429,7 +1488,7 @@ ion-item.ui-toggle p {
   margin: 14px 0 8px;
   font-size: 12px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--salut-text-1);
 }
 
 .booking-list {
@@ -1441,8 +1500,8 @@ ion-item.ui-toggle p {
 ion-card.booking-card {
   margin: 0;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--salut-card-bg);
+  border: 1px solid var(--salut-card-border);
   box-shadow: none;
 }
 
@@ -1453,19 +1512,23 @@ ion-card.booking-card ion-card-content {
 
 .booking-title {
   margin: 0 0 6px;
-  color: rgba(255, 255, 255, 0.94);
+  color: var(--salut-text-1);
   font-size: 14px;
   font-weight: 800;
 }
 
 .booking-meta {
   margin: 3px 0;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--salut-text-2);
   font-size: 12px;
   font-weight: 600;
 }
 
 .history-card {
+  opacity: 0.92;
+}
+
+html.ion-palette-dark .history-card {
   opacity: 0.85;
 }
 
@@ -1477,20 +1540,24 @@ ion-card.booking-card ion-card-content {
 }
 
 ion-segment {
-  --background: rgba(255, 255, 255, 0.04);
+  --background: var(--salut-card-bg);
   --border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--salut-border);
   padding: 4px;
 }
 
 ion-segment-button {
   --border-radius: 8px;
-  --color: rgba(255, 255, 255, 0.65);
+  --color: var(--salut-text-2);
   --color-checked: #ffffff;
   --background-checked: var(--salut-primary);
   font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
+}
+
+html.ui-theme-light ion-segment-button {
+  --color-checked: #ffffff;
 }
 
 @media (min-height: 720px) {
