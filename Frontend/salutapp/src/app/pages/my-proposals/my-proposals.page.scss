@@ -24,7 +24,7 @@ ion-card.proposal-card ion-card-content {
   font-size: 14px;
   line-height: 1.25;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.94);
+  color: var(--salut-text-1);
   letter-spacing: -0.01em;
 }
 
@@ -32,11 +32,11 @@ ion-card.proposal-card ion-card-content {
   margin: 0;
   font-size: 12px;
   font-weight: 650;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--salut-text-2);
 }
 
 .proposal-sub--secondary {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--salut-text-2);
   font-weight: 700;
 }
 
@@ -44,11 +44,11 @@ ion-card.proposal-card ion-card-content {
   margin: 0;
   font-size: 12px;
   font-weight: 650;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--salut-text-2);
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--salut-card-bg);
+  border: 1px solid var(--salut-card-border);
   overflow-wrap: anywhere;
 }
 
@@ -56,8 +56,8 @@ ion-button.proposal-cta {
   align-self: center;
   min-width: 160px;
   --border-radius: 999px;
-  --border-color: rgba(255, 255, 255, 0.18);
-  --color: rgba(255, 255, 255, 0.86);
+  --border-color: var(--salut-outline);
+  --color: var(--salut-text-1);
   height: 34px;
   text-transform: none;
   font-weight: 800;

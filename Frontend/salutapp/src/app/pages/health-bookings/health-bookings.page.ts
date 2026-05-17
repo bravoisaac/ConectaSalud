@@ -319,6 +319,22 @@ export class HealthBookingsPage implements OnInit {
     return null;
   }
 
+  initials(text: string) {
+    const value = String(text || '').trim();
+    if (!value) {
+      return 'US';
+    }
+    const parts = value.split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] || value[0] || 'U';
+    const second = parts[1]?.[0] || parts[0]?.[1] || '';
+    return (first + second).toUpperCase();
+  }
+
+  get counterpartVerified() {
+    const raw = this.selectedCounterpartUser?.email_verified_at ?? this.selectedCounterpartUser?.emailVerifiedAt ?? null;
+    return !!raw;
+  }
+
   private statusKey(status: string) {
     return String(status || '').toLowerCase();
   }

@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { regions as clRegions, provinces as clProvinces, communes as clCommunes } from '@clregions/data/array';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 import { HealthService } from '../../services/health.service';
+import { FontSizeMode, ThemeMode, UiSettings, UiSettingsService } from '../../services/ui-settings.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +18,7 @@ import { HealthService } from '../../services/health.service';
   standalone: true,
   imports: [IonicModule, CommonModule, RouterModule, FormsModule],
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, OnDestroy {
   readonly regions = clRegions;
   readonly provinces = clProvinces;
   readonly communes = clCommunes;
@@ -127,12 +129,70 @@ export class ProfilePage implements OnInit {
     bio: ''
   };
 
+  isUiSettingsOpen = false;
+  uiSettingsState: UiSettings = {
+    themeMode: 'dark',
+    fontSize: 'md',
+    highContrast: false,
+  };
+  private uiSettingsSub?: Subscription;
+
   constructor(
     private auth: AuthService,
     private router: Router,
     private profileService: ProfileService,
-    private healthService: HealthService
+    private healthService: HealthService,
+    private uiSettings: UiSettingsService
   ) {}
+
+  initials(text: string) {
+    const value = String(text || '').trim();
+    if (!value) {
+      return 'US';
+    }
+    const parts = value.split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] || value[0] || 'U';
+    const second = parts[1]?.[0] || parts[0]?.[1] || '';
+    return (first + second).toUpperCase();
+  }
+
+  roleLabel(role: any) {
+    const key = String(role || '').toLowerCase();
+    if (key === 'admin') return 'Admin';
+    if (key === 'company') return 'Empresa';
+    if (key === 'health') return 'Salud';
+    return 'Usuario';
+  }
+
+  get healthHeaderChips() {
+    const chips: string[] = [];
+    const specialty = String(this.healthProfile?.specialty || '').trim();
+    const location = String(this.healthProfile?.location || '').trim();
+    const experience = String(this.healthProfile?.experience_years ?? '').trim();
+    const rateRaw = String(this.healthProfile?.rate_hour ?? '').trim();
+
+    if (specialty) {
+      chips.push(specialty);
+    }
+
+    if (experience && experience !== '0') {
+      chips.push(`${experience} años`);
+    }
+
+    if (rateRaw && rateRaw !== '0') {
+      const rateNum = Number(rateRaw);
+      const rateText = Number.isFinite(rateNum)
+        ? rateNum.toLocaleString('es-CL', { maximumFractionDigits: 0 })
+        : rateRaw;
+      chips.push(`$${rateText}/hr`);
+    }
+
+    if (location) {
+      chips.push(location);
+    }
+
+    return chips;
+  }
 
   get formattedAddress() {
     const parts = [
@@ -219,6 +279,43 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  openUiSettings() {
+    this.isUiSettingsOpen = true;
+  }
+
+  closeUiSettings() {
+    this.isUiSettingsOpen = false;
+  }
+
+  onThemeModeChange(event: any) {
+    const value = event?.detail?.value as ThemeMode;
+    this.uiSettings.update({ themeMode: value });
+  }
+
+  onFontSizeChange(event: any) {
+    const value = event?.detail?.value as FontSizeMode;
+    this.uiSettings.update({ fontSize: value });
+  }
+
+  onHighContrastChange(event: any) {
+    const checked = !!event?.detail?.checked;
+    this.uiSettings.update({ highContrast: checked });
+  }
+
+  get themeModeLabel() {
+    const mode = this.uiSettingsState?.themeMode;
+    if (mode === 'dark') return 'Oscuro';
+    if (mode === 'light') return 'Claro';
+    return 'Sistema';
+  }
+
+  get fontSizeLabel() {
+    const size = this.uiSettingsState?.fontSize;
+    if (size === 'sm') return 'Pequeña';
+    if (size === 'lg') return 'Grande';
+    return 'Normal';
+  }
+
   async ngOnInit() {
     const stored = await this.auth.getUser();
     if (stored) {
@@ -246,6 +343,14 @@ export class ProfilePage implements OnInit {
         }
       }
     });
+
+    this.uiSettingsSub = this.uiSettings.settings$.subscribe((settings) => {
+      this.uiSettingsState = settings;
+    });
+  }
+
+  ngOnDestroy() {
+    this.uiSettingsSub?.unsubscribe();
   }
 
   loadHealthServiceProfile() {

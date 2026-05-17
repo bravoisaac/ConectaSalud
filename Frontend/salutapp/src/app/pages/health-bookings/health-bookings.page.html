@@ -122,71 +122,142 @@
         {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
       </ion-text>
 
-  <ion-modal [isOpen]="!!selectedBooking" (didDismiss)="closeBookingDetails()">
+  <ion-modal [isOpen]="!!selectedBooking" (didDismiss)="closeBookingDetails()" class="health-booking-modal">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar class="modal-toolbar">
           <ion-title>Detalle de la reserva</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeBookingDetails()">Cerrar</ion-button>
+            <ion-button fill="clear" class="modal-close" (click)="closeBookingDetails()">
+              <ion-icon slot="start" name="close-outline" aria-hidden="true"></ion-icon>
+              Cerrar
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>{{ counterpartTitle }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p><strong>Nombre:</strong> {{ selectedCounterpartUser?.name || 'Sin nombre' }}</p>
-            <p *ngIf="counterpartSpecialty"><strong>Especialidad:</strong> {{ counterpartSpecialty }}</p>
-            <ng-container *ngIf="canSeeCounterpartContact(selectedBooking)">
-              <p><strong>Telefono:</strong> {{ selectedCounterpartUser?.phone || 'Sin telefono' }}</p>
-              <p><strong>Correo:</strong> {{ selectedCounterpartUser?.email || 'Sin correo' }}</p>
-            </ng-container>
-            <ion-text color="medium" *ngIf="!canSeeCounterpartContact(selectedBooking)">
-              El contacto se muestra cuando la reserva estÃ¡ aceptada.
-            </ion-text>
-          </ion-card-content>
-        </ion-card>
+      <ion-content class="feed-content modal-content">
+        <div class="modal-body">
+          <ion-card class="detail-card">
+            <ion-card-content>
+              <div class="card-head">
+                <div class="card-icon" aria-hidden="true">
+                  <ion-icon name="person-outline"></ion-icon>
+                </div>
+                <div class="card-head-title">{{ counterpartTitle }}</div>
+              </div>
 
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Propuesta</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p><strong>Fecha:</strong> {{ selectedBooking?.start_at | date:'fullDate' }}</p>
-            <p><strong>Hora:</strong> {{ selectedBooking?.start_at | date:'shortTime' }} - {{ selectedBooking?.end_at | date:'shortTime' }}</p>
-            <p><strong>Región:</strong> {{ bookingAddressParts.region || '-' }}</p>
-            <p><strong>Ciudad:</strong> {{ bookingAddressParts.city || '-' }}</p>
-            <p><strong>Comuna:</strong> {{ bookingAddressParts.comuna || '-' }}</p>
-            <p><strong>Calle:</strong> {{ bookingAddressParts.street || '-' }}</p>
-            <p><strong>Número:</strong> {{ bookingAddressParts.number || '-' }}</p>
-            <p><strong>Dirección completa:</strong> {{ formattedServiceAddress || 'Sin dirección' }}</p>
-          </ion-card-content>
-        </ion-card>
+              <div class="person-row">
+                <div class="avatar" aria-hidden="true">{{ initials(selectedCounterpartUser?.name || selectedCounterpartUser?.email) }}</div>
+                <div class="person-main">
+                  <div class="person-name">
+                    {{ selectedCounterpartUser?.name || selectedCounterpartUser?.email || 'Sin nombre' }}
+                  </div>
+                  <div class="person-badges">
+                    <span class="badge badge--success" *ngIf="counterpartVerified">Verificado</span>
+                  </div>
+                </div>
+              </div>
 
-        <ion-card *ngIf="mapEmbedUrl">
-          <ion-card-header>
-            <ion-card-title>Mapa</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <iframe [src]="mapEmbedUrl" width="100%" height="260" style="border:0;" loading="lazy"></iframe>
-            <ion-button
-              expand="block"
-              fill="outline"
-              *ngIf="mapsLink"
-              [href]="mapsLink"
-              target="_blank"
-              rel="noopener"
-            >
-              Abrir en Maps
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-        <ion-text color="medium" *ngIf="!mapEmbedUrl">
-          No hay coordenadas guardadas para mostrar un mapa exacto. Puedes abrir la dirección en Maps.
-        </ion-text>
+              <div class="info-list" role="list" *ngIf="canSeeCounterpartContact(selectedBooking); else contactLocked">
+                <div class="info-row" role="listitem">
+                  <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Teléfono</span>
+                  <span class="info-value">{{ selectedCounterpartUser?.phone || 'Sin teléfono' }}</span>
+                </div>
+                <div class="info-row" role="listitem">
+                  <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+                  <span class="info-label">Correo</span>
+                  <span class="info-value">{{ selectedCounterpartUser?.email || 'Sin correo' }}</span>
+                </div>
+              </div>
+
+              <ng-template #contactLocked>
+                <div class="locked-note">
+                  <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+                  <span>El contacto se muestra cuando la reserva está aceptada.</span>
+                </div>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="detail-card">
+            <ion-card-content>
+              <div class="card-head">
+                <div class="card-icon" aria-hidden="true">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                </div>
+                <div class="card-head-title">Propuesta</div>
+              </div>
+
+              <div class="detail-grid" role="list">
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Servicio</span>
+                  <span class="detail-value">{{ bookingTitle(selectedBooking) }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Fecha</span>
+                  <span class="detail-value">{{ selectedBooking?.start_at | date:'fullDate' }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Hora</span>
+                  <span class="detail-value">{{ selectedBooking?.start_at | date:'shortTime' }} - {{ selectedBooking?.end_at | date:'shortTime' }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Región</span>
+                  <span class="detail-value">{{ bookingAddressParts.region || 'Sin especificar' }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Ciudad</span>
+                  <span class="detail-value">{{ bookingAddressParts.city || 'Sin especificar' }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Comuna</span>
+                  <span class="detail-value">{{ bookingAddressParts.comuna || 'Sin especificar' }}</span>
+                </div>
+                <div class="detail-row" role="listitem">
+                  <span class="detail-label">Dirección</span>
+                  <span class="detail-value">{{ formattedServiceAddress || 'Sin dirección' }}</span>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="detail-card">
+            <ion-card-content>
+              <div class="card-head">
+                <div class="card-icon" aria-hidden="true">
+                  <ion-icon name="map-outline"></ion-icon>
+                </div>
+                <div class="card-head-title">Mapa</div>
+              </div>
+
+              <ng-container *ngIf="mapEmbedUrl; else mapEmpty">
+                <div class="map-frame">
+                  <iframe [src]="mapEmbedUrl" width="100%" height="260" style="border:0;" loading="lazy"></iframe>
+                </div>
+                <ion-button
+                  class="secondary"
+                  expand="block"
+                  fill="outline"
+                  *ngIf="mapsLink"
+                  [href]="mapsLink"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <ion-icon slot="start" name="map-outline" aria-hidden="true"></ion-icon>
+                  Abrir en Maps
+                </ion-button>
+              </ng-container>
+
+              <ng-template #mapEmpty>
+                <div class="locked-note">
+                  <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+                  <span>No hay coordenadas guardadas para mostrar un mapa exacto. Puedes abrir la dirección en Maps.</span>
+                </div>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>

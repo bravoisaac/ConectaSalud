@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UiSettingsService } from './services/ui-settings.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private uiSettings: UiSettingsService) {
+    this.uiSettings.init();
+  }
 }

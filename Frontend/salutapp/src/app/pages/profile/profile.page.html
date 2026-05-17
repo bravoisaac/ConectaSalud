@@ -1,46 +1,80 @@
 <ion-content class="feed-content" [fullscreen]="true">
   <div class="feed-shell">
-    <header class="feed-header">
-      <div class="feed-header-inner">
-        <h1 class="feed-title">Perfil</h1>
-        <p class="feed-subtitle">Gestiona tu información</p>
+    <header class="feed-header profile-header">
+      <div class="profile-hero">
+        <div class="profile-avatar" aria-hidden="true">
+          {{ initials(profile.full_name || user?.name || user?.email) }}
+        </div>
+        <h1 class="profile-name">{{ profile.full_name || user?.name || 'Usuario' }}</h1>
+        <div class="profile-role">Rol: {{ roleLabel(user?.role) }}</div>
       </div>
     </header>
 
     <section class="feed-body" aria-label="Perfil">
-  <ion-card>
+  <ion-card class="profile-section">
     <ion-card-header>
-      <ion-card-title>{{ user?.name || 'Usuario' }}</ion-card-title>
-      <ion-card-subtitle>Rol: {{ user?.role || 'user' }}</ion-card-subtitle>
+      <div class="section-head">
+        <div class="section-icon" aria-hidden="true">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <div class="section-titles">
+          <ion-card-title>Datos personales</ion-card-title>
+          <ion-card-subtitle>{{ user?.email || profile.email || '' }}</ion-card-subtitle>
+        </div>
+        <ion-button
+          size="small"
+          fill="outline"
+          *ngIf="!isPersonalEditMode"
+          (click)="startPersonalEdit()"
+        >
+          Editar
+        </ion-button>
+      </div>
     </ion-card-header>
     <ion-card-content>
-      <p>Idioma: {{ user?.locale || 'es' }}</p>
 
       <ion-text color="danger" *ngIf="personalErrorMsg">{{ personalErrorMsg }}</ion-text>
       <ion-text color="success" *ngIf="personalSuccessMsg">{{ personalSuccessMsg }}</ion-text>
 
       <ng-container *ngIf="!isPersonalEditMode; else personalEditBlock">
-        <p><strong>Nombre completo:</strong> {{ profile.full_name || user?.name || 'Sin nombre' }}</p>
-        <p><strong>Email:</strong> {{ profile.email || user?.email || 'Sin email' }}</p>
-        <p><strong>Telefono:</strong> {{ profile.phone || user?.phone || 'Sin telefono' }}</p>
-        <p><strong>Dirección:</strong> {{ formattedAddress || profile.address || 'Sin dirección' }}</p>
-        <ion-button expand="block" (click)="startPersonalEdit()">Editar perfil</ion-button>
+        <div class="info-list" role="list">
+          <div class="info-row" role="listitem">
+            <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ profile.email || user?.email || 'Sin email' }}</span>
+          </div>
+          <div class="info-row" role="listitem">
+            <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+            <span class="info-label">Teléfono</span>
+            <span class="info-value">{{ profile.phone || user?.phone || 'Sin teléfono' }}</span>
+          </div>
+          <div class="info-row" role="listitem">
+            <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+            <span class="info-label">Dirección</span>
+            <span class="info-value">{{ formattedAddress || profile.address || 'Sin dirección' }}</span>
+          </div>
+        </div>
       </ng-container>
 
       <ng-template #personalEditBlock>
-        <ion-item>
+        <div class="personal-sheet" aria-label="Editar datos personales">
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="person-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Nombre completo</ion-label>
           <ion-input [(ngModel)]="profile.full_name" placeholder="Ej: Maria Gonzalez"></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="mail-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Email</ion-label>
           <ion-input [(ngModel)]="profile.email" type="email" placeholder="correo@correo.com"></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="call-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Telefono</ion-label>
           <ion-input [(ngModel)]="profile.phone" inputmode="tel" placeholder="+56 9 1234 5678"></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="map-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Región</ion-label>
           <ion-select [(ngModel)]="profile.address_region" (ionChange)="onAddressRegionChange()">
             <ion-select-option *ngFor="let r of regions" [value]="r.name">
@@ -48,7 +82,8 @@
             </ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="location-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Ciudad</ion-label>
           <ion-select
             [(ngModel)]="profile.address_city"
@@ -58,9 +93,10 @@
             <ion-select-option *ngFor="let p of availableCities" [value]="p.name">
               {{ p.name }}
             </ion-select-option>
-          </ion-select>
+            </ion-select>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="pin-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Comuna</ion-label>
           <ion-select [(ngModel)]="profile.address_comuna" [disabled]="!availableComunas.length">
             <ion-select-option *ngFor="let c of availableComunas" [value]="c.name">
@@ -68,31 +104,45 @@
             </ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="home-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Calle</ion-label>
           <ion-input [(ngModel)]="profile.address_street" placeholder="Ej: Av. Siempre Viva"></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item class="personal-item" lines="none">
+          <ion-icon slot="start" name="keypad-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Número</ion-label>
           <ion-input [(ngModel)]="profile.address_number" placeholder="Ej: 123"></ion-input>
         </ion-item>
-        <ion-button expand="block" (click)="savePersonalProfile()" [disabled]="savingPersonal">
-          {{ savingPersonal ? 'Guardando...' : 'Guardar perfil' }}
-        </ion-button>
-        <ion-button expand="block" fill="outline" (click)="cancelPersonalEdit()" [disabled]="savingPersonal">
-          Cancelar
-        </ion-button>
+        </div>
+
+        <div class="personal-actions">
+          <ion-button class="primary" expand="block" (click)="savePersonalProfile()" [disabled]="savingPersonal">
+            {{ savingPersonal ? 'Guardando...' : 'Guardar perfil' }}
+          </ion-button>
+          <ion-button class="secondary" expand="block" fill="outline" (click)="cancelPersonalEdit()" [disabled]="savingPersonal">
+            Cancelar
+          </ion-button>
+        </div>
       </ng-template>
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+  <ion-card class="profile-section">
     <ion-card-header>
-      <ion-item lines="none" class="cv-header-item" button detail="false" (click)="toggleCvSection()">
-        <ion-label>
-          <ion-card-title>Curriculum profesional</ion-card-title>
-          <ion-card-subtitle>Completa tu informacion laboral</ion-card-subtitle>
-        </ion-label>
+      <ion-item lines="none" class="cv-header-item profile-toggle-item" button detail="false" (click)="toggleCvSection()">
+        <div class="section-head">
+          <div class="section-icon" aria-hidden="true">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+          <div class="section-titles">
+            <ion-card-title>Curriculum profesional</ion-card-title>
+            <ion-card-subtitle>Completa tu informacion laboral</ion-card-subtitle>
+            <div class="chip-row" *ngIf="isCvSectionCollapsed && skillsEntries.length">
+              <span class="skill-chip" *ngFor="let skill of skillsEntries | slice:0:3">{{ skill }}</span>
+            </div>
+          </div>
+        </div>
         <ion-icon
           slot="end"
           [name]="isCvSectionCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"
@@ -102,14 +152,16 @@
     <ion-card-content *ngIf="!isCvSectionCollapsed">
       <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
       <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
-      <ion-item>
-        <ion-label position="stacked">Profesion</ion-label>
-        <ion-input [(ngModel)]="profile.profession" placeholder="Ej: Enfermera, TENS"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">Resumen profesional</ion-label>
-        <ion-textarea [(ngModel)]="profile.summary" autoGrow="true" placeholder="Breve resumen"></ion-textarea>
-      </ion-item>
+      <div class="form-grid">
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Profesión</ion-label>
+          <ion-input [(ngModel)]="profile.profession" placeholder="Ej: Enfermera, TENS"></ion-input>
+        </ion-item>
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Resumen profesional</ion-label>
+          <ion-textarea [(ngModel)]="profile.summary" autoGrow="true" placeholder="Breve resumen"></ion-textarea>
+        </ion-item>
+      </div>
       <div class="experience-block">
         <div class="experience-header">
           <ion-label>Experiencia laboral</ion-label>
@@ -316,31 +368,53 @@
             <p class="education-meta">Finalizado: {{ edu.completed ? 'Si' : 'No' }}</p>
           </ion-card-content>
         </ion-card>
-        <ion-text color="medium" *ngIf="!educationEditMode && !educationEntries.length">
+      <ion-text color="medium" *ngIf="!educationEditMode && !educationEntries.length">
           Sin estudios registrados
-        </ion-text>
+      </ion-text>
       </div>
-      <ion-item lines="none">
-        <ion-label position="stacked">Curriculum PDF</ion-label>
-        <input class="file-input" type="file" accept="application/pdf" (change)="onFileSelected($event)" />
-      </ion-item>
-      <ion-note *ngIf="cvName">Archivo seleccionado: {{ cvName }}</ion-note>
-      <ion-button *ngIf="profile.cv_url" expand="block" fill="outline" [href]="profile.cv_url" target="_blank">
-        Ver curriculum actual
-      </ion-button>
-      <ion-button expand="block" (click)="saveProfile()" [disabled]="savingProfile">
-        {{ savingProfile ? 'Guardando...' : 'Guardar curriculum' }}
-      </ion-button>
+      <div class="cv-upload" aria-label="Currículum PDF">
+        <div class="cv-upload__title">Currículum PDF</div>
+        <input
+          #cvFileInput
+          class="cv-upload__input"
+          type="file"
+          accept="application/pdf"
+          (change)="onFileSelected($event)"
+        />
+        <ion-button class="cv-upload__pick" expand="block" fill="outline" (click)="cvFileInput.click()">
+          Seleccionar archivo
+        </ion-button>
+        <div class="cv-upload__name" *ngIf="cvName">
+          <span class="cv-upload__name-label">Archivo</span>
+          <span class="cv-upload__name-value">{{ cvName }}</span>
+        </div>
+      </div>
+      <div class="cv-actions">
+        <ion-button *ngIf="profile.cv_url" expand="block" fill="outline" [href]="profile.cv_url" target="_blank">
+          Ver currículum actual
+        </ion-button>
+        <ion-button expand="block" (click)="saveProfile()" [disabled]="savingProfile">
+          {{ savingProfile ? 'Guardando...' : 'Guardar currículum' }}
+        </ion-button>
+      </div>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="isHealthUser">
+  <ion-card class="profile-section" *ngIf="isHealthUser">
     <ion-card-header>
-      <ion-item lines="none" class="cv-header-item" button detail="false" (click)="toggleHealthServiceSection()">
-        <ion-label>
-          <ion-card-title>Servicio de salud</ion-card-title>
-          <ion-card-subtitle>Crea o actualiza tu perfil profesional de salud</ion-card-subtitle>
-        </ion-label>
+      <ion-item lines="none" class="cv-header-item profile-toggle-item" button detail="false" (click)="toggleHealthServiceSection()">
+        <div class="section-head">
+          <div class="section-icon" aria-hidden="true">
+            <ion-icon name="medkit-outline"></ion-icon>
+          </div>
+          <div class="section-titles">
+            <ion-card-title>Servicio de salud</ion-card-title>
+            <ion-card-subtitle>Crea o actualiza tu perfil profesional de salud</ion-card-subtitle>
+            <div class="chip-row" *ngIf="isHealthServiceSectionCollapsed && healthHeaderChips.length">
+              <span class="skill-chip" *ngFor="let chip of healthHeaderChips | slice:0:3">{{ chip }}</span>
+            </div>
+          </div>
+        </div>
         <ion-icon
           slot="end"
           [name]="isHealthServiceSectionCollapsed ? 'chevron-down-outline' : 'chevron-up-outline'"
@@ -351,30 +425,32 @@
       <ion-text color="danger" *ngIf="healthErrorMsg">{{ healthErrorMsg }}</ion-text>
       <ion-text color="success" *ngIf="healthSuccessMsg">{{ healthSuccessMsg }}</ion-text>
 
-      <ion-item>
-        <ion-label position="stacked">Profesion / Especialidad</ion-label>
-        <ion-input [(ngModel)]="healthProfile.specialty" placeholder="Ej: Enfermeria, Kinesiologia"></ion-input>
-      </ion-item>
+      <div class="form-grid">
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Profesión / Especialidad</ion-label>
+          <ion-input [(ngModel)]="healthProfile.specialty" placeholder="Ej: Enfermería, Kinesiología"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Experiencia (anos)</ion-label>
-        <ion-input [(ngModel)]="healthProfile.experience_years" type="number" inputmode="numeric"></ion-input>
-      </ion-item>
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Experiencia (años)</ion-label>
+          <ion-input [(ngModel)]="healthProfile.experience_years" type="number" inputmode="numeric"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Sueldo por hora (CLP)</ion-label>
-        <ion-input [(ngModel)]="healthProfile.rate_hour" type="number" inputmode="numeric"></ion-input>
-      </ion-item>
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Tarifa por hora (CLP)</ion-label>
+          <ion-input [(ngModel)]="healthProfile.rate_hour" type="number" inputmode="numeric"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Ubicacion</ion-label>
-        <ion-input [(ngModel)]="healthProfile.location" placeholder="Ej: Chile, Biobio, Concepcion"></ion-input>
-      </ion-item>
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Ubicación</ion-label>
+          <ion-input [(ngModel)]="healthProfile.location" placeholder="Ej: Chile, Biobío, Concepción"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Descripcion del servicio</ion-label>
-        <ion-textarea [(ngModel)]="healthProfile.bio" autoGrow="true" placeholder="Servicios, enfoque, experiencia"></ion-textarea>
-      </ion-item>
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked">Descripción del servicio</ion-label>
+          <ion-textarea [(ngModel)]="healthProfile.bio" autoGrow="true" placeholder="Servicios, enfoque, experiencia"></ion-textarea>
+        </ion-item>
+      </div>
 
       <ion-button expand="block" (click)="saveHealthServiceProfile()" [disabled]="savingHealthProfile">
         {{ savingHealthProfile ? 'Guardando...' : 'Guardar servicio de salud' }}
@@ -383,74 +459,175 @@
       <ion-card class="availability-card">
         <ion-card-header>
           <ion-card-title>Disponibilidad para reservas</ion-card-title>
-          <ion-card-subtitle>Define dias y horas para recibir reservas</ion-card-subtitle>
+          <ion-card-subtitle>Define días y horas para recibir reservas</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-          <ion-item>
-            <ion-label position="stacked">Dia</ion-label>
-            <ion-select [(ngModel)]="availabilityForm.day_of_week">
-              <ion-select-option *ngFor="let day of weekDays" [value]="day.value">
-                {{ day.label }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <div class="availability-shell">
+            <div class="form-grid availability-form">
+              <ion-item class="form-item" lines="none">
+                <ion-label position="stacked">Día</ion-label>
+                <ion-select [(ngModel)]="availabilityForm.day_of_week" interface="popover">
+                  <ion-select-option *ngFor="let day of weekDays" [value]="day.value">
+                    {{ day.label }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
 
-          <ion-item>
-            <ion-label position="stacked">Hora de inicio</ion-label>
-            <ion-input [(ngModel)]="availabilityForm.start_time" type="time"></ion-input>
-          </ion-item>
+              <ion-item class="form-item" lines="none">
+                <ion-label position="stacked">Hora de inicio</ion-label>
+                <ion-input [(ngModel)]="availabilityForm.start_time" type="time"></ion-input>
+              </ion-item>
 
-          <ion-item>
-            <ion-label position="stacked">Hora de fin</ion-label>
-            <ion-input [(ngModel)]="availabilityForm.end_time" type="time"></ion-input>
-          </ion-item>
+              <ion-item class="form-item" lines="none">
+                <ion-label position="stacked">Hora de fin</ion-label>
+                <ion-input [(ngModel)]="availabilityForm.end_time" type="time"></ion-input>
+              </ion-item>
 
-          <ion-item>
-            <ion-label position="stacked">Zona horaria</ion-label>
-            <ion-input [(ngModel)]="availabilityForm.timezone" placeholder="America/Santiago"></ion-input>
-          </ion-item>
+              <ion-item class="form-item" lines="none">
+                <ion-label position="stacked">Zona horaria</ion-label>
+                <ion-input [(ngModel)]="availabilityForm.timezone" placeholder="America/Santiago"></ion-input>
+              </ion-item>
+            </div>
 
-          <ion-button
-            expand="block"
-            fill="outline"
-            (click)="saveHealthAvailability()"
-            [disabled]="savingHealthAvailability"
-          >
-            {{ savingHealthAvailability ? 'Guardando horario...' : 'Agregar horario' }}
-          </ion-button>
+            <ion-button
+              class="availability-action"
+              expand="block"
+              fill="outline"
+              (click)="saveHealthAvailability()"
+              [disabled]="savingHealthAvailability"
+            >
+              {{ savingHealthAvailability ? 'Guardando horario...' : 'Agregar horario' }}
+            </ion-button>
 
-          <ion-list *ngIf="!loadingHealthAvailability && healthAvailability.length">
-            <ion-item *ngFor="let slot of healthAvailability">
-              <ion-label>
-                <h3>{{ dayName(slot.day_of_week) }}</h3>
-                <p>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.timezone || 'America/Santiago' }})</p>
-              </ion-label>
+            <div class="availability-list" *ngIf="!loadingHealthAvailability && healthAvailability.length">
+              <div class="availability-slot" *ngFor="let slot of healthAvailability">
+                <div class="availability-slot__day">{{ dayName(slot.day_of_week) }}</div>
+                <div class="availability-slot__time">{{ slot.start_time }} - {{ slot.end_time }}</div>
+                <div class="availability-slot__tz">{{ slot.timezone || 'America/Santiago' }}</div>
+              </div>
+            </div>
+
+            <ion-text color="medium" *ngIf="!loadingHealthAvailability && !healthAvailability.length">
+              Aún no has agregado horarios
+            </ion-text>
+
+            <ion-item class="availability-loading" lines="none" *ngIf="loadingHealthAvailability">
+              <ion-label>Cargando horarios...</ion-label>
             </ion-item>
-          </ion-list>
-
-          <ion-text color="medium" *ngIf="!loadingHealthAvailability && !healthAvailability.length">
-            Aun no has agregado horarios
-          </ion-text>
-
-          <ion-item *ngIf="loadingHealthAvailability">
-            <ion-label>Cargando horarios...</ion-label>
-          </ion-item>
+          </div>
         </ion-card-content>
       </ion-card>
     </ion-card-content>
   </ion-card>
 
-  <ion-list>
-    <ion-item *ngIf="isAdmin" button routerLink="/admin">
-      <ion-label>Panel admin</ion-label>
-    </ion-item>
-    <ion-item button>
-      <ion-label>Configuracion</ion-label>
-    </ion-item>
-    <ion-item button (click)="logout()">
-      <ion-label>Cerrar sesion</ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-card class="profile-section">
+    <ion-card-header>
+      <div class="section-head">
+        <div class="section-icon" aria-hidden="true">
+          <ion-icon name="settings-outline"></ion-icon>
+        </div>
+        <div class="section-titles">
+          <ion-card-title>Configuración</ion-card-title>
+          <ion-card-subtitle>Ajustes de la cuenta</ion-card-subtitle>
+        </div>
+      </div>
+    </ion-card-header>
+    <ion-card-content class="settings-card">
+      <ion-item class="settings-item" lines="none" *ngIf="isAdmin" button routerLink="/admin">
+        <ion-icon slot="start" name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+        <ion-label>Panel admin</ion-label>
+      </ion-item>
+      <ion-item class="settings-item" lines="none" button (click)="openUiSettings()">
+        <ion-icon slot="start" name="options-outline" aria-hidden="true"></ion-icon>
+        <ion-label>Preferencias</ion-label>
+        <ion-note slot="end" class="settings-summary">{{ themeModeLabel }} · {{ fontSizeLabel }}</ion-note>
+      </ion-item>
+      <ion-item class="settings-item settings-item--danger" lines="none" button (click)="logout()">
+        <ion-icon slot="start" name="log-out-outline" aria-hidden="true"></ion-icon>
+        <ion-label>Cerrar sesión</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-modal
+    class="ui-settings-modal"
+    [isOpen]="isUiSettingsOpen"
+    (didDismiss)="closeUiSettings()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Preferencias</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeUiSettings()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="feed-content ui-settings-content">
+        <div class="feed-shell">
+          <section class="feed-body" aria-label="Preferencias">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Apariencia</ion-card-title>
+                <ion-card-subtitle>Color y accesibilidad</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="ui-settings-block">
+                  <div class="ui-settings-label">Tema</div>
+                  <ion-segment
+                    class="ui-segment"
+                    [value]="uiSettingsState.themeMode"
+                    (ionChange)="onThemeModeChange($event)"
+                  >
+                    <ion-segment-button value="system">
+                      <ion-label>Sistema</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="dark">
+                      <ion-label>Oscuro</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="light">
+                      <ion-label>Claro</ion-label>
+                    </ion-segment-button>
+                  </ion-segment>
+                </div>
+
+                <div class="ui-settings-block">
+                  <div class="ui-settings-label">Tamaño de letra</div>
+                  <ion-segment
+                    class="ui-segment"
+                    [value]="uiSettingsState.fontSize"
+                    (ionChange)="onFontSizeChange($event)"
+                  >
+                    <ion-segment-button value="sm">
+                      <ion-label>Pequeña</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="md">
+                      <ion-label>Normal</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="lg">
+                      <ion-label>Grande</ion-label>
+                    </ion-segment-button>
+                  </ion-segment>
+                </div>
+
+                <ion-item class="ui-toggle" lines="none">
+                  <ion-label>
+                    <h3>Alto contraste</h3>
+                    <p>Mejora la legibilidad de bordes y texto</p>
+                  </ion-label>
+                  <ion-toggle
+                    slot="end"
+                    [checked]="uiSettingsState.highContrast"
+                    (ionChange)="onHighContrastChange($event)"
+                  ></ion-toggle>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </section>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
     </section>
   </div>
 </ion-content>
