@@ -2,3 +2,67 @@
   display: block;
 }
 
+ion-segment {
+  margin-top: 8px;
+}
+
+ion-card.proposal-card ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proposal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.proposal-title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.94);
+  letter-spacing: -0.01em;
+}
+
+.proposal-sub {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.proposal-sub--secondary {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+}
+
+.proposal-message {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-wrap: anywhere;
+}
+
+ion-button.proposal-cta {
+  align-self: center;
+  min-width: 160px;
+  --border-radius: 999px;
+  --border-color: rgba(255, 255, 255, 0.18);
+  --color: rgba(255, 255, 255, 0.86);
+  height: 34px;
+  text-transform: none;
+  font-weight: 800;
+}
+
+.proposal-actions {
+  justify-content: center;
+}

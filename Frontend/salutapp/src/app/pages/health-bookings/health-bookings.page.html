@@ -3,7 +3,7 @@
     <header class="feed-header">
       <div class="feed-header-inner">
         <h1 class="feed-title">Reservas</h1>
-        <p class="feed-subtitle">Gestiona tus reservas</p>
+        <p class="feed-subtitle">Citas de salud</p>
       </div>
     </header>
 
@@ -19,21 +19,43 @@
   <div class="booking-list" *ngIf="!loading && currentBookings.length">
     <ion-card
       *ngFor="let booking of currentBookings"
-      class="booking-card"
+      class="booking-card health-booking-card"
       button="true"
       (click)="openBookingDetails(booking)"
     >
       <ion-card-content>
-        <h2 class="booking-title">{{ bookingCounterpartName(booking) }}</h2>
-        <p class="booking-meta">Reserva #{{ booking.id }}</p>
-        <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
-        <p class="booking-meta">
-          Hora: {{ booking.start_at | date:'shortTime' }} - {{ booking.end_at | date:'shortTime' }}
-        </p>
-        <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
-        <p class="booking-meta" *ngIf="canSeeCounterpartContact(booking)">
-          Contacto: {{ counterpartUser(booking)?.phone || 'Sin telefono' }} / {{ counterpartUser(booking)?.email || 'Sin correo' }}
-        </p>
+        <div class="booking-head">
+          <div class="booking-head-main">
+            <h2 class="booking-title">{{ bookingTitle(booking) }}</h2>
+            <p class="booking-sub">{{ bookingSubtitle(booking) }}</p>
+          </div>
+          <span class="badge" [ngClass]="'badge--' + bookingBadgeTone(booking)">
+            {{ bookingStatusLabel(booking.status) }}
+          </span>
+        </div>
+
+        <div class="booking-meta-row">
+          <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+          <span>
+            {{ booking.start_at | date:'d MMM' }} - {{ booking.start_at | date:'shortTime' }} hrs
+          </span>
+        </div>
+
+        <div class="booking-meta-row booking-meta-row--address" *ngIf="bookingAddressLine(booking) as addr">
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+          <span>{{ addr }}</span>
+        </div>
+
+        <div class="booking-desc" *ngIf="bookingDescription(booking) as desc">
+          <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+          <span>{{ desc }}</span>
+        </div>
+
+        <div class="contact-pill" *ngIf="canSeeCounterpartContact(booking) && counterpartUser(booking)?.phone">
+          <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+          <span>{{ counterpartUser(booking)?.phone }}</span>
+        </div>
+
         <div class="actions" *ngIf="isHealthUser">
           <ion-button
             size="small"
@@ -61,18 +83,37 @@
   <div class="booking-list" *ngIf="!loading && finalizedBookings.length">
     <ion-card
       *ngFor="let booking of finalizedBookings"
-      class="booking-card history-card"
+      class="booking-card history-card health-booking-card"
       button="true"
       (click)="openBookingDetails(booking)"
     >
       <ion-card-content>
-        <h2 class="booking-title">{{ bookingCounterpartName(booking) }}</h2>
-        <p class="booking-meta">Reserva #{{ booking.id }}</p>
-        <p class="booking-meta">Fecha: {{ booking.start_at | date:'fullDate' }}</p>
-        <p class="booking-meta">
-          Hora: {{ booking.start_at | date:'shortTime' }} - {{ booking.end_at | date:'shortTime' }}
-        </p>
-        <p class="booking-meta">Estado: {{ bookingStatusLabel(booking.status) }}</p>
+        <div class="booking-head">
+          <div class="booking-head-main">
+            <h2 class="booking-title">{{ bookingTitle(booking) }}</h2>
+            <p class="booking-sub">{{ bookingSubtitle(booking) }}</p>
+          </div>
+          <span class="badge" [ngClass]="'badge--' + bookingBadgeTone(booking)">
+            {{ bookingStatusLabel(booking.status) }}
+          </span>
+        </div>
+
+        <div class="booking-meta-row">
+          <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+          <span>
+            {{ booking.start_at | date:'d MMM' }} - {{ booking.start_at | date:'shortTime' }} hrs
+          </span>
+        </div>
+
+        <div class="booking-meta-row booking-meta-row--address" *ngIf="bookingAddressLine(booking) as addr">
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+          <span>{{ addr }}</span>
+        </div>
+
+        <div class="booking-desc" *ngIf="bookingDescription(booking) as desc">
+          <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+          <span>{{ desc }}</span>
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

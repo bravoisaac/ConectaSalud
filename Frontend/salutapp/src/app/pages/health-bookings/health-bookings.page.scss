@@ -1,47 +1,99 @@
-.booking-meta {
-  margin: 3px 0;
-  color: var(--ion-color-medium);
+:host {
+  display: block;
 }
 
-.section-title {
-  margin: 14px 0 8px;
-  font-size: 1rem;
+ion-card.health-booking-card ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.booking-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.booking-head-main {
+  min-width: 0;
+}
+
+.booking-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.booking-meta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
   font-weight: 700;
-  color: var(--ion-text-color);
+  width: fit-content;
 }
 
-.booking-list {
-  display: grid;
-  gap: 12px;
+.booking-meta-row ion-icon {
+  font-size: 14px;
+  opacity: 0.85;
 }
 
-.booking-card {
-  margin: 0;
-  cursor: pointer;
+.booking-meta-row--address {
+  max-width: 100%;
 }
 
-.booking-title {
-  margin: 0 0 6px;
-  color: var(--ion-text-color);
-  font-size: 1rem;
-  font-weight: 700;
+.booking-meta-row--address span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.history-card {
-  border: 1px solid rgba(220, 38, 38, 0.2);
+.booking-desc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.booking-desc ion-icon {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(26, 86, 160, 0.18);
+  border: 1px solid rgba(26, 86, 160, 0.35);
+  color: rgba(191, 219, 254, 0.95);
+  font-size: 12px;
+  font-weight: 900;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.contact-pill ion-icon {
+  font-size: 16px;
+}
+
+.contact-pill span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-@media (max-width: 640px) {
-  .actions {
-    width: 100%;
-    margin-top: 8px;
-    flex-direction: column;
-  }
+  justify-content: center;
 }

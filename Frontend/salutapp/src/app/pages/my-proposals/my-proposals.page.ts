@@ -222,6 +222,64 @@ export class MyProposalsPage implements OnInit {
     return status || 'Sin estado';
   }
 
+  proposalBadgeLabel(status: string) {
+    const key = this.statusKey(status);
+    if (key === 'accepted') return 'Aceptada';
+    if (key === 'declined' || key === 'rejected') return 'Rechazada';
+    return 'Pendiente';
+  }
+
+  proposalBadgeTone(status: string) {
+    const key = this.statusKey(status);
+    if (key === 'accepted') return 'success';
+    if (key === 'declined' || key === 'rejected') return 'danger';
+    return 'warning';
+  }
+
+  proposalCtaLabel(status: string) {
+    const key = this.statusKey(status);
+    if (key === 'accepted') return 'Contactar';
+    return 'Ver detalle';
+  }
+
+  timeAgo(app: any) {
+    const raw =
+      app?.created_at ||
+      app?.createdAt ||
+      app?.applied_at ||
+      app?.appliedAt ||
+      app?.updated_at ||
+      app?.updatedAt ||
+      app?.job_post?.created_at ||
+      app?.jobPost?.created_at;
+
+    if (!raw) {
+      return '';
+    }
+
+    const d = new Date(raw);
+    if (Number.isNaN(d.getTime())) {
+      return '';
+    }
+
+    const diffMs = Date.now() - d.getTime();
+    if (!Number.isFinite(diffMs) || diffMs < 0) {
+      return '';
+    }
+
+    const minutes = Math.floor(diffMs / 60000);
+    if (minutes <= 0) return 'recién';
+    if (minutes < 60) return `hace ${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `hace ${hours} h`;
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `hace ${days} días`;
+    const months = Math.floor(days / 30);
+    if (months < 12) return `hace ${months} mes${months === 1 ? '' : 'es'}`;
+    const years = Math.floor(months / 12);
+    return `hace ${years} año${years === 1 ? '' : 's'}`;
+  }
+
   inboxStatusLabel(status: string) {
     const key = this.statusKey(status);
     if (key === 'applied') {

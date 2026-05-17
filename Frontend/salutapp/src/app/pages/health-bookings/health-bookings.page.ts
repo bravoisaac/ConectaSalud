@@ -132,6 +132,67 @@ export class HealthBookingsPage implements OnInit {
     return status || 'Sin estado';
   }
 
+  bookingBadgeTone(booking: any) {
+    const key = this.statusKey(booking?.status);
+    if (key === 'in_service') return 'success';
+    if (key === 'requested') return 'warning';
+    if (key === 'cancelled') return 'danger';
+    return 'neutral';
+  }
+
+  bookingTitle(booking: any) {
+    const specialty = String(this.bookingHealthProfile(booking)?.specialty || '').trim();
+    if (specialty) {
+      return specialty;
+    }
+    return 'Cita de salud';
+  }
+
+  bookingSubtitle(booking: any) {
+    return this.bookingCounterpartName(booking);
+  }
+
+  bookingDescription(booking: any) {
+    const location = String(this.bookingHealthProfile(booking)?.location || '').trim();
+    if (location) {
+      return location;
+    }
+    const { city, comuna } = this.bookingAddressPartsFrom(booking);
+    const place = [city, comuna].filter(Boolean).join(', ').trim();
+    return place ? `Servicio en ${place}` : '';
+  }
+
+  bookingAddressLine(booking: any) {
+    const { region, comuna, city, street, number } = this.bookingAddressPartsFrom(booking);
+    const parts = [region, city, comuna].filter(Boolean);
+    const streetLine = `${street} ${number}`.trim();
+    if (streetLine) {
+      parts.push(streetLine);
+    }
+    const formatted = parts.join(', ').trim();
+    if (formatted) {
+      return formatted;
+    }
+    return String(booking?.service_address || booking?.serviceAddress || '').trim();
+  }
+
+  private bookingAddressPartsFrom(booking: any) {
+    const region = String(booking?.service_region || booking?.serviceRegion || '').trim();
+    const comuna = String(booking?.service_comuna || booking?.serviceComuna || '').trim();
+    const city = String(booking?.service_city || booking?.serviceCity || '').trim();
+    const street = String(booking?.service_street || booking?.serviceStreet || '').trim();
+    const number = String(booking?.service_number || booking?.serviceNumber || '').trim();
+    return { region, comuna, city, street, number };
+  }
+
+  bookingDateCompact(booking: any) {
+    const raw = booking?.start_at || booking?.startAt || null;
+    if (!raw) return '';
+    const d = new Date(raw);
+    if (Number.isNaN(d.getTime())) return '';
+    return d;
+  }
+
   private updateBooking(booking: any, status: string, okMessage: string) {
     if (!booking?.id || !this.canManageBooking(booking)) {
       return;

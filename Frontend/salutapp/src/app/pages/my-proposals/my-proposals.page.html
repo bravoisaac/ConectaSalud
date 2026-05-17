@@ -2,20 +2,20 @@
   <div class="feed-shell">
     <header class="feed-header">
       <div class="feed-header-inner">
-        <h1 class="feed-title">Propuestas</h1>
-        <p class="feed-subtitle">Postulaciones y ofertas</p>
+        <h1 class="feed-title">Mis propuestas</h1>
+        <p class="feed-subtitle">Postulaciones y recibidas</p>
       </div>
     </header>
 
     <section class="feed-body" aria-label="Propuestas">
       <ion-segment *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
-    <ion-segment-button value="my">
-      <ion-label>Mis postulaciones</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="inbox">
-      <ion-label>Recibidas</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+        <ion-segment-button value="my">
+          <ion-label>Mis postulaciones</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="inbox">
+          <ion-label>Recibidas</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
   <ng-container *ngIf="proposalsSection === 'my'">
     <ion-text color="danger" *ngIf="myErrorMsg">{{ myErrorMsg }}</ion-text>
@@ -27,12 +27,37 @@
 
     <h3 class="section-title" *ngIf="!myLoading && myCurrent.length">En proceso</h3>
     <div class="booking-list" *ngIf="!myLoading && myCurrent.length">
-      <ion-card *ngFor="let app of myCurrent" class="booking-card" button="true" (click)="openApplicationJob(app)">
+      <ion-card *ngFor="let app of myCurrent" class="booking-card proposal-card" button="true" (click)="openApplicationJob(app)">
         <ion-card-content>
-          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
-          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
-          <p class="booking-meta">Estado: {{ myStatusLabel(app.status) }}</p>
-          <div class="actions" *ngIf="canRespondToOffer(app)">
+          <div class="proposal-head">
+            <h2 class="proposal-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+            <span class="badge" [ngClass]="'badge--' + proposalBadgeTone(app.status)">
+              {{ proposalBadgeLabel(app.status) }}
+            </span>
+          </div>
+
+          <p class="proposal-sub">
+            {{ posterText(app) }}
+            <span class="dot">•</span>
+            {{ applicationJob(app)?.location || 'Sin ubicación' }}
+            <ng-container *ngIf="timeAgo(app) as t">
+              <ng-container *ngIf="t">
+                <span class="dot">•</span>
+                {{ t }}
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <ion-button
+            class="proposal-cta"
+            size="small"
+            fill="outline"
+            (click)="$event.stopPropagation(); openApplicationJob(app)"
+          >
+            {{ proposalCtaLabel(app.status) }}
+          </ion-button>
+
+          <div class="actions proposal-actions" *ngIf="canRespondToOffer(app)">
             <ion-button
               size="small"
               color="success"
@@ -57,11 +82,35 @@
 
     <h3 class="section-title" *ngIf="!myLoading && myFinalized.length">Finalizadas</h3>
     <div class="booking-list" *ngIf="!myLoading && myFinalized.length">
-      <ion-card *ngFor="let app of myFinalized" class="booking-card history-card" button="true" (click)="openApplicationJob(app)">
+      <ion-card *ngFor="let app of myFinalized" class="booking-card history-card proposal-card" button="true" (click)="openApplicationJob(app)">
         <ion-card-content>
-          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
-          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
-          <p class="booking-meta">Estado: {{ myStatusLabel(app.status) }}</p>
+          <div class="proposal-head">
+            <h2 class="proposal-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+            <span class="badge" [ngClass]="'badge--' + proposalBadgeTone(app.status)">
+              {{ proposalBadgeLabel(app.status) }}
+            </span>
+          </div>
+
+          <p class="proposal-sub">
+            {{ posterText(app) }}
+            <span class="dot">•</span>
+            {{ applicationJob(app)?.location || 'Sin ubicación' }}
+            <ng-container *ngIf="timeAgo(app) as t">
+              <ng-container *ngIf="t">
+                <span class="dot">•</span>
+                {{ t }}
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <ion-button
+            class="proposal-cta"
+            size="small"
+            fill="outline"
+            (click)="$event.stopPropagation(); openApplicationJob(app)"
+          >
+            {{ proposalCtaLabel(app.status) }}
+          </ion-button>
         </ion-card-content>
       </ion-card>
     </div>
@@ -81,14 +130,43 @@
 
     <h3 class="section-title" *ngIf="!inboxLoading && inboxCurrent.length">En proceso</h3>
     <div class="booking-list" *ngIf="!inboxLoading && inboxCurrent.length">
-      <ion-card *ngFor="let app of inboxCurrent" class="booking-card" button="true" (click)="openApplicantProfile(app)">
+      <ion-card *ngFor="let app of inboxCurrent" class="booking-card proposal-card" button="true" (click)="openApplicantProfile(app)">
         <ion-card-content>
-          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
-          <p class="booking-meta">Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}</p>
-          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
-          <p class="booking-meta">Estado: {{ inboxStatusLabel(app.status) }}</p>
-          <p class="booking-meta" *ngIf="app.cover_letter">Mensaje: {{ app.cover_letter }}</p>
-          <div class="actions" *ngIf="canEmployerRespond(app)">
+          <div class="proposal-head">
+            <h2 class="proposal-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+            <span class="badge" [ngClass]="'badge--' + proposalBadgeTone(app.status)">
+              {{ proposalBadgeLabel(app.status) }}
+            </span>
+          </div>
+
+          <p class="proposal-sub proposal-sub--secondary">
+            Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}
+          </p>
+
+          <p class="proposal-sub">
+            {{ posterText(app) }}
+            <span class="dot">•</span>
+            {{ applicationJob(app)?.location || 'Sin ubicación' }}
+            <ng-container *ngIf="timeAgo(app) as t">
+              <ng-container *ngIf="t">
+                <span class="dot">•</span>
+                {{ t }}
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <p class="proposal-message" *ngIf="app.cover_letter">“{{ app.cover_letter }}”</p>
+
+          <ion-button
+            class="proposal-cta"
+            size="small"
+            fill="outline"
+            (click)="$event.stopPropagation(); openApplicantProfile(app)"
+          >
+            {{ proposalCtaLabel(app.status) }}
+          </ion-button>
+
+          <div class="actions proposal-actions" *ngIf="canEmployerRespond(app)">
             <ion-button
               size="small"
               color="success"
@@ -113,12 +191,39 @@
 
     <h3 class="section-title" *ngIf="!inboxLoading && inboxFinalized.length">Finalizadas</h3>
     <div class="booking-list" *ngIf="!inboxLoading && inboxFinalized.length">
-      <ion-card *ngFor="let app of inboxFinalized" class="booking-card history-card" button="true" (click)="openApplicantProfile(app)">
+      <ion-card *ngFor="let app of inboxFinalized" class="booking-card history-card proposal-card" button="true" (click)="openApplicantProfile(app)">
         <ion-card-content>
-          <h2 class="booking-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
-          <p class="booking-meta">Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}</p>
-          <p class="booking-meta">{{ posterText(app) }} • {{ applicationJob(app)?.location || 'Sin ubicacion' }}</p>
-          <p class="booking-meta">Estado: {{ inboxStatusLabel(app.status) }}</p>
+          <div class="proposal-head">
+            <h2 class="proposal-title">{{ applicationJob(app)?.title || 'Empleo' }}</h2>
+            <span class="badge" [ngClass]="'badge--' + proposalBadgeTone(app.status)">
+              {{ proposalBadgeLabel(app.status) }}
+            </span>
+          </div>
+
+          <p class="proposal-sub proposal-sub--secondary">
+            Postulante: {{ app?.user?.name || app?.user?.email || ('Usuario #' + (app?.user_id || '-')) }}
+          </p>
+
+          <p class="proposal-sub">
+            {{ posterText(app) }}
+            <span class="dot">•</span>
+            {{ applicationJob(app)?.location || 'Sin ubicación' }}
+            <ng-container *ngIf="timeAgo(app) as t">
+              <ng-container *ngIf="t">
+                <span class="dot">•</span>
+                {{ t }}
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <ion-button
+            class="proposal-cta"
+            size="small"
+            fill="outline"
+            (click)="$event.stopPropagation(); openApplicantProfile(app)"
+          >
+            {{ proposalCtaLabel(app.status) }}
+          </ion-button>
         </ion-card-content>
       </ion-card>
     </div>
