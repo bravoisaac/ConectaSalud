@@ -1621,3 +1621,289 @@ ion-content:not(.auth-content):not(.feed-content)::part(scroll) {
     --min-height: 60px;
   }
 }
+
+app-job-detail {
+  .description {
+    margin-top: 12px;
+    white-space: pre-line;
+  }
+
+  .detail-toprow {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  ion-button.back-btn {
+    margin: 0;
+    height: 32px;
+    width: 32px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --color: rgba(255, 255, 255, 0.92);
+  }
+
+  .detail-titles {
+    min-width: 0;
+  }
+
+  .detail-title {
+    font-size: 16px;
+  }
+
+  .detail-subtitle {
+    margin-top: 3px;
+  }
+
+  ion-card.detail-card {
+    margin: 0 0 12px;
+  }
+
+  ion-item.similar-job-card {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --min-height: 0;
+    margin: 10px 0 0;
+  }
+
+  ion-item.similar-job-card::part(native) {
+    padding: 10px 12px;
+    background: var(--salut-card-bg);
+    border: 1px solid var(--salut-card-border);
+    border-radius: 14px;
+  }
+
+  .similar-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .similar-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+    background: rgba(26, 86, 160, 0.16);
+    border: 1px solid rgba(26, 86, 160, 0.28);
+    color: rgba(191, 219, 254, 0.95);
+    flex-shrink: 0;
+  }
+
+  .similar-main {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .similar-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .similar-title {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 900;
+    color: var(--salut-text-1);
+  }
+
+  .similar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .similar-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .similar-pill ion-icon {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  .similar-salary {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--salut-text-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 750;
+  }
+
+  .similar-salary ion-icon {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  ion-button.similar-more-link {
+    margin-top: 10px;
+    height: 30px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --color: var(--salut-primary);
+    text-transform: none;
+    font-weight: 900;
+  }
+
+  .detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .detail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .detail-pill ion-icon {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .detail-salary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .detail-salary ion-icon {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .company-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    background: rgba(26, 86, 160, 0.22);
+    border: 1px solid rgba(26, 86, 160, 0.35);
+    color: rgba(191, 219, 254, 0.95);
+    flex-shrink: 0;
+  }
+
+  .company-body {
+    min-width: 0;
+  }
+
+  .company-name {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .company-sub {
+    margin: 4px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .dot {
+    margin: 0 6px;
+    opacity: 0.7;
+  }
+
+  ion-item.apply-item {
+    --background: rgba(255, 255, 255, 0.04);
+    --border-color: rgba(255, 255, 255, 0.12);
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+  }
+
+  ion-item.apply-item::part(native) {
+    border-radius: 10px;
+  }
+
+  ion-item.apply-item ion-textarea::part(native) {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+html.ui-theme-light app-job-detail {
+  .similar-avatar {
+    background: rgba(26, 86, 160, 0.10);
+    border-color: rgba(26, 86, 160, 0.22);
+    color: rgba(26, 86, 160, 0.92);
+  }
+
+  .similar-pill {
+    background: rgba(15, 23, 42, 0.03);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html:not(.ui-theme-dark):not(.ui-theme-light) app-job-detail {
+    .similar-avatar {
+      background: rgba(26, 86, 160, 0.10);
+      border-color: rgba(26, 86, 160, 0.22);
+      color: rgba(26, 86, 160, 0.92);
+    }
+
+    .similar-pill {
+      background: rgba(15, 23, 42, 0.03);
+      border-color: rgba(15, 23, 42, 0.12);
+      color: rgba(15, 23, 42, 0.72);
+    }
+  }
+}
