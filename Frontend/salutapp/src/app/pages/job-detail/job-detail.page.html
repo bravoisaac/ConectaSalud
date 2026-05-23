@@ -25,129 +25,135 @@
       </div>
 
       <ng-container *ngIf="!loading && job">
-        <ion-card class="detail-card">
-          <ion-card-content>
-            <p class="section-title">Detalles del empleo</p>
+        <div class="detail-grid">
+          <div class="detail-col detail-col--main">
+            <ion-card class="detail-card">
+              <ion-card-content>
+                <p class="section-title">Detalles del empleo</p>
 
-            <div class="detail-meta">
-              <div class="detail-pill">
-                <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
-                <span>{{ job.location || 'Sin ubicación' }}</span>
-              </div>
-              <div class="detail-pill">
-                <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
-                <span>{{ job.modality || 'Sin especificar' }}</span>
-              </div>
-            </div>
+                <div class="detail-meta">
+                  <div class="detail-pill">
+                    <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                    <span>{{ job.location || 'Sin ubicación' }}</span>
+                  </div>
+                  <div class="detail-pill">
+                    <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
+                    <span>{{ job.modality || 'Sin especificar' }}</span>
+                  </div>
+                </div>
 
-            <div class="detail-row">
-              <div class="detail-salary">
-                <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
-                <span>{{ salaryText(job) }}</span>
-              </div>
-              <span class="badge" [ngClass]="'badge--' + jobBadgeTone(job)">{{ jobBadgeLabel(job) }}</span>
-            </div>
+                <div class="detail-row">
+                  <div class="detail-salary">
+                    <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                    <span>{{ salaryText(job) }}</span>
+                  </div>
+                  <span class="badge" [ngClass]="'badge--' + jobBadgeTone(job)">{{ jobBadgeLabel(job) }}</span>
+                </div>
 
-            <div class="description" *ngIf="descriptionText">{{ descriptionText }}</div>
-          </ion-card-content>
-        </ion-card>
+                <div class="description" *ngIf="descriptionText">{{ descriptionText }}</div>
+              </ion-card-content>
+            </ion-card>
 
-        <ion-card class="detail-card" *ngIf="!isPersonalJob && job.company">
-          <ion-card-content>
-            <p class="section-title">Empresa</p>
-            <div class="company-row">
-              <div class="avatar" aria-hidden="true">{{ companyInitials() }}</div>
-              <div class="company-body">
-                <p class="company-name">{{ job.company?.name || posterTitle }}</p>
-                <p class="company-sub">
-                  <ng-container *ngIf="job.company?.legal_name">{{ job.company.legal_name }}</ng-container>
-                  <ng-container *ngIf="job.company?.rut">
-                    <span class="dot">•</span>
-                    RUT {{ job.company.rut }}
-                  </ng-container>
-                </p>
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="detail-card">
-          <ion-card-content>
-            <p class="section-title">Postular</p>
-
-            <ion-item class="apply-item" lines="none">
-              <ion-textarea
-                [placeholder]="isPersonalJob ? 'Mensaje opcional para el anunciante…' : 'Mensaje opcional para el reclutador…'"
-                autoGrow="true"
-                [(ngModel)]="coverLetter"
-              ></ion-textarea>
-            </ion-item>
-
-            <ion-button class="primary" expand="block" [disabled]="applyLoading || !canApply" (click)="apply()">
-              {{ applyLoading ? 'Enviando...' : 'Enviar postulación' }}
-            </ion-button>
-
-            <ion-text color="medium" *ngIf="!canApply" class="empty">Esta oferta no está disponible.</ion-text>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="detail-card" *ngIf="loadingSimilar">
-          <ion-card-content>
-            <p class="section-title">Empleos similares</p>
-            <div class="loading similar-loading">
-              <ion-spinner></ion-spinner>
-              <span>Buscando empleos similares...</span>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="detail-card" *ngIf="!loadingSimilar && similarJobs.length">
-          <ion-card-content>
-            <p class="section-title">Empleos similares</p>
-
-            <ion-item
-              *ngFor="let item of similarJobs"
-              class="similar-job-card"
-              lines="none"
-              button
-              detail="false"
-              (click)="goToSimilar(item)"
-            >
-              <ion-label>
-                <div class="similar-row">
-                  <div class="similar-avatar" aria-hidden="true">{{ titleInitials(item?.title) }}</div>
-                  <div class="similar-main">
-                    <div class="similar-top">
-                      <h3 class="similar-title">{{ item?.title || 'Empleo' }}</h3>
-                      <span class="badge" [ngClass]="'badge--' + jobBadgeTone(item)">{{ jobBadgeLabel(item) }}</span>
-                    </div>
-
-                    <div class="similar-tags">
-                      <span class="similar-pill">
-                        <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
-                        {{ item?.location || 'Sin ubicación' }}
-                      </span>
-                      <span class="similar-pill">
-                        <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
-                        {{ item?.modality || 'Sin especificar' }}
-                      </span>
-                    </div>
-
-                    <p class="similar-salary">
-                      <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
-                      {{ salaryText(item) }}
+            <ion-card class="detail-card" *ngIf="!isPersonalJob && job.company">
+              <ion-card-content>
+                <p class="section-title">Empresa</p>
+                <div class="company-row">
+                  <div class="avatar" aria-hidden="true">{{ companyInitials() }}</div>
+                  <div class="company-body">
+                    <p class="company-name">{{ job.company?.name || posterTitle }}</p>
+                    <p class="company-sub">
+                      <ng-container *ngIf="job.company?.legal_name">{{ job.company.legal_name }}</ng-container>
+                      <ng-container *ngIf="job.company?.rut">
+                        <span class="dot">•</span>
+                        RUT {{ job.company.rut }}
+                      </ng-container>
                     </p>
                   </div>
                 </div>
-              </ion-label>
-            </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </div>
 
-            <ion-button fill="clear" size="small" class="similar-more-link" (click)="viewMoreSimilar()">
-              Ver más empleos similares
-              <ion-icon slot="end" name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
+          <div class="detail-col detail-col--side">
+            <ion-card class="detail-card">
+              <ion-card-content>
+                <p class="section-title">Postular</p>
+
+                <ion-item class="apply-item" lines="none">
+                  <ion-textarea
+                    [placeholder]="isPersonalJob ? 'Mensaje opcional para el anunciante…' : 'Mensaje opcional para el reclutador…'"
+                    autoGrow="true"
+                    [(ngModel)]="coverLetter"
+                  ></ion-textarea>
+                </ion-item>
+
+                <ion-button class="primary" expand="block" [disabled]="applyLoading || !canApply" (click)="apply()">
+                  {{ applyLoading ? 'Enviando...' : 'Enviar postulación' }}
+                </ion-button>
+
+                <ion-text color="medium" *ngIf="!canApply" class="empty">Esta oferta no está disponible.</ion-text>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="detail-card" *ngIf="loadingSimilar">
+              <ion-card-content>
+                <p class="section-title">Empleos similares</p>
+                <div class="loading similar-loading">
+                  <ion-spinner></ion-spinner>
+                  <span>Buscando empleos similares...</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="detail-card" *ngIf="!loadingSimilar && similarJobs.length">
+              <ion-card-content>
+                <p class="section-title">Empleos similares</p>
+
+                <ion-item
+                  *ngFor="let item of similarJobs"
+                  class="similar-job-card"
+                  lines="none"
+                  button
+                  detail="false"
+                  (click)="goToSimilar(item)"
+                >
+                  <ion-label>
+                    <div class="similar-row">
+                      <div class="similar-avatar" aria-hidden="true">{{ titleInitials(item?.title) }}</div>
+                      <div class="similar-main">
+                        <div class="similar-top">
+                          <h3 class="similar-title">{{ item?.title || 'Empleo' }}</h3>
+                          <span class="badge" [ngClass]="'badge--' + jobBadgeTone(item)">{{ jobBadgeLabel(item) }}</span>
+                        </div>
+
+                        <div class="similar-tags">
+                          <span class="similar-pill">
+                            <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                            {{ item?.location || 'Sin ubicación' }}
+                          </span>
+                          <span class="similar-pill">
+                            <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
+                            {{ item?.modality || 'Sin especificar' }}
+                          </span>
+                        </div>
+
+                        <p class="similar-salary">
+                          <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                          {{ salaryText(item) }}
+                        </p>
+                      </div>
+                    </div>
+                  </ion-label>
+                </ion-item>
+
+                <ion-button fill="clear" size="small" class="similar-more-link" (click)="viewMoreSimilar()">
+                  Ver más empleos similares
+                  <ion-icon slot="end" name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
       </ng-container>
     </section>
   </div>

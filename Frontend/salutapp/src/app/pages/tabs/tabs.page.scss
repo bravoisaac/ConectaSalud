@@ -3,6 +3,9 @@ ion-tab-bar {
   --color: var(--salut-text-3);
   --color-selected: #1a56a0;
   border-top: 1px solid var(--salut-card-border);
+  width: 100%;
+  height: var(--salut-tabbar-height, 56px);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 ion-tab-button {
@@ -12,7 +15,7 @@ ion-tab-button {
 
 @media (min-width: 992px) {
   ion-tab-bar {
-    max-width: 1120px;
+    max-width: var(--app-content-max-width);
     margin: 0 auto;
     border-top-left-radius: 14px;
     border-top-right-radius: 14px;

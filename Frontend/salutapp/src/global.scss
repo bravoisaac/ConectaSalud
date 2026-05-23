@@ -39,6 +39,8 @@
 :root {
   --app-content-max-width: 1120px;
   --app-content-gutter: 16px;
+  --feed-max-width: 560px;
+  --salut-tabbar-height: 56px;
   --salut-primary: #1a56a0;
   --salut-surface: #1f1f1f;
   --salut-surface-2: rgba(255, 255, 255, 0.04);
@@ -275,6 +277,10 @@ ion-button.secondary {
   --background: var(--salut-surface);
 }
 
+ion-tabs ion-content.feed-content::part(scroll) {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 .feed-shell {
   min-height: 100%;
   padding-bottom: env(safe-area-inset-bottom);
@@ -286,7 +292,7 @@ ion-button.secondary {
 }
 
 .feed-header-inner {
-  max-width: 560px;
+  max-width: var(--feed-max-width);
   margin: 0 auto;
 }
 
@@ -316,7 +322,7 @@ ion-button.secondary {
 }
 
 .feed-body {
-  max-width: 560px;
+  max-width: var(--feed-max-width);
   margin: 0 auto;
   padding: 0 16px 26px;
 }
@@ -1583,6 +1589,10 @@ html.ui-theme-light ion-segment-button {
 }
 
 @media (min-width: 992px) {
+  :root {
+    --feed-max-width: 960px;
+  }
+
   .feed-header {
     padding-left: 24px;
     padding-right: 24px;
@@ -1623,6 +1633,16 @@ ion-content:not(.auth-content):not(.feed-content)::part(scroll) {
 }
 
 app-job-detail {
+  .detail-grid {
+    display: block;
+  }
+
+  .detail-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .description {
     margin-top: 12px;
     white-space: pre-line;
@@ -1656,7 +1676,7 @@ app-job-detail {
   }
 
   ion-card.detail-card {
-    margin: 0 0 12px;
+    margin: 0;
   }
 
   ion-item.similar-job-card {
@@ -1904,6 +1924,21 @@ html.ui-theme-light app-job-detail {
       background: rgba(15, 23, 42, 0.03);
       border-color: rgba(15, 23, 42, 0.12);
       color: rgba(15, 23, 42, 0.72);
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  app-job-detail {
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    ion-item.similar-job-card {
+      margin-top: 12px;
     }
   }
 }
