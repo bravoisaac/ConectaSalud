@@ -2263,3 +2263,137 @@ app-job-detail {
     opacity: 1;
   }
 }
+
+@media (min-width: 1024px) {
+  :root {
+    --feed-max-width: 1180px;
+    --app-content-max-width: 1240px;
+  }
+
+  .feed-header {
+    padding: calc(env(safe-area-inset-top) + 34px) 32px 86px;
+  }
+
+  .feed-header::after,
+  .profile-header::after,
+  .auth-top::after {
+    right: 8%;
+    bottom: -84px;
+    width: 260px;
+    height: 260px;
+  }
+
+  .feed-header-inner,
+  .profile-hero,
+  .auth-top-inner,
+  .feed-body {
+    max-width: var(--feed-max-width);
+  }
+
+  .feed-title {
+    max-width: 760px;
+    font-size: 40px;
+  }
+
+  .feed-subtitle {
+    max-width: 560px;
+    font-size: 15px;
+  }
+
+  .feed-body {
+    width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  app-jobs .feed-body,
+  app-health .feed-body,
+  app-health-bookings .feed-body,
+  app-my-proposals .feed-body,
+  app-admin .feed-body {
+    max-width: var(--feed-max-width) !important;
+    width: 100% !important;
+  }
+
+  app-jobs .job-list,
+  app-health .profile-list,
+  app-health-bookings .booking-list,
+  app-my-proposals .booking-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch;
+  }
+
+  app-jobs ion-item.job-card,
+  app-health ion-item.profile-card-item,
+  app-health-bookings ion-card.health-booking-card,
+  app-my-proposals ion-card.proposal-card {
+    height: 100%;
+    margin: 0;
+  }
+
+  app-profile .feed-shell > .feed-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+    gap: 18px;
+    align-items: start;
+    max-width: var(--feed-max-width);
+  }
+
+  app-profile .feed-shell > .feed-body > .profile-section {
+    margin: 0;
+  }
+
+  app-profile .feed-shell > .feed-body > .profile-section:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .profile-header ~ .feed-body .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-header ~ .feed-body ion-item.form-item:has(ion-textarea),
+  .profile-header ~ .feed-body .availability-card,
+  .profile-header ~ .feed-body .cv-upload,
+  .profile-header ~ .feed-body .cv-actions {
+    grid-column: 1 / -1;
+  }
+
+  app-job-detail .detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.7fr);
+    gap: 18px;
+    align-items: start;
+  }
+
+  app-job-detail .detail-col {
+    gap: 16px;
+  }
+
+  ion-modal.health-modal,
+  ion-modal.health-booking-modal,
+  ion-modal.ui-settings-modal {
+    --width: min(920px, calc(100vw - 64px));
+    --max-width: 920px;
+  }
+
+  ion-modal.health-booking-modal .modal-body {
+    max-width: 900px;
+  }
+
+  ion-modal.health-booking-modal .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  app-jobs .job-list,
+  app-health .profile-list,
+  app-health-bookings .booking-list,
+  app-my-proposals .booking-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
