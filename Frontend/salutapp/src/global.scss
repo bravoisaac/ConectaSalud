@@ -278,7 +278,7 @@ ion-button.secondary {
 }
 
 ion-tabs ion-content.feed-content::part(scroll) {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
 }
 
 .feed-shell {
@@ -1898,6 +1898,56 @@ app-job-detail {
   }
 }
 
+ion-modal.health-booking-modal {
+  .modal-content {
+    --background: #ffffff;
+  }
+
+  ion-card.detail-card,
+  .person-row,
+  .info-row,
+  .locked-note,
+  .detail-grid {
+    background: #ffffff;
+    border-color: #ebedef;
+  }
+
+  .card-head-title,
+  .person-name,
+  .info-value,
+  .detail-value,
+  .locked-note span {
+    color: #000000;
+  }
+
+  .info-label,
+  .detail-label {
+    color: #5f6162;
+  }
+
+  .card-icon,
+  .avatar {
+    background: rgba(98, 77, 227, 0.1);
+    border-color: rgba(98, 77, 227, 0.22);
+    color: #624de3;
+  }
+
+  .card-icon ion-icon,
+  .info-row ion-icon,
+  .locked-note ion-icon {
+    color: #624de3;
+    opacity: 1;
+  }
+
+  .detail-row {
+    border-bottom-color: #ebedef;
+  }
+
+  .map-frame {
+    border-color: #ebedef;
+  }
+}
+
 html.ui-theme-light app-job-detail {
   .similar-avatar {
     background: rgba(26, 86, 160, 0.10);
@@ -1940,5 +1990,276 @@ html.ui-theme-light app-job-detail {
     ion-item.similar-job-card {
       margin-top: 12px;
     }
+  }
+}
+
+/* Specify visual system overrides */
+
+:root,
+html.ui-theme-light,
+html.ui-theme-dark {
+  --salut-primary: #624de3;
+  --salut-surface: #ffffff;
+  --salut-surface-2: #f6f7f9;
+  --salut-border: #ebedef;
+  --salut-text-1: #000000;
+  --salut-text-2: #5f6162;
+  --salut-text-3: #8d8e8f;
+  --salut-title: #000000;
+  --salut-card-bg: #ffffff;
+  --salut-card-border: #ebedef;
+  --salut-control-bg: #f6f7f9;
+  --salut-control-border: #ebedef;
+  --salut-placeholder: #8d8e8f;
+  --salut-icon: #624de3;
+  --salut-divider: #ebedef;
+  --salut-auth-card-bg: #ffffff;
+  --salut-shadow-lg: 0 10px 30px rgba(26, 29, 30, 0.08);
+  --salut-outline: #d9dde3;
+  --salut-button-secondary: #1a1d1e;
+  color-scheme: light;
+}
+
+body {
+  background: #ffffff;
+  color: #000000;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.auth-content,
+.feed-content,
+.ui-settings-content,
+ion-modal.health-modal .modal-content,
+ion-modal.health-booking-modal .modal-content {
+  --background: #ffffff;
+}
+
+.auth-top,
+.feed-header,
+.profile-header,
+ion-modal.health-modal .modal-toolbar,
+ion-modal.health-booking-modal .modal-toolbar {
+  position: relative;
+  overflow: hidden;
+  background: #151718;
+}
+
+.auth-top::after,
+.feed-header::after,
+.profile-header::after {
+  content: "";
+  position: absolute;
+  right: -54px;
+  bottom: -64px;
+  width: 190px;
+  height: 190px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(98, 77, 227, 0.85), rgba(107, 205, 255, 0.26));
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.auth-top-inner,
+.feed-header-inner,
+.profile-hero {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-title,
+.feed-header .feed-title,
+.profile-name {
+  color: #ffffff;
+  letter-spacing: 0;
+}
+
+.auth-subtitle,
+.feed-header .feed-subtitle {
+  color: rgba(255, 255, 255, 0.66);
+  line-height: 1.71;
+  font-weight: 500;
+}
+
+.feed-header {
+  padding: calc(env(safe-area-inset-top) + 28px) 20px 72px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.feed-title {
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.feed-body {
+  margin-top: -42px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: calc(var(--salut-tabbar-height, 56px) + env(safe-area-inset-bottom) + 8px);
+}
+
+.auth-card,
+.feed-content ion-card,
+ion-card.booking-card,
+ion-modal.health-modal ion-card.detail-card,
+ion-modal.health-booking-modal ion-card.detail-card,
+.profile-header ~ .feed-body .info-row,
+.profile-header ~ .feed-body ion-item.form-item::part(native),
+.profile-header ~ .feed-body .cv-upload,
+.profile-header ~ .feed-body .availability-slot,
+.profile-header ~ .feed-body .personal-sheet,
+.booking-meta-row,
+ion-segment.ui-segment,
+ion-segment {
+  background: #ffffff;
+  border-color: #ebedef;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(26, 29, 30, 0.08);
+}
+
+ion-searchbar.feed-search {
+  position: relative;
+  z-index: 2;
+  --background: #ffffff;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 30px rgba(26, 29, 30, 0.08);
+  --placeholder-color: #8d8e8f;
+  --color: #000000;
+  --icon-color: #624de3;
+  --clear-button-color: #5f6162;
+}
+
+.auth-item::part(native),
+.filter-pill,
+.detail-pill,
+.similar-pill,
+.skill-chip,
+.profile-role {
+  background: #ffffff;
+  border-color: #ebedef;
+  color: #1a1d1e;
+}
+
+.filter-pill,
+ion-button.primary,
+ion-button.secondary,
+ion-button.cv-upload__pick,
+ion-button.availability-action {
+  --border-radius: 40px;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+ion-button.primary,
+ion-segment-button {
+  --background: #624de3;
+  --background-hover: #5842d2;
+  --background-activated: #4f3cc6;
+  --background-checked: #624de3;
+  --indicator-color: #624de3;
+  --color: #ffffff;
+  --color-checked: #ffffff;
+}
+
+.badge {
+  height: 24px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge--success,
+.badge--info {
+  background: rgba(98, 77, 227, 0.1);
+  border-color: rgba(98, 77, 227, 0.22);
+  color: #624de3;
+}
+
+.badge--warning {
+  color: #8a4f00;
+}
+
+.badge--neutral {
+  color: #1a1d1e;
+}
+
+.feed-content ion-card-title,
+.feed-content ion-card-subtitle,
+.feed-content ion-card-content,
+.feed-content ion-label,
+.feed-content ion-item,
+.feed-content p,
+.feed-content h2,
+.feed-content h3,
+.booking-title,
+.section-title {
+  color: #000000;
+}
+
+.booking-meta,
+.booking-sub,
+.booking-desc,
+.profile-header ~ .feed-body .info-label,
+.profile-header ~ .feed-body .availability-slot__time,
+.profile-header ~ .feed-body ion-note.settings-summary {
+  color: #5f6162;
+}
+
+.profile-header ~ .feed-body ion-item.settings-item--danger {
+  --background: rgba(220, 38, 38, 0.08);
+  --color: #b91c1c;
+  border-bottom: 0;
+}
+
+.profile-header ~ .feed-body ion-item.settings-item--danger::part(native) {
+  color: #b91c1c;
+}
+
+.profile-header ~ .feed-body ion-item.settings-item--danger ion-icon,
+.profile-header ~ .feed-body ion-item.settings-item--danger ion-label {
+  color: #b91c1c;
+  font-weight: 800;
+}
+
+app-job-detail {
+  .detail-card,
+  ion-item.similar-job-card::part(native),
+  ion-item.apply-item,
+  .detail-pill,
+  .similar-pill,
+  .company-row,
+  .avatar,
+  .similar-avatar {
+    background: #ffffff;
+    border-color: #ebedef;
+    color: #000000;
+  }
+
+  .detail-title,
+  .similar-title,
+  .company-name,
+  .detail-salary,
+  .similar-salary,
+  .description,
+  ion-item.apply-item ion-textarea::part(native) {
+    color: #000000;
+  }
+
+  .detail-subtitle,
+  .detail-pill,
+  .similar-pill,
+  .company-sub,
+  .empty {
+    color: #5f6162;
+  }
+
+  .detail-pill ion-icon,
+  .similar-pill ion-icon,
+  .detail-salary ion-icon,
+  .similar-salary ion-icon {
+    color: #624de3;
+    opacity: 1;
   }
 }
