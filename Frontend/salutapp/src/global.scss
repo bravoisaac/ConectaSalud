@@ -40,7 +40,7 @@
   --app-content-max-width: 1120px;
   --app-content-gutter: 16px;
   --feed-max-width: 560px;
-  --salut-tabbar-height: 56px;
+  --salut-tabbar-height: 64px;
   --salut-primary: #1a56a0;
   --salut-surface: #1f1f1f;
   --salut-surface-2: rgba(255, 255, 255, 0.04);
@@ -2261,6 +2261,283 @@ app-job-detail {
   .similar-salary ion-icon {
     color: #624de3;
     opacity: 1;
+  }
+}
+
+app-health {
+  ion-item.profile-card-item,
+  ion-item.profile-card-item::part(native),
+  .prof-row,
+  .prof-main {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .prof-name,
+  ion-label,
+  h2 {
+    color: #000000;
+  }
+
+  .prof-sub,
+  .prof-exp,
+  .empty {
+    color: #4b4f52;
+  }
+
+  .avatar {
+    background: rgba(98, 77, 227, 0.12) !important;
+    border-color: rgba(98, 77, 227, 0.28) !important;
+    color: #4f3cc6 !important;
+  }
+
+  .rating {
+    color: #9a5b00;
+  }
+}
+
+ion-popover.filter-popover {
+  ion-content,
+  ion-list,
+  ion-item,
+  ion-item::part(native) {
+    --background: #ffffff;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  ion-label,
+  ion-input,
+  ion-input::part(native) {
+    --color: #000000;
+    color: #000000;
+  }
+
+  ion-input {
+    --placeholder-color: #6b6f72;
+  }
+}
+
+ion-modal.health-modal {
+  ion-card.detail-card,
+  ion-card.detail-card ion-card-content,
+  .prof-row,
+  .info-list,
+  .info-row,
+  .availability-mini,
+  ion-list.availability-list,
+  ion-list.availability-list ion-item,
+  ion-list.availability-list ion-item::part(native),
+  .booking-sheet,
+  .booking-note {
+    background: #ffffff;
+    border-color: #ebedef;
+    color: #000000;
+  }
+
+  .section-title,
+  .prof-name,
+  .info-value,
+  .mini-date.is-enabled,
+  ion-list.availability-list ion-label h3,
+  .booking-field-value,
+  ion-item.booking-item ion-input::part(native),
+  ion-item.booking-item ion-select::part(text),
+  .booking-note-title {
+    color: #000000;
+  }
+
+  .prof-sub,
+  .prof-exp,
+  .info-label,
+  .mini-label,
+  ion-list.availability-list ion-label p,
+  .booking-field-label,
+  .booking-helper,
+  .booking-note-sub {
+    color: #4b4f52;
+  }
+
+  .avatar {
+    background: rgba(98, 77, 227, 0.12) !important;
+    border-color: rgba(98, 77, 227, 0.28) !important;
+    color: #4f3cc6 !important;
+  }
+
+  ion-datetime.booking-datetime {
+    --background: #ffffff;
+    --background-rgb: 255, 255, 255;
+    --ion-color-primary: #624de3;
+    --ion-color-primary-rgb: 98, 77, 227;
+    --ion-color-step-50: #f6f7f9;
+    --ion-color-step-100: #eceef2;
+    --ion-color-step-150: #dde1e7;
+    --ion-color-step-200: #cfd5dd;
+    --ion-color-step-250: #c0c7d0;
+    --ion-color-step-300: #aeb7c2;
+    --ion-color-step-350: #9aa5b1;
+    --ion-color-step-400: #858f9b;
+    --ion-color-step-450: #717b86;
+    --ion-color-step-500: #5f6974;
+    --ion-color-step-550: #4e5862;
+    --ion-color-step-600: #404951;
+    --ion-color-step-650: #343c43;
+    --ion-color-step-700: #2a3036;
+    --ion-color-step-750: #20262b;
+    --ion-color-step-800: #171c20;
+    --ion-color-step-850: #111519;
+    --ion-color-step-900: #0b0f12;
+    --ion-color-step-950: #050708;
+    color: #000000;
+    background: #ffffff;
+    border: 1px solid #ebedef;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 390px;
+    margin: 12px auto 0;
+    padding: 10px 12px 14px;
+    box-shadow: 0 14px 36px rgba(26, 29, 30, 0.08), inset 0 0 0 1px rgba(98, 77, 227, 0.04);
+  }
+
+  .booking-field--datetime {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fb 100%);
+    border: 1px solid #ebedef;
+    border-radius: 18px;
+    padding: 14px;
+  }
+
+  ion-item.booking-item {
+    --background: #ffffff;
+    --border-color: #ebedef;
+    --color: #000000;
+    --padding-start: 14px;
+    --inner-padding-end: 12px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --min-height: 58px;
+    margin-top: 10px;
+    border: 1px solid #ebedef;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 22px rgba(26, 29, 30, 0.05);
+    overflow: hidden;
+  }
+
+  ion-item.booking-item:last-of-type {
+    border-bottom: 1px solid #ebedef !important;
+  }
+
+  ion-item.booking-item::part(native) {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  ion-item.booking-item ion-label {
+    --color: #4b4f52;
+    color: #4b4f52 !important;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  ion-item.booking-item ion-input,
+  ion-item.booking-item ion-select {
+    --color: #000000;
+    --placeholder-color: #7b8086;
+    color: #000000;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  ion-item.booking-item ion-input::part(native),
+  ion-item.booking-item ion-select::part(text),
+  ion-item.booking-item ion-select::part(placeholder) {
+    color: #000000 !important;
+  }
+
+  ion-item.booking-item ion-input::part(native)::placeholder {
+    color: #7b8086;
+    opacity: 1;
+  }
+
+  ion-item.booking-item ion-icon[slot='end'] {
+    color: #624de3 !important;
+    opacity: 1;
+  }
+
+  ion-item.booking-item.item-has-focus,
+  ion-item.booking-item:focus-within {
+    border-color: rgba(98, 77, 227, 0.45);
+    box-shadow: 0 0 0 3px rgba(98, 77, 227, 0.1), 0 8px 22px rgba(26, 29, 30, 0.05);
+  }
+
+  .booking-field--datetime .booking-field-label {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(98, 77, 227, 0.1);
+    color: #4f3cc6;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  ion-datetime.booking-datetime::part(month-year-button) {
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f6f7f9;
+    color: #1a1d1e;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day) {
+    color: #1a1d1e;
+    min-width: 38px;
+    min-height: 38px;
+    border-radius: 999px;
+    font-weight: 800;
+    transition: background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day-active) {
+    background: #624de3;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(98, 77, 227, 0.28);
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day-today) {
+    background: rgba(98, 77, 227, 0.08);
+    color: #4f3cc6;
+    border-color: rgba(98, 77, 227, 0.45);
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day-of-week),
+  ion-datetime.booking-datetime::part(wheel-item) {
+    color: #1a1d1e;
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day-of-week) {
+    font-size: 11px;
+    font-weight: 900;
+    color: #6b6f72;
+    text-transform: uppercase;
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day-disabled),
+  ion-datetime.booking-datetime::part(wheel-item-disabled) {
+    color: #8d8e8f;
+    opacity: 0.42;
+  }
+
+  ion-datetime.booking-datetime::part(calendar-day):focus-visible {
+    outline: 2px solid rgba(98, 77, 227, 0.42);
+    outline-offset: 2px;
   }
 }
 
