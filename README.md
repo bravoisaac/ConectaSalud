@@ -1,8 +1,8 @@
-# 🩺 SalutAPP - Plataforma de Salud y Gestión Médica
+# 🩺 ConectaSalud - Plataforma de Salud y Gestión Médica
 
 ## 📌 Descripción del Proyecto
 
-SalutAPP es una aplicación desarrollada para facilitar la gestión de servicios de salud, permitiendo la interacción entre pacientes y profesionales médicos mediante una plataforma moderna, intuitiva y accesible desde dispositivos móviles y web.
+ConectaSalud es una aplicación desarrollada para facilitar la gestión de servicios de salud, permitiendo la interacción entre pacientes y profesionales médicos mediante una plataforma moderna, intuitiva y accesible desde dispositivos móviles y web.
 
 El objetivo principal del proyecto es optimizar procesos de atención, reservas, seguimiento y administración médica, mejorando la experiencia del usuario y la eficiencia operativa.
 
