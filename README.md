@@ -1,70 +1,129 @@
 # Salut App
 
-Salut App es una plataforma web y movil para conectar usuarios, profesionales de salud y empresas. El proyecto combina una app Ionic/Angular con una API Laravel protegida con Sanctum.
+Plataforma digital para conectar personas, profesionales de salud y empresas del area sanitaria en un solo entorno web y movil.
 
-## Capturas
+Salut App permite buscar ofertas laborales, publicar oportunidades, postular a empleos, encontrar profesionales de salud, gestionar reservas y mantener el perfil profesional actualizado. El sistema esta construido con un frontend Ionic/Angular y una API REST en Laravel.
 
-**Acceso**
+## Vista general
 
-| Inicio de sesion | Registro |
-| --- | --- |
-| ![Pantalla de login](docs/images/login.png) | ![Pantalla de registro](docs/images/registro.png) |
+Salut App esta pensada para resolver tres necesidades principales:
 
-**App autenticada**
+- Usuarios que buscan servicios de salud o nuevas oportunidades laborales.
+- Profesionales de salud que quieren mostrar su perfil, disponibilidad y experiencia.
+- Empresas o instituciones que necesitan publicar ofertas y revisar postulaciones.
 
-| Empleos | Servicios de salud |
-| --- | --- |
-| ![Pantalla de empleos](docs/images/jobs.jpg) | ![Pantalla de servicios de salud](docs/images/health.jpg) |
+El proyecto integra autenticacion, roles, reservas, postulaciones, perfiles, servicios de salud y gestion de datos desde una API centralizada.
 
-| Reservas | Propuestas | Perfil |
-| --- | --- | --- |
-| ![Pantalla de reservas](docs/images/health-bookings.jpg) | ![Pantalla de propuestas](docs/images/my-proposals.jpg) | ![Pantalla de perfil](docs/images/profile.jpg) |
+## Capturas del sistema
 
-## Funcionalidades
+### Inicio de sesion
 
-- Registro e inicio de sesion de usuarios.
-- Roles para usuario, profesional de salud, empresa y administrador.
-- Perfil personal y perfil profesional de salud.
-- Publicacion, busqueda y postulacion a empleos.
-- Gestion de servicios de salud y reservas.
-- Chat, comentarios, likes, reportes, verificaciones y pagos.
-- API REST con autenticacion por Laravel Sanctum.
+Pantalla de acceso para usuarios registrados. Desde aqui el usuario ingresa con correo y contrasena para acceder a las funciones privadas de la aplicacion.
 
-## Tecnologias
+![Pantalla de inicio de sesion](docs/images/login.png)
 
-**Frontend**
+### Registro de usuarios
+
+Formulario para crear una cuenta nueva. Permite seleccionar el tipo de usuario, idioma y datos basicos de contacto.
+
+![Pantalla de registro](docs/images/registro.png)
+
+### Modulo de empleos
+
+Listado de ofertas laborales con buscador, filtros por ubicacion, profesion, sueldo, jornada, fecha y experiencia. Desde esta vista el usuario puede revisar oportunidades y entrar al detalle de cada publicacion.
+
+![Pantalla de empleos](docs/images/jobs.jpg)
+
+### Servicios de salud
+
+Directorio de profesionales disponibles. Incluye filtros por especialidad, ubicacion y tarifa, mostrando informacion relevante como experiencia, profesion y valor por hora.
+
+![Pantalla de servicios de salud](docs/images/health.jpg)
+
+### Reservas
+
+Panel para revisar citas de salud activas y finalizadas. Permite visualizar fecha, hora, ubicacion, estado de la reserva y acciones segun el rol del usuario.
+
+![Pantalla de reservas](docs/images/health-bookings.jpg)
+
+### Propuestas
+
+Vista de postulaciones enviadas o recibidas. El usuario puede consultar el estado de sus propuestas, revisar detalles y contactar cuando corresponde.
+
+![Pantalla de propuestas](docs/images/my-proposals.jpg)
+
+### Perfil
+
+Seccion de datos personales y curriculum profesional. Centraliza informacion de contacto, direccion, rol y antecedentes laborales del usuario.
+
+![Pantalla de perfil](docs/images/profile.jpg)
+
+## Funcionalidades principales
+
+- Registro e inicio de sesion.
+- Autenticacion protegida con Laravel Sanctum.
+- Roles de usuario, profesional de salud, empresa y administrador.
+- Perfil personal y curriculum profesional.
+- Publicacion y busqueda de empleos.
+- Postulacion a ofertas laborales.
+- Busqueda de profesionales de salud.
+- Gestion de reservas medicas o servicios domiciliarios.
+- Historial de postulaciones y citas.
+- API REST para conectar frontend y backend.
+
+## Stack tecnologico
+
+### Frontend
 
 - Angular 20
 - Ionic 8
 - TypeScript
 - SCSS
 - Capacitor
+- Ionic Storage
 
-**Backend**
+### Backend
 
 - PHP 8.2+
 - Laravel 12
 - Laravel Sanctum
 - MySQL
+- PHPUnit
 
-## Estructura del proyecto
+## Arquitectura del proyecto
 
 ```text
 Salut_app/
 +-- Backend/
-|   +-- api/                 # API Laravel
+|   +-- api/
+|       +-- app/             # Controladores, modelos y providers
+|       +-- config/          # Configuracion Laravel
+|       +-- database/        # Migraciones, seeders y factories
+|       +-- routes/          # Rutas web, consola y API
+|       +-- tests/           # Pruebas del backend
 +-- Frontend/
-|   +-- Modelos/             # Documentacion/modelado
-|   +-- salutapp/            # App Ionic + Angular
+|   +-- salutapp/
+|       +-- src/app/pages/   # Pantallas principales
+|       +-- src/app/services/# Servicios HTTP y estado
+|       +-- src/app/guards/  # Proteccion de rutas
+|       +-- src/assets/      # Recursos estaticos
 +-- docs/
-|   +-- images/              # Imagenes usadas en este README
+|   +-- images/              # Capturas del README
 +-- tools/
 +-- README.md
 ```
 
-## Instalacion
+## Instalacion local
 
-### 1. Backend
+### Requisitos
+
+- Node.js
+- npm
+- PHP 8.2 o superior
+- Composer
+- MySQL
+
+### Backend
 
 ```bash
 cd Backend/api
@@ -73,7 +132,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Configura la base de datos en `.env`:
+Configura la conexion a MySQL en el archivo `.env`:
 
 ```env
 DB_CONNECTION=mysql
@@ -84,22 +143,26 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Ejecuta migraciones y datos de prueba:
+Ejecuta las migraciones y carga datos de prueba:
 
 ```bash
 php artisan migrate
 php artisan db:seed
 ```
 
-Inicia la API:
+Levanta la API:
 
 ```bash
 php artisan serve
 ```
 
-Por defecto, la API queda disponible en `http://localhost:8000/api`.
+La API queda disponible en:
 
-### 2. Frontend
+```text
+http://localhost:8000/api
+```
+
+### Frontend
 
 ```bash
 cd Frontend/salutapp
@@ -107,42 +170,49 @@ npm install
 npm run start
 ```
 
-La app Angular queda disponible normalmente en `http://localhost:4200`.
+La aplicacion queda disponible en:
 
-El frontend usa esta URL de API en desarrollo:
+```text
+http://localhost:4200
+```
+
+En el entorno de desarrollo, el frontend consume la API desde:
 
 ```ts
 apiBase: 'http://localhost:8000/api'
 ```
 
-## Rutas principales
+## Rutas principales del frontend
 
-**Frontend**
+| Ruta | Descripcion |
+| --- | --- |
+| `/login` | Inicio de sesion |
+| `/register` | Registro de usuarios |
+| `/admin` | Panel administrativo |
+| `/app/jobs` | Listado de empleos |
+| `/app/jobs/new` | Creacion de empleo |
+| `/app/jobs/:id` | Detalle de empleo |
+| `/app/health` | Busqueda de profesionales de salud |
+| `/app/health-bookings` | Reservas de salud |
+| `/app/my-proposals` | Propuestas y postulaciones |
+| `/app/profile` | Perfil del usuario |
 
-- `/login`
-- `/register`
-- `/admin`
-- `/app/jobs`
-- `/app/jobs/new`
-- `/app/jobs/:id`
-- `/app/health`
-- `/app/health-bookings`
-- `/app/my-proposals`
-- `/app/profile`
+## Endpoints principales de la API
 
-**API**
-
-- `POST /api/register`
-- `POST /api/login`
-- `GET /api/me`
-- `POST /api/logout`
-- `/api/jobs`
-- `/api/job-applications`
-- `/api/health/profiles`
-- `/api/health/bookings`
-- `/api/posts`
-- `/api/chats`
-- `/api/profile`
+| Metodo | Endpoint | Descripcion |
+| --- | --- | --- |
+| `POST` | `/api/register` | Crear usuario |
+| `POST` | `/api/login` | Iniciar sesion |
+| `GET` | `/api/me` | Obtener usuario autenticado |
+| `POST` | `/api/logout` | Cerrar sesion |
+| `GET/POST` | `/api/jobs` | Listar o crear empleos |
+| `POST` | `/api/jobs/{job}/apply` | Postular a un empleo |
+| `GET` | `/api/job-applications` | Ver postulaciones |
+| `GET/POST` | `/api/health/profiles` | Gestionar perfiles de salud |
+| `GET/POST` | `/api/health/bookings` | Gestionar reservas |
+| `GET/POST` | `/api/posts` | Gestionar publicaciones sociales |
+| `GET/POST` | `/api/chats` | Gestionar conversaciones |
+| `GET/POST` | `/api/profile` | Consultar o actualizar perfil |
 
 ## Scripts utiles
 
@@ -164,13 +234,13 @@ php artisan db:seed
 php artisan test
 ```
 
-## Estado
+## Estado del proyecto
 
-Proyecto en desarrollo activo.
+Proyecto en desarrollo activo. Actualmente cuenta con autenticacion, roles, empleos, postulaciones, servicios de salud, reservas y perfil de usuario.
 
 ## Autor
 
-Isaac Daniel Bravo Melo  
+**Isaac Daniel Bravo Melo**  
 Ingeniero en Informatica  
 Concepcion, Chile  
 [isaacbravo1431@gmail.com](mailto:isaacbravo1431@gmail.com)
