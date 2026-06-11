@@ -20,13 +20,13 @@ El proyecto integra autenticacion, roles, reservas, postulaciones, perfiles, ser
 
 Pantalla de acceso para usuarios registrados. Desde aqui el usuario ingresa con correo y contrasena para acceder a las funciones privadas de la aplicacion.
 
-![Pantalla de inicio de sesion](docs/images/login.png)
+![Pantalla de inicio de sesion](docs/images/login.jpg)
 
 ### Registro de usuarios
 
 Formulario para crear una cuenta nueva. Permite seleccionar el tipo de usuario, idioma y datos basicos de contacto.
 
-![Pantalla de registro](docs/images/registro.png)
+![Pantalla de registro](docs/images/registro.jpg)
 
 ### Modulo de empleos
 
