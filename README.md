@@ -1,150 +1,79 @@
-# 🩺 ConectaSalud - Plataforma de Salud y Gestión Médica
+# Salut App
 
-## 📌 Descripción del Proyecto
+Salut App es una plataforma web y movil para conectar usuarios, profesionales de salud y empresas. El proyecto combina una app Ionic/Angular con una API Laravel protegida con Sanctum.
 
-ConectaSalud es una aplicación desarrollada para facilitar la gestión de servicios de salud, permitiendo la interacción entre pacientes y profesionales médicos mediante una plataforma moderna, intuitiva y accesible desde dispositivos móviles y web.
+## Capturas
 
-El objetivo principal del proyecto es optimizar procesos de atención, reservas, seguimiento y administración médica, mejorando la experiencia del usuario y la eficiencia operativa.
+**Acceso**
 
----
+| Inicio de sesion | Registro |
+| --- | --- |
+| ![Pantalla de login](docs/images/login.png) | ![Pantalla de registro](docs/images/registro.png) |
 
-# 🚀 Características Principales
+**App autenticada**
 
-✅ Registro e inicio de sesión de usuarios
+| Empleos | Servicios de salud |
+| --- | --- |
+| ![Pantalla de empleos](docs/images/jobs.jpg) | ![Pantalla de servicios de salud](docs/images/health.jpg) |
 
-✅ Gestión de perfiles de pacientes y profesionales
+| Reservas | Propuestas | Perfil |
+| --- | --- | --- |
+| ![Pantalla de reservas](docs/images/health-bookings.jpg) | ![Pantalla de propuestas](docs/images/my-proposals.jpg) | ![Pantalla de perfil](docs/images/profile.jpg) |
 
-✅ Reserva y administración de horas médicas
+## Funcionalidades
 
-✅ Historial y seguimiento de atenciones
+- Registro e inicio de sesion de usuarios.
+- Roles para usuario, profesional de salud, empresa y administrador.
+- Perfil personal y perfil profesional de salud.
+- Publicacion, busqueda y postulacion a empleos.
+- Gestion de servicios de salud y reservas.
+- Chat, comentarios, likes, reportes, verificaciones y pagos.
+- API REST con autenticacion por Laravel Sanctum.
 
-✅ Sistema de autenticación con JWT
+## Tecnologias
 
-✅ Integración de API REST
+**Frontend**
 
-✅ Interfaz responsive para dispositivos móviles
+- Angular 20
+- Ionic 8
+- TypeScript
+- SCSS
+- Capacitor
 
-✅ Gestión de notificaciones y estados
+**Backend**
 
-✅ Base de datos relacional para almacenamiento seguro
+- PHP 8.2+
+- Laravel 12
+- Laravel Sanctum
+- MySQL
 
----
+## Estructura del proyecto
 
-# 🛠️ Tecnologías Utilizadas
-
-## Frontend
-
-* Angular
-* Ionic Framework
-* TypeScript
-* HTML5
-* SCSS
-
-## Backend
-
-* Laravel
-* PHP
-* API REST
-* Laravel Sanctum / JWT
-
-## Base de Datos
-
-* MySQL
-
-## Herramientas
-
-* Visual Studio Code
-* Android Studio
-* Postman
-* Git & GitHub
-
----
-
-# 📱 Funcionalidades del Sistema
-
-## 👤 Usuarios
-
-* Registro de cuenta
-* Inicio de sesión seguro
-* Recuperación de contraseña
-* Gestión de perfil
-
-## 🩺 Atención Médica
-
-* Solicitud de horas médicas
-* Visualización de reservas
-* Seguimiento de estados
-* Historial de atenciones
-
-## 🔔 Notificaciones
-
-* Alertas de atención
-* Cambios de estado
-* Recordatorios
-
----
-
-# 🗂️ Estructura del Proyecto
-
-```bash
-SalutAPP/
-│
-├── frontend/
-│   ├── src/
-│   ├── pages/
-│   ├── services/
-│   └── components/
-│
-├── backend/
-│   ├── app/
-│   ├── routes/
-│   ├── database/
-│   └── api/
-│
-└── README.md
+```text
+Salut_app/
++-- Backend/
+|   +-- api/                 # API Laravel
++-- Frontend/
+|   +-- Modelos/             # Documentacion/modelado
+|   +-- salutapp/            # App Ionic + Angular
++-- docs/
+|   +-- images/              # Imagenes usadas en este README
++-- tools/
++-- README.md
 ```
 
----
+## Instalacion
 
-# ⚙️ Instalación del Proyecto
-
-## 1️⃣ Clonar el repositorio
+### 1. Backend
 
 ```bash
-git clone https://github.com/TU-USUARIO/salutapp.git
-```
-
----
-
-## 2️⃣ Instalar dependencias Frontend
-
-```bash
-cd frontend
-npm install
-```
-
----
-
-## 3️⃣ Ejecutar Frontend
-
-```bash
-ionic serve
-```
-
----
-
-## 4️⃣ Configurar Backend
-
-```bash
-cd backend
+cd Backend/api
 composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
----
-
-## 5️⃣ Configurar archivo .env
-
-Configurar credenciales de MySQL:
+Configura la base de datos en `.env`:
 
 ```env
 DB_CONNECTION=mysql
@@ -155,90 +84,93 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
----
-
-## 6️⃣ Ejecutar migraciones
+Ejecuta migraciones y datos de prueba:
 
 ```bash
 php artisan migrate
+php artisan db:seed
 ```
 
----
-
-## 7️⃣ Iniciar servidor Laravel
+Inicia la API:
 
 ```bash
 php artisan serve
 ```
 
----
+Por defecto, la API queda disponible en `http://localhost:8000/api`.
 
-# 🔐 Seguridad
-
-La aplicación implementa:
-
-* Autenticación JWT
-* Protección de rutas
-* Validación de datos
-* Manejo seguro de sesiones
-* Control de acceso por roles
-
----
-
-# 📸 Capturas del Sistema
-
-## Login
-
-*Agregar captura aquí*
-
-## Dashboard
-
-*Agregar captura aquí*
-
-## Reservas
-
-*Agregar captura aquí*
-
----
-
-# 📈 Objetivos del Proyecto
-
-* Mejorar la accesibilidad a servicios médicos
-* Optimizar tiempos de atención
-* Digitalizar procesos de salud
-* Facilitar la comunicación entre usuarios y profesionales
-
----
-
-# 👨‍💻 Autor
-
-## Isaac Daniel Bravo Melo
-
-Ingeniero en Informática
-
-📍 Concepción, Chile
-
-📧 [isaacbravo1431@gmail.com](mailto:isaacbravo1431@gmail.com)
-
----
-
-# 📄 Licencia
-
-Este proyecto fue desarrollado con fines académicos y de aprendizaje.
-
----
-
-# ⭐ Contribuciones
-
-Las contribuciones, mejoras y sugerencias son bienvenidas.
+### 2. Frontend
 
 ```bash
-Fork -> Clone -> Commit -> Push -> Pull Request
+cd Frontend/salutapp
+npm install
+npm run start
 ```
 
----
+La app Angular queda disponible normalmente en `http://localhost:4200`.
 
-# 🌐 Estado del Proyecto
+El frontend usa esta URL de API en desarrollo:
 
-🚧 Proyecto en desarrollo activo.
+```ts
+apiBase: 'http://localhost:8000/api'
+```
 
+## Rutas principales
+
+**Frontend**
+
+- `/login`
+- `/register`
+- `/admin`
+- `/app/jobs`
+- `/app/jobs/new`
+- `/app/jobs/:id`
+- `/app/health`
+- `/app/health-bookings`
+- `/app/my-proposals`
+- `/app/profile`
+
+**API**
+
+- `POST /api/register`
+- `POST /api/login`
+- `GET /api/me`
+- `POST /api/logout`
+- `/api/jobs`
+- `/api/job-applications`
+- `/api/health/profiles`
+- `/api/health/bookings`
+- `/api/posts`
+- `/api/chats`
+- `/api/profile`
+
+## Scripts utiles
+
+Frontend:
+
+```bash
+npm run start
+npm run build
+npm run test
+npm run lint
+```
+
+Backend:
+
+```bash
+php artisan serve
+php artisan migrate
+php artisan db:seed
+php artisan test
+```
+
+## Estado
+
+Proyecto en desarrollo activo.
+
+## Autor
+
+Isaac Daniel Bravo Melo  
+Ingeniero en Informatica  
+Concepcion, Chile  
+[isaacbravo1431@gmail.com](mailto:isaacbravo1431@gmail.com)
