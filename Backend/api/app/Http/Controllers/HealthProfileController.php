@@ -7,13 +7,22 @@ use Illuminate\Http\Request;
 
 class HealthProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
+        $query = HealthProfile::query()
+            ->with('user')
+            ->latest();
+
+        if (!$user->isAdmin()) {
+            $query->where(function ($q) use ($user) {
+                $q->where('verification_status', 'approved')
+                    ->orWhere('user_id', $user->id);
+            });
+        }
+
         return response()->json(
-            HealthProfile::query()
-                ->with('user')
-                ->latest()
-                ->paginate(20)
+            $query->paginate(20)
         );
     }
 
@@ -55,14 +64,19 @@ class HealthProfileController extends Controller
             return response()->json(['message' => 'No autorizado'], 403);
         }
 
-        $data = $request->validate([
+        $rules = [
             'specialty' => 'sometimes|required|string|max:255',
             'experience_years' => 'nullable|integer|min:0',
             'rate_hour' => 'nullable|numeric|min:0',
             'location' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
-            'verification_status' => 'nullable|string',
-        ]);
+        ];
+
+        if ($user->isAdmin()) {
+            $rules['verification_status'] = 'nullable|string|in:pending,approved,rejected';
+        }
+
+        $data = $request->validate($rules);
 
         $profile->update($data);
 

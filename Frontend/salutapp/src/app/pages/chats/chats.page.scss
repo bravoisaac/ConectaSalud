@@ -1,0 +1,166 @@
+:host {
+  display: block;
+}
+
+.chat-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 34px 18px;
+  border: 1px solid #dfe5eb;
+  border-radius: 8px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.chat-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 8px;
+  background: #eef6ff;
+  border: 1px solid #c7dcf5;
+  color: #1766ad;
+}
+
+.chat-empty-icon ion-icon {
+  font-size: 30px;
+}
+
+.chat-empty h2 {
+  margin: 4px 0 0;
+  color: #202427;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.chat-empty p {
+  width: min(100%, 520px);
+  margin: 0;
+  color: #4f5962;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.chat-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 0.58fr);
+  gap: 14px;
+}
+
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-card {
+  margin: 0;
+}
+
+.chat-card-title {
+  color: #202427;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.chat-card-message {
+  margin-top: 6px;
+  color: #515960;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.chat-detail {
+  margin: 0;
+}
+
+.chat-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 48vh;
+  overflow: auto;
+  padding: 4px;
+}
+
+.message {
+  align-self: flex-start;
+  max-width: min(82%, 520px);
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f3f5f7;
+  border: 1px solid #dde3e8;
+}
+
+.message--own {
+  align-self: flex-end;
+  background: #eaf3ff;
+  border-color: #bdd8ff;
+}
+
+.message-sender {
+  color: #4d5660;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.message-body {
+  color: #202427;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.message-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+@media (max-width: 760px) {
+  .chat-empty {
+    padding: 26px 14px;
+  }
+
+  .chat-empty-actions {
+    width: 100%;
+  }
+
+  .chat-empty-actions ion-button {
+    flex: 1 1 180px;
+  }
+
+  .chat-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .messages {
+    max-height: 42vh;
+  }
+}

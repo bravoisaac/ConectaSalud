@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
+import { ChatService } from '../../services/chat.service';
 import { HealthService } from '../../services/health.service';
 
 @Component({
@@ -24,7 +26,9 @@ export class HealthBookingsPage implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private chatService: ChatService,
     private healthService: HealthService,
+    private router: Router,
     private sanitizer: DomSanitizer,
   ) {}
 
@@ -69,7 +73,7 @@ export class HealthBookingsPage implements OnInit {
   }
 
   acceptBooking(booking: any) {
-    this.updateBooking(booking, 'in_service', 'Reserva aceptada');
+    this.updateBooking(booking, 'accepted', 'Reserva aceptada');
   }
 
   rejectBooking(booking: any) {
@@ -80,13 +84,29 @@ export class HealthBookingsPage implements OnInit {
     return this.isHealthUser && String(booking?.status || '').toLowerCase() === 'requested';
   }
 
+  canStartBooking(booking: any) {
+    return this.isHealthUser && this.statusKey(booking?.status) === 'accepted';
+  }
+
+  canCompleteBooking(booking: any) {
+    return this.isHealthUser && this.statusKey(booking?.status) === 'in_service';
+  }
+
+  canSeeBookingOtp(booking: any) {
+    return !this.isHealthUser && this.statusKey(booking?.status) === 'accepted' && !!(booking?.otp_code || booking?.otpCode);
+  }
+
   canSeeCounterpartContact(booking: any) {
     const key = this.statusKey(booking?.status);
-    return key === 'in_service' || key === 'completed';
+    return key === 'accepted' || key === 'in_service' || key === 'completed';
+  }
+
+  canOpenBookingChat(booking: any) {
+    return this.canSeeCounterpartContact(booking) && !!this.counterpartUser(booking)?.id;
   }
 
   get currentBookings() {
-    const currentStatuses = new Set(['requested', 'in_service']);
+    const currentStatuses = new Set(['requested', 'accepted', 'in_service']);
     return this.bookings.filter(item => currentStatuses.has(this.statusKey(item?.status)));
   }
 
@@ -120,8 +140,11 @@ export class HealthBookingsPage implements OnInit {
     if (key === 'requested') {
       return 'En espera';
     }
-    if (key === 'in_service') {
+    if (key === 'accepted') {
       return 'Aceptada';
+    }
+    if (key === 'in_service') {
+      return 'En servicio';
     }
     if (key === 'completed') {
       return 'Completada';
@@ -135,6 +158,7 @@ export class HealthBookingsPage implements OnInit {
   bookingBadgeTone(booking: any) {
     const key = this.statusKey(booking?.status);
     if (key === 'in_service') return 'success';
+    if (key === 'accepted') return 'info';
     if (key === 'requested') return 'warning';
     if (key === 'cancelled') return 'danger';
     return 'neutral';
@@ -194,7 +218,11 @@ export class HealthBookingsPage implements OnInit {
   }
 
   private updateBooking(booking: any, status: string, okMessage: string) {
-    if (!booking?.id || !this.canManageBooking(booking)) {
+    const canUpdate =
+      this.canManageBooking(booking) ||
+      (status === 'completed' && this.canCompleteBooking(booking));
+
+    if (!booking?.id || !canUpdate) {
       return;
     }
 
@@ -206,8 +234,11 @@ export class HealthBookingsPage implements OnInit {
       next: (updated: any) => {
         const merged = { ...booking, ...updated };
         this.bookings = this.bookings.map(item => item.id === booking.id ? merged : item);
+        if (this.selectedBooking?.id === booking.id) {
+          this.selectedBooking = merged;
+        }
         this.successMsg = okMessage;
-        if (status === 'in_service') {
+        if (status === 'accepted') {
           this.openBookingDetails(merged);
         }
       },
@@ -225,7 +256,7 @@ export class HealthBookingsPage implements OnInit {
     }
     if (this.isHealthUser) {
       const key = this.statusKey(booking?.status);
-      if (key !== 'in_service' && key !== 'completed') {
+      if (key !== 'accepted' && key !== 'in_service' && key !== 'completed') {
         return;
       }
     }
@@ -234,6 +265,61 @@ export class HealthBookingsPage implements OnInit {
 
   closeBookingDetails() {
     this.selectedBooking = null;
+  }
+
+  startBookingWithOtp(booking: any) {
+    if (!booking?.id || !this.canStartBooking(booking)) {
+      return;
+    }
+
+    const otpCode = window.prompt('Ingresa el codigo OTP del cliente');
+    if (!otpCode) {
+      return;
+    }
+
+    this.updatingId = Number(booking.id);
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    this.healthService.confirmBookingOtp(Number(booking.id), otpCode.trim()).subscribe({
+      next: (updated: any) => {
+        const merged = { ...booking, ...updated };
+        this.bookings = this.bookings.map(item => item.id === booking.id ? merged : item);
+        this.selectedBooking = merged;
+        this.successMsg = 'Servicio iniciado';
+      },
+      error: (err: any) => {
+        this.errorMsg = err?.error?.message || 'No se pudo confirmar el OTP';
+      }
+    }).add(() => {
+      this.updatingId = null;
+    });
+  }
+
+  completeBooking(booking: any) {
+    this.updateBooking(booking, 'completed', 'Reserva finalizada');
+  }
+
+  openBookingChat(booking: any) {
+    const counterpartId = Number(this.counterpartUser(booking)?.id);
+    if (!counterpartId || !this.canOpenBookingChat(booking)) {
+      return;
+    }
+
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    this.chatService.create([counterpartId]).subscribe({
+      next: (chat: any) => {
+        this.closeBookingDetails();
+        this.router.navigate(['/app/chats'], {
+          queryParams: chat?.id ? { chat: chat.id } : undefined,
+        });
+      },
+      error: (err: any) => {
+        this.errorMsg = err?.error?.message || 'No se pudo abrir el chat';
+      },
+    });
   }
 
   get selectedCounterpartUser() {
@@ -265,6 +351,10 @@ export class HealthBookingsPage implements OnInit {
     const street = String(this.selectedBooking?.service_street || this.selectedBooking?.serviceStreet || '').trim();
     const number = String(this.selectedBooking?.service_number || this.selectedBooking?.serviceNumber || '').trim();
     return { region, comuna, city, street, number };
+  }
+
+  get bookingOtpCode() {
+    return String(this.selectedBooking?.otp_code || this.selectedBooking?.otpCode || '').trim();
   }
 
   get formattedServiceAddress() {

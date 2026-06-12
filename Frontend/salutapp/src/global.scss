@@ -2167,22 +2167,70 @@ ion-segment-button {
   height: 24px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  border: 1px solid transparent;
 }
 
-.badge--success,
+.badge--success {
+  background: #eaf8ef;
+  border-color: #bdebc8;
+  color: #176b31;
+}
+
 .badge--info {
-  background: rgba(98, 77, 227, 0.1);
-  border-color: rgba(98, 77, 227, 0.22);
-  color: #624de3;
+  background: rgba(98, 77, 227, 0.11);
+  border-color: rgba(98, 77, 227, 0.28);
+  color: #4f3cc6;
 }
 
 .badge--warning {
-  color: #8a4f00;
+  background: #fff3d7;
+  border-color: #f5c56b;
+  color: #7a4200;
+}
+
+.badge--danger {
+  background: #feecec;
+  border-color: #f5b5af;
+  color: #b42318;
 }
 
 .badge--neutral {
+  background: #f3f4f6;
+  border-color: #d9dde3;
   color: #1a1d1e;
+}
+
+app-health-bookings .actions ion-button.booking-action {
+  min-width: 112px;
+  height: 36px;
+  --border-radius: 999px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --box-shadow: none;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+app-health-bookings .actions ion-button.booking-action--accept {
+  --background: #16803a;
+  --background-hover: #126b31;
+  --background-activated: #105f2c;
+  --color: #ffffff;
+}
+
+app-health-bookings .actions ion-button.booking-action--reject {
+  --border-color: #c7352b;
+  --color: #b42318;
+  --background: #ffffff;
+  --background-hover: #fff1f0;
+  --background-activated: #ffe4e1;
+}
+
+app-health-bookings .actions ion-button.booking-action[disabled] {
+  opacity: 0.7;
 }
 
 .feed-content ion-card-title,
@@ -2204,7 +2252,11 @@ ion-segment-button {
 .profile-header ~ .feed-body .info-label,
 .profile-header ~ .feed-body .availability-slot__time,
 .profile-header ~ .feed-body ion-note.settings-summary {
-  color: #5f6162;
+  color: #34383b;
+}
+
+.history-card {
+  opacity: 1;
 }
 
 .profile-header ~ .feed-body ion-item.settings-item--danger {

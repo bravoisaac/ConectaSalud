@@ -38,6 +38,8 @@ class ChatMessageController extends Controller
             'attachment_type' => $data['attachment_type'] ?? null,
         ]);
 
+        $message->load('sender:id,name,email');
+
         return response()->json($message, 201);
     }
 }

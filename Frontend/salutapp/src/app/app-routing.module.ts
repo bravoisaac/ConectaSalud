@@ -63,6 +63,11 @@ const routes: Routes = [
           import('./pages/my-proposals/my-proposals.page').then(m => m.MyProposalsPage),
       },
       {
+        path: 'chats',
+        loadComponent: () =>
+          import('./pages/chats/chats.page').then(m => m.ChatsPage),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'jobs',

@@ -470,6 +470,10 @@ export class JobDetailPage implements OnInit {
           this.errorMsg = 'No autorizado para postular';
           return;
         }
+        if (err?.status === 409) {
+          this.errorMsg = err?.error?.message || 'Ya postulaste a esta oferta';
+          return;
+        }
         this.errorMsg = 'No se pudo enviar la postulacion';
       }
     }).add(() => {

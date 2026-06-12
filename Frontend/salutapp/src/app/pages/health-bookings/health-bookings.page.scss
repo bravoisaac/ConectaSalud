@@ -5,7 +5,7 @@
 ion-card.health-booking-card ion-card-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .booking-head {
@@ -16,32 +16,39 @@ ion-card.health-booking-card ion-card-content {
 }
 
 .booking-head-main {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 .booking-sub {
   margin: 4px 0 0;
-  font-size: 12px;
-  font-weight: 650;
-  color: var(--salut-text-2);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 750;
+  color: #34383b;
+  overflow-wrap: anywhere;
 }
 
 .booking-meta-row {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--salut-card-bg);
-  border: 1px solid var(--salut-card-border);
-  color: var(--salut-text-2);
-  font-size: 12px;
-  font-weight: 700;
+  padding: 8px 11px;
+  border-radius: 12px;
+  background: #f6f7f9;
+  border: 1px solid #dfe3e8;
+  color: #2f3437;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 800;
   width: fit-content;
+  max-width: 100%;
 }
 
 .booking-meta-row ion-icon {
-  font-size: 14px;
+  flex: 0 0 auto;
+  font-size: 15px;
+  color: #624de3;
   opacity: 0.85;
 }
 
@@ -50,35 +57,40 @@ ion-card.health-booking-card ion-card-content {
 }
 
 .booking-meta-row--address span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .booking-desc {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
-  color: var(--salut-text-2);
-  font-size: 12px;
-  font-weight: 650;
+  color: #34383b;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .booking-desc ion-icon {
-  font-size: 14px;
-  opacity: 0.85;
+  flex: 0 0 auto;
+  font-size: 15px;
+  color: #624de3;
+  opacity: 1;
 }
 
 .contact-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(26, 86, 160, 0.16);
-  border: 1px solid rgba(26, 86, 160, 0.32);
-  color: rgba(191, 219, 254, 0.95);
-  font-size: 12px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: #eef6ff;
+  border: 1px solid #b8d6ff;
+  color: #0f4f8a;
+  font-size: 13px;
+  line-height: 1.35;
   font-weight: 900;
   width: fit-content;
   max-width: 100%;
@@ -86,26 +98,13 @@ ion-card.health-booking-card ion-card-content {
 
 .contact-pill ion-icon {
   font-size: 16px;
+  color: #1766ad;
 }
 
 .contact-pill span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-html.ui-theme-light :host .contact-pill {
-  background: rgba(26, 86, 160, 0.10);
-  border-color: rgba(26, 86, 160, 0.22);
-  color: rgba(26, 86, 160, 0.92);
-}
-
-@media (prefers-color-scheme: light) {
-  html:not(.ui-theme-dark):not(.ui-theme-light) :host .contact-pill {
-    background: rgba(26, 86, 160, 0.10);
-    border-color: rgba(26, 86, 160, 0.22);
-    color: rgba(26, 86, 160, 0.92);
-  }
 }
 
 .actions {

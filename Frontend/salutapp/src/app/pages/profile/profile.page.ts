@@ -317,6 +317,10 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.uiSettingsSub = this.uiSettings.settings$.subscribe((settings) => {
+      this.uiSettingsState = settings;
+    });
+
     const stored = await this.auth.getUser();
     if (stored) {
       this.user = stored;
@@ -344,9 +348,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       }
     });
 
-    this.uiSettingsSub = this.uiSettings.settings$.subscribe((settings) => {
-      this.uiSettingsState = settings;
-    });
   }
 
   ngOnDestroy() {

@@ -13,15 +13,43 @@
       <ion-card-title>Verificaciones</ion-card-title>
     </ion-card-header>
     <ion-card-content>
+      <ion-text color="danger" *ngIf="verificationError">{{ verificationError }}</ion-text>
+      <ion-text color="success" *ngIf="verificationSuccess">{{ verificationSuccess }}</ion-text>
+      <ion-item *ngIf="loadingVerifications">
+        <ion-label>Cargando verificaciones...</ion-label>
+      </ion-item>
       <ion-list>
         <ion-item *ngFor="let item of verifications">
           <ion-label>
-            <h2>{{ item.name }}</h2>
-            <p>{{ item.role }} ? {{ item.status }}</p>
+            <h2>{{ verificationName(item) }}</h2>
+            <p>{{ item.role }} - {{ item.status }}</p>
           </ion-label>
-          <ion-button slot="end" size="small">Revisar</ion-button>
+          <ion-button
+            slot="end"
+            size="small"
+            color="success"
+            *ngIf="item.status === 'pending'"
+            [disabled]="updatingVerificationId === item.id"
+            (click)="reviewVerification(item, 'approve')"
+          >
+            Aprobar
+          </ion-button>
+          <ion-button
+            slot="end"
+            size="small"
+            color="danger"
+            fill="outline"
+            *ngIf="item.status === 'pending'"
+            [disabled]="updatingVerificationId === item.id"
+            (click)="reviewVerification(item, 'reject')"
+          >
+            Rechazar
+          </ion-button>
         </ion-item>
       </ion-list>
+      <ion-text color="medium" *ngIf="!loadingVerifications && !verifications.length">
+        No hay verificaciones para revisar.
+      </ion-text>
     </ion-card-content>
   </ion-card>
 
@@ -30,15 +58,44 @@
       <ion-card-title>Reportes</ion-card-title>
     </ion-card-header>
     <ion-card-content>
+      <ion-text color="danger" *ngIf="reportError">{{ reportError }}</ion-text>
+      <ion-text color="success" *ngIf="reportSuccess">{{ reportSuccess }}</ion-text>
+      <ion-item *ngIf="loadingReports">
+        <ion-label>Cargando reportes...</ion-label>
+      </ion-item>
       <ion-list>
         <ion-item *ngFor="let report of reports">
           <ion-label>
-            <h2>{{ report.target }}</h2>
-            <p>{{ report.reason }} ? {{ report.status }}</p>
+            <h2>{{ reportTitle(report) }}</h2>
+            <p>{{ report.reason }} - {{ report.status }}</p>
+            <p>Reportado por {{ reporterName(report) }}</p>
           </ion-label>
-          <ion-button slot="end" size="small" fill="outline">Resolver</ion-button>
+          <ion-button
+            slot="end"
+            size="small"
+            fill="outline"
+            *ngIf="report.status === 'open'"
+            [disabled]="updatingReportId === report.id"
+            (click)="updateReport(report, 'resolved')"
+          >
+            Resolver
+          </ion-button>
+          <ion-button
+            slot="end"
+            size="small"
+            color="medium"
+            fill="clear"
+            *ngIf="report.status === 'open'"
+            [disabled]="updatingReportId === report.id"
+            (click)="updateReport(report, 'dismissed')"
+          >
+            Desestimar
+          </ion-button>
         </ion-item>
       </ion-list>
+      <ion-text color="medium" *ngIf="!loadingReports && !reports.length">
+        No hay reportes para revisar.
+      </ion-text>
     </ion-card-content>
       </ion-card>
     </section>

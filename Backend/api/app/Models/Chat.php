@@ -10,4 +10,14 @@ class Chat extends Model
     use HasFactory;
 
     protected $fillable = [];
+
+    public function participants()
+    {
+        return $this->hasMany(ChatParticipant::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
 }

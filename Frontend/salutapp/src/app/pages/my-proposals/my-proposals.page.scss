@@ -21,34 +21,37 @@ ion-card.proposal-card ion-card-content {
 
 .proposal-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.25;
   font-weight: 900;
-  color: var(--salut-text-1);
+  color: #000000;
   letter-spacing: -0.01em;
 }
 
 .proposal-sub {
   margin: 0;
-  font-size: 12px;
-  font-weight: 650;
-  color: var(--salut-text-2);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 750;
+  color: #34383b;
+  overflow-wrap: anywhere;
 }
 
 .proposal-sub--secondary {
-  color: var(--salut-text-2);
-  font-weight: 700;
+  color: #1f2326;
+  font-weight: 850;
 }
 
 .proposal-message {
   margin: 0;
-  font-size: 12px;
-  font-weight: 650;
-  color: var(--salut-text-2);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 750;
+  color: #34383b;
   padding: 10px 12px;
   border-radius: 12px;
-  background: var(--salut-card-bg);
-  border: 1px solid var(--salut-card-border);
+  background: #f6f7f9;
+  border: 1px solid #dfe3e8;
   overflow-wrap: anywhere;
 }
 
@@ -56,13 +59,47 @@ ion-button.proposal-cta {
   align-self: center;
   min-width: 160px;
   --border-radius: 999px;
-  --border-color: var(--salut-outline);
-  --color: var(--salut-text-1);
+  --border-color: #cfd5dd;
+  --color: #111315;
+  --background: #ffffff;
+  --background-hover: #f6f7f9;
+  --background-activated: #eef0f3;
   height: 34px;
   text-transform: none;
   font-weight: 800;
 }
 
 .proposal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
+}
+
+.proposal-actions ion-button {
+  min-width: 112px;
+  height: 36px;
+  --border-radius: 999px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --box-shadow: none;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.proposal-actions ion-button[color='success'] {
+  --background: #16803a;
+  --background-hover: #126b31;
+  --background-activated: #105f2c;
+  --color: #ffffff;
+}
+
+.proposal-actions ion-button[color='danger'] {
+  --border-color: #c7352b;
+  --color: #b42318;
+  --background: #ffffff;
+  --background-hover: #fff1f0;
+  --background-activated: #ffe4e1;
 }

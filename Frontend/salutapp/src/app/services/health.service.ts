@@ -78,4 +78,10 @@ export class HealthService {
   updateBookingStatus(bookingId: number, status: string) {
     return this.http.put(`${environment.apiBase}/health/bookings/${bookingId}`, { status });
   }
+
+  confirmBookingOtp(bookingId: number, otpCode: string) {
+    return this.http.post(`${environment.apiBase}/health/bookings/${bookingId}/otp`, {
+      otp_code: otpCode,
+    });
+  }
 }

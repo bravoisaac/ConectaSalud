@@ -16,6 +16,11 @@ class ChatController extends Controller
 
         $chats = Chat::query()
             ->whereIn('id', $chatIds)
+            ->with([
+                'participants.user:id,name,email,role',
+                'messages' => fn ($q) => $q->latest()->limit(1),
+                'messages.sender:id,name,email',
+            ])
             ->latest()
             ->paginate(20);
 
@@ -34,6 +39,12 @@ class ChatController extends Controller
             return response()->json(['message' => 'No autorizado'], 403);
         }
 
+        $chat->load([
+            'participants.user:id,name,email,role',
+            'messages' => fn ($q) => $q->oldest(),
+            'messages.sender:id,name,email',
+        ]);
+
         return response()->json($chat);
     }
 
@@ -44,12 +55,39 @@ class ChatController extends Controller
             'participant_ids.*' => 'integer|exists:users,id',
         ]);
 
-        $chat = Chat::create();
-
         $participantIds = array_unique(array_merge(
             $data['participant_ids'],
             [$request->user()->id]
         ));
+
+        sort($participantIds);
+
+        if (count($participantIds) === 2) {
+            $candidateChatIds = ChatParticipant::query()
+                ->whereIn('user_id', $participantIds)
+                ->select('chat_id')
+                ->groupBy('chat_id')
+                ->havingRaw('COUNT(DISTINCT user_id) = ?', [2])
+                ->pluck('chat_id');
+
+            foreach ($candidateChatIds as $candidateChatId) {
+                $count = ChatParticipant::query()
+                    ->where('chat_id', $candidateChatId)
+                    ->count();
+
+                if ($count === 2) {
+                    $chat = Chat::find($candidateChatId);
+                    $chat?->load([
+                        'participants.user:id,name,email,role',
+                        'messages' => fn ($q) => $q->oldest(),
+                        'messages.sender:id,name,email',
+                    ]);
+                    return response()->json($chat);
+                }
+            }
+        }
+
+        $chat = Chat::create();
 
         foreach ($participantIds as $participantId) {
             ChatParticipant::create([
@@ -57,6 +95,12 @@ class ChatController extends Controller
                 'user_id' => $participantId,
             ]);
         }
+
+        $chat->load([
+            'participants.user:id,name,email,role',
+            'messages' => fn ($q) => $q->oldest(),
+            'messages.sender:id,name,email',
+        ]);
 
         return response()->json($chat, 201);
     }

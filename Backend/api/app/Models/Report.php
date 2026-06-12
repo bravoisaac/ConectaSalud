@@ -16,4 +16,9 @@ class Report extends Model
         'reason',
         'status',
     ];
+
+    public function reporter()
+    {
+        return $this->belongsTo(User::class, 'reporter_id');
+    }
 }

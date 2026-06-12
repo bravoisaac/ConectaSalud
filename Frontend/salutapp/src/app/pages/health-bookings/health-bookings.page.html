@@ -56,23 +56,47 @@
           <span>{{ counterpartUser(booking)?.phone }}</span>
         </div>
 
-        <div class="actions" *ngIf="isHealthUser">
+        <div class="actions" *ngIf="isHealthUser && (canManageBooking(booking) || canStartBooking(booking) || canCompleteBooking(booking) || updatingId === booking.id)">
           <ion-button
+            class="booking-action booking-action--accept"
             size="small"
             color="success"
+            *ngIf="canManageBooking(booking)"
             [disabled]="!canManageBooking(booking) || updatingId === booking.id"
             (click)="$event.stopPropagation(); acceptBooking(booking)"
           >
             Aceptar
           </ion-button>
           <ion-button
+            class="booking-action booking-action--reject"
             size="small"
             color="danger"
             fill="outline"
+            *ngIf="canManageBooking(booking)"
             [disabled]="!canManageBooking(booking) || updatingId === booking.id"
             (click)="$event.stopPropagation(); rejectBooking(booking)"
           >
             Rechazar
+          </ion-button>
+          <ion-button
+            class="booking-action booking-action--accept"
+            size="small"
+            color="success"
+            *ngIf="canStartBooking(booking)"
+            [disabled]="updatingId === booking.id"
+            (click)="$event.stopPropagation(); startBookingWithOtp(booking)"
+          >
+            Iniciar con OTP
+          </ion-button>
+          <ion-button
+            class="booking-action booking-action--accept"
+            size="small"
+            color="success"
+            *ngIf="canCompleteBooking(booking)"
+            [disabled]="updatingId === booking.id"
+            (click)="$event.stopPropagation(); completeBooking(booking)"
+          >
+            Finalizar
           </ion-button>
         </div>
       </ion-card-content>
@@ -171,6 +195,17 @@
                 </div>
               </div>
 
+              <ion-button
+                class="secondary"
+                expand="block"
+                fill="outline"
+                *ngIf="canOpenBookingChat(selectedBooking)"
+                (click)="openBookingChat(selectedBooking)"
+              >
+                <ion-icon slot="start" name="chatbubbles-outline" aria-hidden="true"></ion-icon>
+                Abrir chat
+              </ion-button>
+
               <ng-template #contactLocked>
                 <div class="locked-note">
                   <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
@@ -201,6 +236,10 @@
                 <div class="detail-row" role="listitem">
                   <span class="detail-label">Hora</span>
                   <span class="detail-value">{{ selectedBooking?.start_at | date:'shortTime' }} - {{ selectedBooking?.end_at | date:'shortTime' }}</span>
+                </div>
+                <div class="detail-row" role="listitem" *ngIf="canSeeBookingOtp(selectedBooking)">
+                  <span class="detail-label">Codigo OTP</span>
+                  <span class="detail-value">{{ bookingOtpCode }}</span>
                 </div>
                 <div class="detail-row" role="listitem">
                   <span class="detail-label">Región</span>

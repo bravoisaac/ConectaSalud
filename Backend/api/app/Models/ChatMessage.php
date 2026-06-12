@@ -16,4 +16,9 @@ class ChatMessage extends Model
         'attachment_url',
         'attachment_type',
     ];
+
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
 }

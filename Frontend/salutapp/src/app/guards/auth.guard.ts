@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,6 +13,16 @@ export class AuthGuard implements CanActivate {
       this.router.navigateByUrl('/login');
       return false;
     }
-    return true;
+
+    try {
+      const user = await firstValueFrom(this.auth.me());
+      await this.auth.setUser(user);
+      return true;
+    } catch {
+      await this.auth.clearToken();
+      await this.auth.clearUser();
+      this.router.navigateByUrl('/login');
+      return false;
+    }
   }
 }

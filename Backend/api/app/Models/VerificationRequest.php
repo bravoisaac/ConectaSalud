@@ -22,4 +22,9 @@ class VerificationRequest extends Model
         'payload' => 'array',
         'reviewed_at' => 'datetime',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

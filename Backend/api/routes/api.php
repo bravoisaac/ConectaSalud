@@ -47,12 +47,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('posts/{post}/comments', [PostCommentController::class, 'store']);
     Route::post('posts/{post}/likes', [PostLikeController::class, 'store']);
     Route::delete('posts/{post}/likes', [PostLikeController::class, 'destroy']);
+    Route::get('reports', [ReportController::class, 'index']);
     Route::post('reports', [ReportController::class, 'store']);
+    Route::put('reports/{report}', [ReportController::class, 'update']);
 
     Route::apiResource('chats', ChatController::class)->only(['index', 'show', 'store']);
     Route::post('chats/{chat}/messages', [ChatMessageController::class, 'store']);
 
+    Route::get('verifications', [VerificationController::class, 'index']);
     Route::post('verifications', [VerificationController::class, 'store']);
+    Route::put('verifications/{verification}/approve', [VerificationController::class, 'approve']);
+    Route::put('verifications/{verification}/reject', [VerificationController::class, 'reject']);
     Route::post('payments/authorize', [PaymentController::class, 'authorizePayment']);
     Route::post('payments/{payment}/capture', [PaymentController::class, 'capturePayment']);
 

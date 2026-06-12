@@ -44,12 +44,17 @@ class CompanyController extends Controller
             return response()->json(['message' => 'No autorizado'], 403);
         }
 
-        $data = $request->validate([
+        $rules = [
             'name' => 'sometimes|required|string|max:255',
             'rut' => 'sometimes|required|string|max:20|unique:companies,rut,' . $company->id,
             'legal_name' => 'nullable|string|max:255',
-            'verification_status' => 'sometimes|string',
-        ]);
+        ];
+
+        if ($user->isAdmin()) {
+            $rules['verification_status'] = 'sometimes|string|in:pending,approved,rejected,personal';
+        }
+
+        $data = $request->validate($rules);
 
         $company->update($data);
 

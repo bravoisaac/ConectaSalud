@@ -1,0 +1,85 @@
+<ion-content class="feed-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Chats</h1>
+        <p class="feed-subtitle">Conversaciones</p>
+      </div>
+    </header>
+
+    <section class="feed-body" aria-label="Chats">
+      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+      <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+
+      <ion-item *ngIf="loading">
+        <ion-label>Cargando chats...</ion-label>
+      </ion-item>
+
+      <div class="chat-empty" *ngIf="!loading && !chats.length">
+        <div class="chat-empty-icon" aria-hidden="true">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+        </div>
+        <h2>Todavia no hay chats</h2>
+        <p>
+          Las conversaciones se crean automaticamente cuando un profesional de salud acepta una reserva.
+        </p>
+        <div class="chat-empty-actions">
+          <ion-button routerLink="/app/health">
+            <ion-icon slot="start" name="medkit-outline" aria-hidden="true"></ion-icon>
+            Buscar profesional
+          </ion-button>
+          <ion-button routerLink="/app/health-bookings" fill="outline">
+            <ion-icon slot="start" name="calendar-outline" aria-hidden="true"></ion-icon>
+            Ver reservas
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="chat-layout" *ngIf="!loading && chats.length">
+        <div class="chat-list">
+          <ion-card *ngFor="let chat of chats" class="chat-card" button="true" (click)="openChat(chat)">
+            <ion-card-content>
+              <div class="chat-card-title">{{ chatTitle(chat) }}</div>
+              <div class="chat-card-message">{{ lastMessage(chat) }}</div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+
+        <ion-card class="chat-detail" *ngIf="selectedChat">
+          <ion-card-header>
+            <div class="chat-detail-head">
+              <ion-card-title>{{ chatTitle(selectedChat) }}</ion-card-title>
+              <ion-button size="small" fill="clear" (click)="closeChat()">
+                <ion-icon slot="icon-only" name="close-outline" aria-label="Cerrar"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="messages">
+              <div
+                class="message"
+                *ngFor="let message of selectedChat.messages || []"
+                [ngClass]="{ 'message--own': isOwnMessage(message) }"
+              >
+                <div class="message-sender">{{ messageSender(message) }}</div>
+                <div class="message-body">{{ message.body }}</div>
+              </div>
+            </div>
+
+            <form class="message-form" (ngSubmit)="sendMessage()">
+              <ion-input
+                name="messageBody"
+                [(ngModel)]="messageBody"
+                placeholder="Escribe un mensaje"
+                [disabled]="sending"
+              ></ion-input>
+              <ion-button type="submit" [disabled]="sending || !messageBody.trim()">
+                <ion-icon slot="icon-only" name="send-outline" aria-label="Enviar"></ion-icon>
+              </ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </section>
+  </div>
+</ion-content>

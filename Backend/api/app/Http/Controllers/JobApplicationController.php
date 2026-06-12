@@ -80,26 +80,37 @@ class JobApplicationController extends Controller
             return response()->json(['message' => 'Oferta no disponible'], 422);
         }
 
+        $companyOwnerId = Company::query()
+            ->where('id', $job->company_id)
+            ->value('user_id');
+
+        if (!$user->isAdmin() && $companyOwnerId === $user->id) {
+            return response()->json(['message' => 'No puedes postular a tu propia oferta'], 403);
+        }
+
         $data = $request->validate([
             'cover_letter' => 'nullable|string',
         ]);
 
-        $application = JobApplication::firstOrCreate(
-            [
+        $exists = JobApplication::query()
+            ->where('job_post_id', $job->id)
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['message' => 'Ya postulaste a esta oferta'], 409);
+        }
+
+        $application = JobApplication::create([
                 'job_post_id' => $job->id,
                 'user_id' => $user->id,
-            ],
-            [
                 'cover_letter' => $data['cover_letter'] ?? null,
                 'status' => 'applied',
-            ]
-        );
+        ]);
 
         $application->load(['user', 'profile', 'healthProfile']);
 
-        $status = $application->wasRecentlyCreated ? 201 : 200;
-
-        return response()->json($application, $status);
+        return response()->json($application, 201);
     }
 
     public function update(Request $request, JobApplication $application)

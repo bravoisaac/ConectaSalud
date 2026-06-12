@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Chat;
+use App\Models\ChatParticipant;
+use App\Models\HealthAvailability;
 use App\Models\HealthProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,7 +40,7 @@ class HealthBookingController extends Controller
             if (!$this->canSeeOtp($user, $booking)) {
                 $booking->otp_code = null;
             }
-            if ($this->isProvider($user, $booking) && !in_array($booking->status, ['in_service', 'completed'], true)) {
+            if ($this->isProvider($user, $booking) && !in_array($booking->status, ['accepted', 'in_service', 'completed'], true)) {
                 $booking->service_address = null;
                 $booking->service_region = null;
                 $booking->service_comuna = null;
@@ -69,7 +72,7 @@ class HealthBookingController extends Controller
             'healthProfile:id,user_id,specialty,location',
             'healthProfile.user:id,name,email,phone',
         ]);
-        if ($this->isProvider($user, $booking) && !in_array($booking->status, ['in_service', 'completed'], true)) {
+        if ($this->isProvider($user, $booking) && !in_array($booking->status, ['accepted', 'in_service', 'completed'], true)) {
             $booking->service_address = null;
             $booking->service_region = null;
             $booking->service_comuna = null;
@@ -135,11 +138,25 @@ class HealthBookingController extends Controller
         if ($profile->user_id === $user->id) {
             return response()->json(['message' => 'No puede reservarse a si mismo'], 422);
         }
+        if (!$user->isAdmin() && strtolower((string) $profile->verification_status) !== 'approved') {
+            return response()->json(['message' => 'El profesional aun no esta verificado'], 422);
+        }
 
         $startAt = Carbon::parse($data['start_at']);
         $endAt = isset($data['end_at'])
             ? Carbon::parse($data['end_at'])
             : (clone $startAt)->addMinutes(60);
+        if ($endAt->lessThanOrEqualTo($startAt)) {
+            return response()->json(['message' => 'La hora de fin debe ser mayor'], 422);
+        }
+        if (!$startAt->isSameDay($endAt)) {
+            return response()->json(['message' => 'La reserva debe ser el mismo dia'], 422);
+        }
+
+        $availabilityError = $this->validateAvailability($profile->id, $startAt, $endAt);
+        if ($availabilityError) {
+            return response()->json(['message' => $availabilityError], 422);
+        }
 
         $booking = Booking::create([
             'health_profile_id' => $data['health_profile_id'],
@@ -177,19 +194,21 @@ class HealthBookingController extends Controller
         }
 
         $data = $request->validate([
-            'status' => 'nullable|string|in:requested,in_service,completed,cancelled',
+            'status' => 'nullable|string|in:requested,accepted,in_service,completed,cancelled',
         ]);
 
-        if (
-            isset($data['status'])
-            && $this->isProvider($user, $booking)
-            && in_array($data['status'], ['in_service', 'cancelled'], true)
-            && $booking->status !== 'requested'
-        ) {
-            return response()->json(['message' => 'Solo puedes aceptar o rechazar reservas en espera'], 422);
+        if (isset($data['status'])) {
+            $transitionError = $this->validateStatusTransition($user, $booking, $data['status']);
+            if ($transitionError) {
+                return response()->json(['message' => $transitionError], 422);
+            }
         }
 
         $booking->update($data);
+
+        if (($data['status'] ?? null) === 'accepted') {
+            $this->ensureBookingChat($booking);
+        }
 
         $booking->loadMissing([
             'user:id,name,email,phone',
@@ -213,6 +232,9 @@ class HealthBookingController extends Controller
 
         if ($booking->otp_code !== $data['otp_code']) {
             return response()->json(['message' => 'OTP invalido'], 422);
+        }
+        if ($booking->status !== 'accepted') {
+            return response()->json(['message' => 'La reserva debe estar aceptada para iniciar el servicio'], 422);
         }
 
         $booking->update([
@@ -251,5 +273,126 @@ class HealthBookingController extends Controller
             ->where('id', $booking->health_profile_id)
             ->where('user_id', $user->id)
             ->exists();
+    }
+
+    private function validateStatusTransition($user, Booking $booking, string $nextStatus): ?string
+    {
+        $currentStatus = strtolower((string) $booking->status);
+        $nextStatus = strtolower($nextStatus);
+
+        if ($currentStatus === $nextStatus) {
+            return null;
+        }
+
+        if ($user->isAdmin()) {
+            return null;
+        }
+
+        if ($booking->user_id === $user->id) {
+            if ($currentStatus === 'requested' && $nextStatus === 'cancelled') {
+                return null;
+            }
+
+            return 'El cliente solo puede cancelar reservas en espera';
+        }
+
+        if ($this->isProvider($user, $booking)) {
+            if ($currentStatus === 'requested' && in_array($nextStatus, ['accepted', 'cancelled'], true)) {
+                return null;
+            }
+            if ($currentStatus === 'in_service' && $nextStatus === 'completed') {
+                return null;
+            }
+
+            return 'Transicion de reserva no permitida para el profesional';
+        }
+
+        return 'No autorizado';
+    }
+
+    private function validateAvailability(int $profileId, Carbon $startAt, Carbon $endAt): ?string
+    {
+        $dayOfWeek = $startAt->dayOfWeek;
+        $startMinutes = $this->timeToMinutes($startAt->format('H:i'));
+        $endMinutes = $this->timeToMinutes($endAt->format('H:i'));
+
+        $fitsAvailability = HealthAvailability::query()
+            ->where('health_profile_id', $profileId)
+            ->where('day_of_week', $dayOfWeek)
+            ->get()
+            ->contains(function (HealthAvailability $availability) use ($startMinutes, $endMinutes) {
+                $slotStart = $this->timeToMinutes((string) $availability->start_time);
+                $slotEnd = $this->timeToMinutes((string) $availability->end_time);
+
+                return $startMinutes >= $slotStart && $endMinutes <= $slotEnd;
+            });
+
+        if (!$fitsAvailability) {
+            return 'No hay disponibilidad para ese horario';
+        }
+
+        $hasOverlap = Booking::query()
+            ->where('health_profile_id', $profileId)
+            ->whereIn('status', ['requested', 'accepted', 'in_service'])
+            ->where('start_at', '<', $endAt)
+            ->where('end_at', '>', $startAt)
+            ->exists();
+
+        if ($hasOverlap) {
+            return 'El profesional ya tiene una reserva en ese horario';
+        }
+
+        return null;
+    }
+
+    private function timeToMinutes(string $time): int
+    {
+        $parts = explode(':', $time);
+        $hours = (int) ($parts[0] ?? 0);
+        $minutes = (int) ($parts[1] ?? 0);
+
+        return ($hours * 60) + $minutes;
+    }
+
+    private function ensureBookingChat(Booking $booking): ?Chat
+    {
+        $providerId = HealthProfile::query()
+            ->where('id', $booking->health_profile_id)
+            ->value('user_id');
+
+        if (!$providerId || (int) $providerId === (int) $booking->user_id) {
+            return null;
+        }
+
+        $participantIds = [(int) $booking->user_id, (int) $providerId];
+        sort($participantIds);
+
+        $candidateChatIds = ChatParticipant::query()
+            ->whereIn('user_id', $participantIds)
+            ->select('chat_id')
+            ->groupBy('chat_id')
+            ->havingRaw('COUNT(DISTINCT user_id) = ?', [2])
+            ->pluck('chat_id');
+
+        foreach ($candidateChatIds as $candidateChatId) {
+            $count = ChatParticipant::query()
+                ->where('chat_id', $candidateChatId)
+                ->count();
+
+            if ($count === 2) {
+                return Chat::find($candidateChatId);
+            }
+        }
+
+        $chat = Chat::create();
+
+        foreach ($participantIds as $participantId) {
+            ChatParticipant::create([
+                'chat_id' => $chat->id,
+                'user_id' => $participantId,
+            ]);
+        }
+
+        return $chat;
     }
 }
