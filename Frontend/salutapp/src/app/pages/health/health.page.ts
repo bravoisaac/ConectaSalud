@@ -236,6 +236,26 @@ export class HealthPage implements OnInit {
     return null;
   }
 
+  formatCurrency(value: any) {
+    const amount = this.toNumber(value);
+    if (amount === null) {
+      return '$0';
+    }
+    return amount.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    });
+  }
+
+  formatHourlyRate(value: any) {
+    const amount = this.toNumber(value);
+    if (amount === null) {
+      return 'Tarifa no informada';
+    }
+    return `${this.formatCurrency(amount)}/h`;
+  }
+
   availabilityDayCodes() {
     const map: Record<number, string> = { 1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V', 6: 'S', 0: 'D' };
     const order: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 0: 7 };

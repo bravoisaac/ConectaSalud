@@ -2,8 +2,22 @@
   <div class="feed-shell">
     <header class="feed-header">
       <div class="feed-header-inner">
+        <div class="feed-kicker">
+          <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+          Red profesional
+        </div>
         <h1 class="feed-title">Servicios de salud</h1>
-        <p class="feed-subtitle">Encuentra un profesional</p>
+        <p class="feed-subtitle">Agenda profesionales por especialidad, tarifa y ubicación desde un mismo lugar.</p>
+        <div class="feed-metrics" *ngIf="!loading">
+          <div class="feed-metric">
+            <strong>{{ filteredProfiles.length }}</strong>
+            <span>profesionales</span>
+          </div>
+          <div class="feed-metric">
+            <strong>Reserva</strong>
+            <span>con calendario</span>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -15,10 +29,10 @@
       ></ion-searchbar>
 
       <div class="filters-row">
-        <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill">Especialidad</ion-button>
-        <ion-button id="filter-location-health" size="small" fill="outline" class="filter-pill">Ubicación</ion-button>
-        <ion-button id="filter-rate-health" size="small" fill="outline" class="filter-pill">Tarifa</ion-button>
-        <ion-button id="filter-sort-health" size="small" fill="outline" class="filter-pill">
+        <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill" [class.is-active]="!!specialty">Especialidad</ion-button>
+        <ion-button id="filter-location-health" size="small" fill="outline" class="filter-pill" [class.is-active]="!!location">Ubicación</ion-button>
+        <ion-button id="filter-rate-health" size="small" fill="outline" class="filter-pill" [class.is-active]="!!rateMin || !!rateMax">Tarifa</ion-button>
+        <ion-button id="filter-sort-health" size="small" fill="outline" class="filter-pill" [class.is-active]="sortBy !== 'name_asc' || !!experienceMin">
           <ion-icon slot="start" name="options-outline"></ion-icon>
           Más
         </ion-button>
@@ -132,7 +146,7 @@
                   {{ specialist.specialty || 'Sin especialidad' }} • {{ specialist.location || 'Sin ubicación' }}
                 </p>
                 <div class="prof-meta-row">
-                  <span class="badge badge--info">${{ specialist.rate_hour || 0 }} CLP/h</span>
+                  <span class="badge badge--info">{{ formatHourlyRate(specialist.rate_hour) }}</span>
                   <span class="prof-exp">{{ specialist.experience_years || 0 }} años exp.</span>
                   <ng-container *ngIf="ratingValue(specialist) as r">
                     <span class="rating">
@@ -175,7 +189,7 @@
                     {{ selectedProfile?.location || 'Sin ubicación' }}
                   </p>
                   <div class="prof-meta-row">
-                    <span class="badge badge--info">${{ selectedProfile?.rate_hour || 0 }} CLP/h</span>
+                    <span class="badge badge--info">{{ formatHourlyRate(selectedProfile?.rate_hour) }}</span>
                     <span class="prof-exp">{{ selectedProfile?.experience_years || 0 }} años exp.</span>
                     <ng-container *ngIf="ratingValue(selectedProfile) as r">
                       <span class="rating">
@@ -201,7 +215,7 @@
                 <div class="info-row" role="listitem">
                   <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
                   <span class="info-label">Tarifa por hora</span>
-                  <span class="info-value">${{ selectedProfile?.rate_hour || 0 }} CLP</span>
+                  <span class="info-value">{{ formatCurrency(selectedProfile?.rate_hour) }}</span>
                 </div>
                 <div class="info-row" role="listitem">
                   <ion-icon name="location-outline" aria-hidden="true"></ion-icon>

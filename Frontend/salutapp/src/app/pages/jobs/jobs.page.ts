@@ -149,6 +149,37 @@ export class JobsPage implements OnInit {
     return status ? status : '';
   }
 
+  jobSalaryRange(job: any) {
+    const min = this.toNumber(job?.salary_min);
+    const max = this.toNumber(job?.salary_max);
+
+    if (min === null && max === null) {
+      return 'Sueldo no informado';
+    }
+
+    if (min !== null && max !== null) {
+      return `${this.formatCurrency(min)} - ${this.formatCurrency(max)}`;
+    }
+
+    if (min !== null) {
+      return `Desde ${this.formatCurrency(min)}`;
+    }
+
+    return `Hasta ${this.formatCurrency(max)}`;
+  }
+
+  formatCurrency(value: any) {
+    const amount = this.toNumber(value);
+    if (amount === null) {
+      return '$0';
+    }
+    return amount.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    });
+  }
+
   loadJobs() {
     this.loading = true;
     this.errorMsg = '';

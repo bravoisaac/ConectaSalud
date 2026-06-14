@@ -2726,3 +2726,525 @@ ion-modal.health-modal {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
+
+/* Professional polish layer */
+
+:root,
+html.ui-theme-light,
+html.ui-theme-dark {
+  --salut-primary: #3140d4;
+  --salut-primary-2: #0ea5e9;
+  --salut-ink: #101828;
+  --salut-muted: #667085;
+  --salut-soft: #f4f7fb;
+  --salut-line: #e6ebf2;
+  --salut-card-bg: #ffffff;
+  --salut-card-border: #e6ebf2;
+  --salut-control-bg: #f8fafc;
+  --salut-control-border: #dbe3ee;
+  --salut-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --salut-shadow-md: 0 14px 32px rgba(16, 24, 40, 0.09);
+  --salut-shadow-lg: 0 24px 60px rgba(16, 24, 40, 0.13);
+}
+
+html,
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f7fb;
+  color: var(--salut-ink);
+}
+
+ion-content.feed-content,
+ion-content.auth-content {
+  --background: #f4f7fb;
+}
+
+.feed-shell,
+.auth-shell {
+  background:
+    radial-gradient(circle at top left, rgba(49, 64, 212, 0.1), transparent 34rem),
+    linear-gradient(180deg, #f8fbff 0%, #eef4fb 42%, #f8fafc 100%);
+}
+
+.feed-header,
+.auth-top,
+.profile-header {
+  isolation: isolate;
+  position: relative;
+  z-index: 1;
+  background:
+    linear-gradient(135deg, rgba(16, 24, 40, 0.98), rgba(30, 41, 59, 0.94) 54%, rgba(49, 64, 212, 0.92)),
+    #101828;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 0 20px 56px rgba(16, 24, 40, 0.26);
+}
+
+.feed-header::before,
+.auth-top::before,
+.profile-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent);
+}
+
+.feed-header::after,
+.auth-top::after,
+.profile-header::after {
+  right: -46px;
+  bottom: -96px;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.48), rgba(49, 64, 212, 0.18) 52%, transparent 72%);
+}
+
+.feed-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-bottom: 13px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.feed-kicker ion-icon {
+  color: #7dd3fc;
+  font-size: 16px;
+}
+
+.feed-title,
+.auth-title,
+.profile-name {
+  letter-spacing: 0;
+}
+
+.feed-subtitle,
+.auth-subtitle {
+  max-width: 620px;
+}
+
+.feed-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.feed-metric {
+  min-width: 116px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  backdrop-filter: blur(14px);
+}
+
+.feed-metric strong,
+.feed-metric span {
+  display: block;
+}
+
+.feed-metric strong {
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.feed-metric span {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.feed-body {
+  position: relative;
+  z-index: 4;
+  isolation: isolate;
+}
+
+.auth-card,
+.feed-content ion-card,
+ion-item.job-card,
+ion-item.profile-card-item,
+ion-card.health-booking-card,
+ion-card.proposal-card,
+.chat-empty,
+.chat-detail,
+.chat-card,
+.profile-header ~ .feed-body .info-row,
+.profile-header ~ .feed-body .personal-sheet,
+.profile-header ~ .feed-body .cv-upload,
+.profile-header ~ .feed-body .availability-slot {
+  border: 1px solid var(--salut-card-border) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: var(--salut-shadow-md) !important;
+}
+
+ion-item.job-card,
+ion-item.profile-card-item,
+.chat-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+ion-item.job-card:hover,
+ion-item.profile-card-item:hover,
+.chat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(49, 64, 212, 0.22) !important;
+  box-shadow: 0 18px 44px rgba(16, 24, 40, 0.13) !important;
+}
+
+ion-item.job-card::part(native),
+ion-item.profile-card-item::part(native) {
+  border-radius: 18px;
+}
+
+ion-searchbar.feed-search {
+  --background: rgba(255, 255, 255, 0.98);
+  --border-radius: 18px;
+  --box-shadow: 0 16px 38px rgba(16, 24, 40, 0.12);
+}
+
+.filter-pill,
+ion-button.secondary {
+  --border-color: #dbe3ee;
+  --color: #344054;
+  --background: rgba(255, 255, 255, 0.92);
+  --background-hover: #f1f5f9;
+  --background-activated: #e2e8f0;
+}
+
+ion-button.primary,
+ion-fab-button.fab,
+ion-button:not(.secondary):not(.filter-pill):not(.link):not(.eye-btn)[fill="solid"],
+ion-button:not([fill]) {
+  --background: linear-gradient(135deg, var(--salut-primary), #2563eb);
+  --background-hover: #2935c7;
+  --background-activated: #2430b7;
+  --color: #ffffff;
+  --box-shadow: 0 14px 28px rgba(49, 64, 212, 0.22);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.badge {
+  align-items: center;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.job-title-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.job-title,
+.prof-name,
+.chat-card-title,
+ion-card-title {
+  color: var(--salut-ink) !important;
+}
+
+.job-sub,
+.prof-sub,
+.chat-card-message,
+ion-card-subtitle {
+  color: var(--salut-muted) !important;
+}
+
+.avatar,
+.profile-avatar,
+.section-icon,
+.chat-empty-icon {
+  background: linear-gradient(135deg, rgba(49, 64, 212, 0.14), rgba(14, 165, 233, 0.14)) !important;
+  border-color: rgba(49, 64, 212, 0.2) !important;
+  color: #3140d4 !important;
+}
+
+.auth-card {
+  position: relative;
+  z-index: 3;
+  margin-top: 18px;
+  padding: 22px 22px 26px;
+}
+
+.auth-item::part(native),
+.profile-header ~ .feed-body ion-item.form-item::part(native),
+.profile-header ~ .feed-body ion-item.personal-item::part(native),
+.message-form ion-input {
+  background: var(--salut-control-bg) !important;
+  border: 1px solid var(--salut-control-border) !important;
+  border-radius: 14px !important;
+}
+
+.auth-item.item-has-focus::part(native),
+.profile-header ~ .feed-body ion-item.form-item.item-has-focus::part(native),
+.profile-header ~ .feed-body ion-item.personal-item.item-has-focus::part(native) {
+  border-color: rgba(49, 64, 212, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(49, 64, 212, 0.1) !important;
+}
+
+.auth-item ion-input::part(native),
+.auth-item ion-select::part(text),
+.auth-item ion-select::part(placeholder),
+.profile-header ~ .feed-body ion-input::part(native),
+.profile-header ~ .feed-body ion-textarea::part(native),
+.profile-header ~ .feed-body ion-select::part(text),
+.profile-header ~ .feed-body ion-select::part(placeholder) {
+  color: var(--salut-ink) !important;
+}
+
+.field-label,
+.profile-header ~ .feed-body ion-label,
+.ui-settings-label {
+  color: #475467 !important;
+}
+
+.eye-btn {
+  --color: #667085 !important;
+}
+
+.cta-text,
+ion-button.link {
+  color: #667085 !important;
+  --color: #3140d4 !important;
+}
+
+.success-message,
+.success,
+.hint {
+  display: block;
+  padding: 10px 12px;
+  background: #ecfdf3 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-radius: 12px;
+  color: #067647 !important;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.error-message,
+.error,
+.errors {
+  display: block;
+  padding: 10px 12px;
+  background: #fef3f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 12px;
+  color: #b42318 !important;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.errors p {
+  margin: 0 0 6px;
+}
+
+.errors p:last-child {
+  margin-bottom: 0;
+}
+
+.auth-card .cta {
+  margin-top: 18px;
+}
+
+.auth-card .cta-text {
+  margin: 2px 0 12px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.messages {
+  background: #f8fafc;
+  border: 1px solid #e6ebf2;
+  border-radius: 16px;
+}
+
+.message {
+  border-radius: 16px 16px 16px 6px;
+}
+
+.message--own {
+  border-radius: 16px 16px 6px 16px;
+  background: linear-gradient(135deg, #eef4ff, #e0f2fe);
+  border-color: #bfdbfe;
+}
+
+.message-form {
+  align-items: center;
+}
+
+.message-form ion-input {
+  min-height: 46px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+}
+
+@media (min-width: 1024px) {
+  .feed-header-inner,
+  .profile-hero,
+  .auth-top-inner,
+  .feed-body {
+    max-width: min(var(--feed-max-width), calc(100vw - 64px));
+  }
+
+  .feed-body {
+    margin-top: -54px;
+  }
+
+  .auth-shell {
+    justify-content: center;
+    min-height: 100%;
+    padding: 32px;
+  }
+
+  .auth-top {
+    width: min(1040px, 100%);
+    margin: 0 auto;
+    border-radius: 30px;
+    padding: 56px 56px 120px;
+  }
+
+  .auth-card {
+    max-width: 520px;
+    margin-top: -72px;
+  }
+}
+
+@media (max-width: 420px) {
+  .feed-title {
+    font-size: 30px;
+  }
+
+  .feed-metric {
+    flex: 1 1 120px;
+  }
+}
+
+@media (max-width: 767px) {
+  app-jobs .feed-body,
+  app-health .feed-body,
+  app-health-bookings .feed-body,
+  app-my-proposals .feed-body,
+  app-admin .feed-body,
+  app-chats .feed-body {
+    margin-top: 14px !important;
+  }
+
+  .feed-header {
+    padding-bottom: 34px;
+  }
+}
+
+/* Shared component refinements */
+
+.filters-row {
+  gap: 10px;
+  margin: 0 -20px;
+  padding: 10px 20px 18px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scroll-padding-inline: 20px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 30px), transparent 100%);
+}
+
+.filters-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-pill {
+  height: 40px;
+  min-width: max-content;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --border-radius: 999px;
+  --border-color: #d7dfec;
+  --background: rgba(255, 255, 255, 0.96);
+  --background-hover: #f1f5f9;
+  --background-activated: #e8eef7;
+  --color: #1f2937;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.filter-pill.is-active {
+  --background: linear-gradient(135deg, #3140d4, #5b45e9);
+  --background-hover: #2935c7;
+  --background-activated: #2430b7;
+  --border-color: transparent;
+  --color: #ffffff;
+  --box-shadow: 0 10px 22px rgba(49, 64, 212, 0.22);
+}
+
+.filter-pill ion-icon {
+  font-size: 16px;
+}
+
+.job-salary,
+.prof-meta-row,
+.booking-meta-row,
+.proposal-sub {
+  letter-spacing: 0;
+}
+
+.job-salary ion-icon,
+.booking-meta-row ion-icon,
+.proposal-message ion-icon {
+  color: #3140d4;
+}
+
+ion-card.health-booking-card,
+ion-card.proposal-card,
+ion-item.job-card,
+ion-item.profile-card-item {
+  overflow: hidden;
+}
+
+.booking-head,
+.proposal-head,
+.job-title-row {
+  min-width: 0;
+}
+
+.booking-title,
+.proposal-title,
+.job-title,
+.prof-name {
+  overflow-wrap: anywhere;
+}
+
+.actions,
+.proposal-actions {
+  align-items: center;
+}
+
+.actions ion-button,
+.proposal-actions ion-button,
+ion-button.proposal-cta {
+  --border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0;
+}

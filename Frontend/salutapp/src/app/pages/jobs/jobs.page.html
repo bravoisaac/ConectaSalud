@@ -2,8 +2,22 @@
   <div class="feed-shell">
     <header class="feed-header">
       <div class="feed-header-inner">
+        <div class="feed-kicker">
+          <ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>
+          Bolsa laboral sanitaria
+        </div>
         <h1 class="feed-title">Empleos</h1>
-        <p class="feed-subtitle">Encuentra tu próxima oportunidad</p>
+        <p class="feed-subtitle">Encuentra oportunidades verificadas en salud y postula con tu perfil profesional.</p>
+        <div class="feed-metrics" *ngIf="!loading">
+          <div class="feed-metric">
+            <strong>{{ filteredJobs.length }}</strong>
+            <span>ofertas</span>
+          </div>
+          <div class="feed-metric">
+            <strong>{{ canCreateJob ? 'Publicar' : 'Postular' }}</strong>
+            <span>acción rápida</span>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -19,17 +33,17 @@
       <ion-searchbar class="feed-search" [(ngModel)]="query" placeholder="Buscar empleo..."></ion-searchbar>
 
   <div class="filters-row">
-    <ion-button id="filter-sort" size="small" fill="outline" class="filter-pill">
+    <ion-button id="filter-sort" size="small" fill="outline" class="filter-pill" [class.is-active]="sortBy !== 'recent'">
       <ion-icon slot="start" name="options-outline"></ion-icon>
       Ordenar
     </ion-button>
-    <ion-button id="filter-location" size="small" fill="outline" class="filter-pill">Ubicación</ion-button>
-    <ion-button id="filter-profession" size="small" fill="outline" class="filter-pill">Profesión</ion-button>
-    <ion-button id="filter-salary" size="small" fill="outline" class="filter-pill">Sueldo</ion-button>
-    <ion-button id="filter-shift" size="small" fill="outline" class="filter-pill">Jornada</ion-button>
-    <ion-button id="filter-date" size="small" fill="outline" class="filter-pill">Fecha</ion-button>
-    <ion-button id="filter-experience" size="small" fill="outline" class="filter-pill">Experiencia</ion-button>
-    <ion-button id="filter-contract" size="small" fill="outline" class="filter-pill">
+    <ion-button id="filter-location" size="small" fill="outline" class="filter-pill" [class.is-active]="!!location">Ubicación</ion-button>
+    <ion-button id="filter-profession" size="small" fill="outline" class="filter-pill" [class.is-active]="!!profession">Profesión</ion-button>
+    <ion-button id="filter-salary" size="small" fill="outline" class="filter-pill" [class.is-active]="!!salaryMin || !!salaryMax">Sueldo</ion-button>
+    <ion-button id="filter-shift" size="small" fill="outline" class="filter-pill" [class.is-active]="modality !== 'todas'">Jornada</ion-button>
+    <ion-button id="filter-date" size="small" fill="outline" class="filter-pill" [class.is-active]="dateRange !== 'any'">Fecha</ion-button>
+    <ion-button id="filter-experience" size="small" fill="outline" class="filter-pill" [class.is-active]="!!specialty">Experiencia</ion-button>
+    <ion-button id="filter-contract" size="small" fill="outline" class="filter-pill" [class.is-active]="!!contract">
       Contrato
     </ion-button>
   </div>
@@ -213,7 +227,7 @@
             </p>
             <p class="job-salary">
               <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
-              {{ job.salary_min || '0' }} - {{ job.salary_max || '' }} CLP
+              {{ jobSalaryRange(job) }}
             </p>
           </ion-label>
         </ion-item>
