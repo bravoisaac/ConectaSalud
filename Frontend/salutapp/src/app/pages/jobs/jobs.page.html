@@ -15,182 +15,153 @@
           </div>
           <div class="feed-metric">
             <strong>{{ canCreateJob ? 'Publicar' : 'Postular' }}</strong>
-            <span>acción rápida</span>
+            <span>accion rapida</span>
           </div>
         </div>
       </div>
     </header>
 
     <section class="feed-body" aria-label="Listado de empleos">
-  <ion-text color="success" *ngIf="showSuccess" class="success-message">
-    Postulacion exitosa ✓
-  </ion-text>
+      <ion-text color="success" *ngIf="showSuccess" class="success-message">
+        Postulacion exitosa
+      </ion-text>
 
-  <ion-text color="success" *ngIf="showCreated" class="success-message">
-    Empleo publicado ✓
-  </ion-text>
+      <ion-text color="success" *ngIf="showCreated" class="success-message">
+        Empleo publicado
+      </ion-text>
 
-      <ion-searchbar class="feed-search" [(ngModel)]="query" placeholder="Buscar empleo..."></ion-searchbar>
+      <div class="search-filter-row">
+        <ion-searchbar class="feed-search job-search" [(ngModel)]="query" placeholder="Buscar empleo..."></ion-searchbar>
 
-  <div class="filters-row">
-    <ion-button id="filter-sort" size="small" fill="outline" class="filter-pill" [class.is-active]="sortBy !== 'recent'">
-      <ion-icon slot="start" name="options-outline"></ion-icon>
-      Ordenar
-    </ion-button>
-    <ion-button id="filter-location" size="small" fill="outline" class="filter-pill" [class.is-active]="!!location">Ubicación</ion-button>
-    <ion-button id="filter-profession" size="small" fill="outline" class="filter-pill" [class.is-active]="!!profession">Profesión</ion-button>
-    <ion-button id="filter-salary" size="small" fill="outline" class="filter-pill" [class.is-active]="!!salaryMin || !!salaryMax">Sueldo</ion-button>
-    <ion-button id="filter-shift" size="small" fill="outline" class="filter-pill" [class.is-active]="modality !== 'todas'">Jornada</ion-button>
-    <ion-button id="filter-date" size="small" fill="outline" class="filter-pill" [class.is-active]="dateRange !== 'any'">Fecha</ion-button>
-    <ion-button id="filter-experience" size="small" fill="outline" class="filter-pill" [class.is-active]="!!specialty">Experiencia</ion-button>
-    <ion-button id="filter-contract" size="small" fill="outline" class="filter-pill" [class.is-active]="!!contract">
-      Contrato
-    </ion-button>
-  </div>
+        <ion-button class="filters-open-btn" fill="outline" (click)="openFilters()">
+          <ion-icon slot="start" name="options-outline" aria-hidden="true"></ion-icon>
+          Filtros
+          <span class="filters-count" *ngIf="activeFiltersCount">{{ activeFiltersCount }}</span>
+        </ion-button>
+      </div>
 
-  <ion-popover trigger="filter-sort" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-list>
-          <ion-radio-group [(ngModel)]="sortBy">
-            <ion-item>
-              <ion-label>Mas recientes</ion-label>
-              <ion-radio slot="end" value="recent"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Mas antiguos</ion-label>
-              <ion-radio slot="end" value="oldest"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Sueldo mayor</ion-label>
-              <ion-radio slot="end" value="salary_desc"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Sueldo menor</ion-label>
-              <ion-radio slot="end" value="salary_asc"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Titulo A-Z</ion-label>
-              <ion-radio slot="end" value="title_asc"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Titulo Z-A</ion-label>
-              <ion-radio slot="end" value="title_desc"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-list>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+      <ion-modal [isOpen]="filtersOpen" (didDismiss)="closeFilters()" class="jobs-filter-modal">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar class="filter-modal-toolbar">
+              <ion-title>Filtros de empleo</ion-title>
+              <ion-buttons slot="end">
+                <ion-button fill="clear" (click)="closeFilters()">
+                  <ion-icon slot="icon-only" name="close-outline" aria-label="Cerrar"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
 
-  <ion-popover trigger="filter-date" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-list>
-          <ion-radio-group [(ngModel)]="dateRange">
-            <ion-item>
-              <ion-label>Cualquier fecha</ion-label>
-              <ion-radio slot="end" value="any"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Ultimos 7 dias</ion-label>
-              <ion-radio slot="end" value="7d"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Ultimos 30 dias</ion-label>
-              <ion-radio slot="end" value="30d"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Ultimos 90 dias</ion-label>
-              <ion-radio slot="end" value="90d"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-list>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+          <ion-content class="filter-modal-content">
+            <div class="filter-sheet">
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="swap-vertical-outline" aria-hidden="true"></ion-icon>
+                  Orden y fecha
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Ordenar por</ion-label>
+                    <ion-select [(ngModel)]="sortBy" interface="popover">
+                      <ion-select-option value="recent">Mas recientes</ion-select-option>
+                      <ion-select-option value="oldest">Mas antiguos</ion-select-option>
+                      <ion-select-option value="salary_desc">Sueldo mayor</ion-select-option>
+                      <ion-select-option value="salary_asc">Sueldo menor</ion-select-option>
+                      <ion-select-option value="title_asc">Titulo A-Z</ion-select-option>
+                      <ion-select-option value="title_desc">Titulo Z-A</ion-select-option>
+                    </ion-select>
+                  </ion-item>
 
-  <ion-popover trigger="filter-location" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-item lines="none">
-          <ion-label position="stacked">Ubicacion</ion-label>
-          <ion-input [(ngModel)]="location" placeholder="Ej: Santiago"></ion-input>
-        </ion-item>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Fecha de publicacion</ion-label>
+                    <ion-select [(ngModel)]="dateRange" interface="popover">
+                      <ion-select-option value="any">Cualquier fecha</ion-select-option>
+                      <ion-select-option value="7d">Ultimos 7 dias</ion-select-option>
+                      <ion-select-option value="30d">Ultimos 30 dias</ion-select-option>
+                      <ion-select-option value="90d">Ultimos 90 dias</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+              </section>
 
-  <ion-popover trigger="filter-profession" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-item lines="none">
-          <ion-label position="stacked">Profesion</ion-label>
-          <ion-input [(ngModel)]="profession" placeholder="Ej: Enfermera, TENS"></ion-input>
-        </ion-item>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                  Ubicacion y modalidad
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Ubicacion</ion-label>
+                    <ion-input [(ngModel)]="location" placeholder="Ej: Santiago"></ion-input>
+                  </ion-item>
 
-  <ion-popover trigger="filter-experience" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-item lines="none">
-          <ion-label position="stacked">Especialidad o experiencia</ion-label>
-          <ion-input [(ngModel)]="specialty" placeholder="Ej: Enfermeria, 2 anos"></ion-input>
-        </ion-item>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Jornada</ion-label>
+                    <ion-select [(ngModel)]="modality" interface="popover">
+                      <ion-select-option value="todas">Todas</ion-select-option>
+                      <ion-select-option value="presencial">Presencial</ion-select-option>
+                      <ion-select-option value="remoto">Remoto</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+              </section>
 
-  <ion-popover trigger="filter-salary" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-item lines="none">
-          <ion-label position="stacked">Salario minimo (CLP)</ion-label>
-          <ion-input [(ngModel)]="salaryMin" type="number" inputmode="numeric" placeholder="Ej: 600000"></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked">Salario maximo (CLP)</ion-label>
-          <ion-input [(ngModel)]="salaryMax" type="number" inputmode="numeric" placeholder="Ej: 1200000"></ion-input>
-        </ion-item>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="medkit-outline" aria-hidden="true"></ion-icon>
+                  Perfil requerido
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Profesion</ion-label>
+                    <ion-input [(ngModel)]="profession" placeholder="Ej: Enfermera, TENS"></ion-input>
+                  </ion-item>
 
-  <ion-popover trigger="filter-shift" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-list>
-          <ion-radio-group [(ngModel)]="modality">
-            <ion-item>
-              <ion-label>Todas</ion-label>
-              <ion-radio slot="end" value="todas"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Presencial</ion-label>
-              <ion-radio slot="end" value="presencial"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>Remoto</ion-label>
-              <ion-radio slot="end" value="remoto"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-list>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Especialidad o experiencia</ion-label>
+                    <ion-input [(ngModel)]="specialty" placeholder="Ej: Enfermeria, 2 anos"></ion-input>
+                  </ion-item>
 
-  <ion-popover trigger="filter-contract" side="bottom" alignment="start" class="filter-popover">
-    <ng-template>
-      <ion-content class="ion-padding">
-        <ion-item lines="none">
-          <ion-label position="stacked">Tipo de contrato</ion-label>
-          <ion-input [(ngModel)]="contract" placeholder="Ej: indefinido, honorarios"></ion-input>
-        </ion-item>
-      </ion-content>
-    </ng-template>
-  </ion-popover>
+                  <ion-item class="filter-field filter-field--wide" lines="none">
+                    <ion-label position="stacked">Tipo de contrato</ion-label>
+                    <ion-input [(ngModel)]="contract" placeholder="Ej: indefinido, honorarios"></ion-input>
+                  </ion-item>
+                </div>
+              </section>
+
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                  Rango de sueldo
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Minimo CLP</ion-label>
+                    <ion-input [(ngModel)]="salaryMin" type="number" inputmode="numeric" placeholder="Ej: 600000"></ion-input>
+                  </ion-item>
+
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Maximo CLP</ion-label>
+                    <ion-input [(ngModel)]="salaryMax" type="number" inputmode="numeric" placeholder="Ej: 1200000"></ion-input>
+                  </ion-item>
+                </div>
+              </section>
+            </div>
+          </ion-content>
+
+          <ion-footer class="filter-modal-footer">
+            <div class="filter-actions">
+              <ion-button fill="outline" class="filter-reset-btn" (click)="clearPanelFilters()">
+                Limpiar filtros
+              </ion-button>
+              <ion-button class="filter-apply-btn" (click)="closeFilters()">
+                Ver {{ filteredJobs.length }} ofertas
+              </ion-button>
+            </div>
+          </ion-footer>
+        </ng-template>
+      </ion-modal>
 
       <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
 
@@ -223,7 +194,7 @@
             <p class="job-sub">
               {{ jobPosterText(job) }}
               <ng-container *ngIf="jobPosterTrust(job)">({{ jobPosterTrust(job) }})</ng-container>
-              • {{ job.location || 'Sin ubicación' }}
+              - {{ job.location || 'Sin ubicacion' }}
             </p>
             <p class="job-salary">
               <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
@@ -233,10 +204,29 @@
         </ion-item>
       </div>
 
-      <div class="loading" *ngIf="loading">
-        <ion-spinner></ion-spinner>
-        <span>Cargando...</span>
-      </div>
+      <app-empty-state
+        *ngIf="!loading && !filteredJobs.length"
+        icon="briefcase-outline"
+        [title]="hasActiveFilters ? 'Sin resultados para estos filtros' : 'No hay empleos publicados'"
+        [description]="hasActiveFilters ? 'Ajusta la busqueda o limpia los filtros para ver mas ofertas.' : 'Cuando existan ofertas disponibles, apareceran aqui para postular.'"
+      >
+        <div empty-actions>
+          <ion-button *ngIf="hasActiveFilters" fill="outline" (click)="clearFilters()">
+            <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>
+            Limpiar filtros
+          </ion-button>
+          <ion-button *ngIf="!hasActiveFilters && canCreateJob" routerLink="/app/jobs/new">
+            <ion-icon slot="start" name="add-outline" aria-hidden="true"></ion-icon>
+            Publicar empleo
+          </ion-button>
+        </div>
+      </app-empty-state>
+
+      <app-loading-state
+        *ngIf="loading"
+        title="Cargando empleos"
+        description="Buscando ofertas disponibles para tu perfil."
+      ></app-loading-state>
 
       <ion-fab *ngIf="canCreateJob" vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button class="fab" routerLink="/app/jobs/new" aria-label="Crear empleo">

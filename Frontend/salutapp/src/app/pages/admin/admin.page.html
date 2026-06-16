@@ -15,9 +15,12 @@
     <ion-card-content>
       <ion-text color="danger" *ngIf="verificationError">{{ verificationError }}</ion-text>
       <ion-text color="success" *ngIf="verificationSuccess">{{ verificationSuccess }}</ion-text>
-      <ion-item *ngIf="loadingVerifications">
-        <ion-label>Cargando verificaciones...</ion-label>
-      </ion-item>
+      <app-loading-state
+        *ngIf="loadingVerifications"
+        [compact]="true"
+        title="Cargando verificaciones"
+        description="Buscando solicitudes pendientes."
+      ></app-loading-state>
       <ion-list>
         <ion-item *ngFor="let item of verifications">
           <ion-label>
@@ -47,9 +50,13 @@
           </ion-button>
         </ion-item>
       </ion-list>
-      <ion-text color="medium" *ngIf="!loadingVerifications && !verifications.length">
-        No hay verificaciones para revisar.
-      </ion-text>
+      <app-empty-state
+        *ngIf="!loadingVerifications && !verifications.length"
+        [compact]="true"
+        icon="shield-checkmark-outline"
+        title="Sin verificaciones pendientes"
+        description="Las nuevas solicitudes apareceran aqui para revision."
+      ></app-empty-state>
     </ion-card-content>
   </ion-card>
 
@@ -60,9 +67,12 @@
     <ion-card-content>
       <ion-text color="danger" *ngIf="reportError">{{ reportError }}</ion-text>
       <ion-text color="success" *ngIf="reportSuccess">{{ reportSuccess }}</ion-text>
-      <ion-item *ngIf="loadingReports">
-        <ion-label>Cargando reportes...</ion-label>
-      </ion-item>
+      <app-loading-state
+        *ngIf="loadingReports"
+        [compact]="true"
+        title="Cargando reportes"
+        description="Revisando casos abiertos."
+      ></app-loading-state>
       <ion-list>
         <ion-item *ngFor="let report of reports">
           <ion-label>
@@ -93,9 +103,13 @@
           </ion-button>
         </ion-item>
       </ion-list>
-      <ion-text color="medium" *ngIf="!loadingReports && !reports.length">
-        No hay reportes para revisar.
-      </ion-text>
+      <app-empty-state
+        *ngIf="!loadingReports && !reports.length"
+        [compact]="true"
+        icon="flag-outline"
+        title="Sin reportes pendientes"
+        description="Los reportes abiertos quedaran disponibles en esta seccion."
+      ></app-empty-state>
     </ion-card-content>
       </ion-card>
     </section>

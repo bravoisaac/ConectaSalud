@@ -11,19 +11,19 @@
       <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
       <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
 
-      <ion-item *ngIf="loading">
-        <ion-label>Cargando chats...</ion-label>
-      </ion-item>
+      <app-loading-state
+        *ngIf="loading"
+        title="Cargando chats"
+        description="Sincronizando tus conversaciones recientes."
+      ></app-loading-state>
 
-      <div class="chat-empty" *ngIf="!loading && !chats.length">
-        <div class="chat-empty-icon" aria-hidden="true">
-          <ion-icon name="chatbubbles-outline"></ion-icon>
-        </div>
-        <h2>Todavia no hay chats</h2>
-        <p>
-          Las conversaciones se crean automaticamente cuando un profesional de salud acepta una reserva.
-        </p>
-        <div class="chat-empty-actions">
+      <app-empty-state
+        *ngIf="!loading && !chats.length"
+        icon="chatbubbles-outline"
+        title="Todavia no hay chats"
+        description="Las conversaciones se crean automaticamente cuando una reserva aceptada habilita el contacto."
+      >
+        <div empty-actions>
           <ion-button routerLink="/app/health">
             <ion-icon slot="start" name="medkit-outline" aria-hidden="true"></ion-icon>
             Buscar profesional
@@ -33,7 +33,7 @@
             Ver reservas
           </ion-button>
         </div>
-      </div>
+      </app-empty-state>
 
       <div class="chat-layout" *ngIf="!loading && chats.length">
         <div class="chat-list">

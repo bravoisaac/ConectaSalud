@@ -7,13 +7,15 @@ import { regions as clRegions, provinces as clProvinces, communes as clCommunes 
 import { HealthService } from '../../services/health.service';
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-health',
   templateUrl: './health.page.html',
   styleUrls: ['./health.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule, FormsModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class HealthPage implements OnInit {
   readonly regions = clRegions;
@@ -26,6 +28,7 @@ export class HealthPage implements OnInit {
   rateMin = '';
   rateMax = '';
   sortBy = 'name_asc';
+  filtersOpen = false;
 
   profiles: any[] = [];
   loading = false;
@@ -50,6 +53,28 @@ export class HealthPage implements OnInit {
   bookingLat: number | null = null;
   bookingLng: number | null = null;
   profileAddressLoaded = false;
+
+  get hasActiveFilters() {
+    return !!(
+      this.query.trim()
+      || this.location.trim()
+      || this.specialty.trim()
+      || this.experienceMin.trim()
+      || this.rateMin.trim()
+      || this.rateMax.trim()
+      || this.sortBy !== 'name_asc'
+    );
+  }
+
+  get activeFiltersCount() {
+    let count = 0;
+    if (this.location.trim()) count++;
+    if (this.specialty.trim()) count++;
+    if (this.experienceMin.trim()) count++;
+    if (this.rateMin.trim() || this.rateMax.trim()) count++;
+    if (this.sortBy !== 'name_asc') count++;
+    return count;
+  }
 
   get availableBookingCities() {
     const regionId = this.resolveRegionId(this.bookingRegion);
@@ -176,6 +201,28 @@ export class HealthPage implements OnInit {
     }).add(() => {
       this.loading = false;
     });
+  }
+
+  clearFilters() {
+    this.query = '';
+    this.clearPanelFilters();
+  }
+
+  clearPanelFilters() {
+    this.location = '';
+    this.specialty = '';
+    this.experienceMin = '';
+    this.rateMin = '';
+    this.rateMax = '';
+    this.sortBy = 'name_asc';
+  }
+
+  openFilters() {
+    this.filtersOpen = true;
+  }
+
+  closeFilters() {
+    this.filtersOpen = false;
   }
 
   openProfile(profile: any) {

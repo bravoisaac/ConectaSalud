@@ -1,0 +1,14 @@
+<section class="empty-state" [class.empty-state--compact]="compact">
+  <div class="empty-state__icon" aria-hidden="true">
+    <ion-icon [name]="icon"></ion-icon>
+  </div>
+
+  <div class="empty-state__copy">
+    <h2>{{ title }}</h2>
+    <p *ngIf="description">{{ description }}</p>
+  </div>
+
+  <div class="empty-state__actions">
+    <ng-content select="[empty-actions]"></ng-content>
+  </div>
+</section>

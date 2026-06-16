@@ -2,18 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { ChatService } from '../../services/chat.service';
 import { HealthService } from '../../services/health.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-health-bookings',
   templateUrl: './health-bookings.page.html',
   styleUrls: ['./health-bookings.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [IonicModule, CommonModule, RouterModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class HealthBookingsPage implements OnInit {
   loading = false;

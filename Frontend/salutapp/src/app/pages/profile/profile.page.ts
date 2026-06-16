@@ -10,13 +10,15 @@ import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 import { HealthService } from '../../services/health.service';
 import { FontSizeMode, ThemeMode, UiSettings, UiSettingsService } from '../../services/ui-settings.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule, FormsModule],
+  imports: [IonicModule, CommonModule, RouterModule, FormsModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class ProfilePage implements OnInit, OnDestroy {
   readonly regions = clRegions;

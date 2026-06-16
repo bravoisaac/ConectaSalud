@@ -22,11 +22,19 @@
     </header>
 
     <section class="feed-body" aria-label="Búsqueda de profesionales">
-      <ion-searchbar
-        class="feed-search"
-        [(ngModel)]="query"
-        placeholder="Buscar especialidad..."
-      ></ion-searchbar>
+      <div class="search-filter-row">
+        <ion-searchbar
+          class="feed-search health-search"
+          [(ngModel)]="query"
+          placeholder="Buscar especialidad..."
+        ></ion-searchbar>
+
+        <ion-button class="filters-open-btn" fill="outline" (click)="openFilters()">
+          <ion-icon slot="start" name="options-outline" aria-hidden="true"></ion-icon>
+          Filtros
+          <span class="filters-count" *ngIf="activeFiltersCount">{{ activeFiltersCount }}</span>
+        </ion-button>
+      </div>
 
       <div class="filters-row">
         <ion-button id="filter-specialty-health" size="small" fill="outline" class="filter-pill" [class.is-active]="!!specialty">Especialidad</ion-button>
@@ -128,6 +136,97 @@
     </ng-template>
   </ion-popover>
 
+      <ion-modal [isOpen]="filtersOpen" (didDismiss)="closeFilters()" class="health-filter-modal">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar class="filter-modal-toolbar">
+              <ion-title>Filtros de salud</ion-title>
+              <ion-buttons slot="end">
+                <ion-button fill="clear" (click)="closeFilters()">
+                  <ion-icon slot="icon-only" name="close-outline" aria-label="Cerrar"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+
+          <ion-content class="filter-modal-content">
+            <div class="filter-sheet">
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="medkit-outline" aria-hidden="true"></ion-icon>
+                  Especialidad y zona
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Especialidad o profesion</ion-label>
+                    <ion-input [(ngModel)]="specialty" placeholder="Ej: Kinesiologia, Psicologia"></ion-input>
+                  </ion-item>
+
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Ubicacion</ion-label>
+                    <ion-input [(ngModel)]="location" placeholder="Ej: Santiago"></ion-input>
+                  </ion-item>
+                </div>
+              </section>
+
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="cash-outline" aria-hidden="true"></ion-icon>
+                  Tarifa y experiencia
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Tarifa minima CLP/h</ion-label>
+                    <ion-input [(ngModel)]="rateMin" type="number" inputmode="numeric" placeholder="Ej: 8000"></ion-input>
+                  </ion-item>
+
+                  <ion-item class="filter-field" lines="none">
+                    <ion-label position="stacked">Tarifa maxima CLP/h</ion-label>
+                    <ion-input [(ngModel)]="rateMax" type="number" inputmode="numeric" placeholder="Ej: 20000"></ion-input>
+                  </ion-item>
+
+                  <ion-item class="filter-field filter-field--wide" lines="none">
+                    <ion-label position="stacked">Experiencia minima</ion-label>
+                    <ion-input [(ngModel)]="experienceMin" type="number" inputmode="numeric" placeholder="Ej: 2 anos"></ion-input>
+                  </ion-item>
+                </div>
+              </section>
+
+              <section class="filter-section">
+                <div class="filter-section-title">
+                  <ion-icon name="swap-vertical-outline" aria-hidden="true"></ion-icon>
+                  Orden
+                </div>
+                <div class="filter-grid">
+                  <ion-item class="filter-field filter-field--wide" lines="none">
+                    <ion-label position="stacked">Ordenar por</ion-label>
+                    <ion-select [(ngModel)]="sortBy" interface="popover">
+                      <ion-select-option value="name_asc">Nombre A-Z</ion-select-option>
+                      <ion-select-option value="name_desc">Nombre Z-A</ion-select-option>
+                      <ion-select-option value="rate_desc">Tarifa mayor</ion-select-option>
+                      <ion-select-option value="rate_asc">Tarifa menor</ion-select-option>
+                      <ion-select-option value="experience_desc">Mas experiencia</ion-select-option>
+                      <ion-select-option value="experience_asc">Menos experiencia</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+              </section>
+            </div>
+          </ion-content>
+
+          <ion-footer class="filter-modal-footer">
+            <div class="filter-actions">
+              <ion-button fill="outline" class="filter-reset-btn" (click)="clearPanelFilters()">
+                Limpiar filtros
+              </ion-button>
+              <ion-button class="filter-apply-btn" (click)="closeFilters()">
+                Ver {{ filteredProfiles.length }} profesionales
+              </ion-button>
+            </div>
+          </ion-footer>
+        </ng-template>
+      </ion-modal>
+
       <div class="profile-list" *ngIf="!loading">
         <ion-item
           *ngFor="let specialist of filteredProfiles"
@@ -159,11 +258,21 @@
             </div>
           </ion-label>
         </ion-item>
-
-        <div class="empty" *ngIf="!filteredProfiles.length">
-          No hay resultados con esos filtros.
-        </div>
       </div>
+
+      <app-empty-state
+        *ngIf="!loading && !filteredProfiles.length"
+        icon="medkit-outline"
+        [title]="hasActiveFilters ? 'Sin profesionales con esos filtros' : 'No hay profesionales disponibles'"
+        [description]="hasActiveFilters ? 'Amplia la busqueda o limpia los filtros para ver mas perfiles.' : 'Cuando haya profesionales de salud activos, apareceran aqui para reservar.'"
+      >
+        <div empty-actions>
+          <ion-button *ngIf="hasActiveFilters" fill="outline" (click)="clearFilters()">
+            <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>
+            Limpiar filtros
+          </ion-button>
+        </div>
+      </app-empty-state>
 
 <ion-modal [isOpen]="!!selectedProfile" (didDismiss)="closeProfile()" class="health-modal">
     <ng-template>
@@ -248,12 +357,20 @@
                 </ng-container>
               </div>
               <ng-template #availabilityEmpty>
-                <div class="empty" *ngIf="!availabilityLoading">Sin disponibilidad registrada</div>
+                <app-empty-state
+                  *ngIf="!availabilityLoading"
+                  [compact]="true"
+                  icon="calendar-clear-outline"
+                  title="Sin disponibilidad registrada"
+                  description="Este profesional aun no publico horarios de atencion."
+                ></app-empty-state>
               </ng-template>
-              <div class="loading" *ngIf="availabilityLoading">
-                <ion-spinner></ion-spinner>
-                <span>Cargando disponibilidad...</span>
-              </div>
+              <app-loading-state
+                *ngIf="availabilityLoading"
+                [compact]="true"
+                title="Cargando disponibilidad"
+                description="Revisando horarios publicados."
+              ></app-loading-state>
 
               <ion-list class="availability-list" *ngIf="!availabilityLoading && availability.length">
                 <ion-item lines="none" *ngFor="let slot of availability">
@@ -390,10 +507,11 @@
     </ng-template>
   </ion-modal>
 
-      <div class="loading" *ngIf="loading">
-        <ion-spinner></ion-spinner>
-        <span>Cargando...</span>
-      </div>
+      <app-loading-state
+        *ngIf="loading"
+        title="Cargando profesionales"
+        description="Preparando el listado de servicios de salud."
+      ></app-loading-state>
     </section>
   </div>
 </ion-content>

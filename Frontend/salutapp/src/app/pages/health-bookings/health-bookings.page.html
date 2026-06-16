@@ -11,9 +11,11 @@
       <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
       <ion-text color="success" *ngIf="successMsg" class="success-message">{{ successMsg }}</ion-text>
 
-  <ion-item *ngIf="loading">
-    <ion-label>Cargando reservas...</ion-label>
-  </ion-item>
+  <app-loading-state
+    *ngIf="loading"
+    title="Cargando reservas"
+    description="Revisando tus citas y solicitudes activas."
+  ></app-loading-state>
 
   <h3 class="section-title" *ngIf="!loading && currentBookings.length">Estado actual</h3>
   <div class="booking-list" *ngIf="!loading && currentBookings.length">
@@ -142,9 +144,23 @@
     </ion-card>
   </div>
 
-      <ion-text color="medium" *ngIf="!loading && !bookings.length" class="empty">
-        {{ isHealthUser ? 'Aun no tienes reservas.' : 'No hay reservas para mostrar en esta cuenta.' }}
-      </ion-text>
+      <app-empty-state
+        *ngIf="!loading && !bookings.length"
+        icon="calendar-outline"
+        [title]="isHealthUser ? 'Aun no tienes reservas recibidas' : 'No tienes reservas agendadas'"
+        [description]="isHealthUser ? 'Las solicitudes de pacientes apareceran aqui para aceptarlas, iniciarlas o finalizarlas.' : 'Busca un profesional de salud y agenda una hora cuando encuentres una disponibilidad que te acomode.'"
+      >
+        <div empty-actions>
+          <ion-button *ngIf="isHealthUser" routerLink="/app/profile" fill="outline">
+            <ion-icon slot="start" name="settings-outline" aria-hidden="true"></ion-icon>
+            Configurar horarios
+          </ion-button>
+          <ion-button *ngIf="!isHealthUser" routerLink="/app/health">
+            <ion-icon slot="start" name="medkit-outline" aria-hidden="true"></ion-icon>
+            Buscar profesional
+          </ion-button>
+        </div>
+      </app-empty-state>
 
   <ion-modal [isOpen]="!!selectedBooking" (didDismiss)="closeBookingDetails()" class="health-booking-modal">
     <ng-template>

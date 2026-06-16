@@ -1,3 +1,18 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
+
+  <div class="app-loading-screen" *ngIf="routeLoading" role="status" aria-live="polite">
+    <div class="app-loading-card">
+      <div class="app-loading-mark" aria-hidden="true">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <div class="app-loading-copy">
+        <h2>Cargando Salut</h2>
+        <p>Preparando tu espacio de salud y trabajo.</p>
+      </div>
+      <div class="app-loading-bar" aria-hidden="true">
+        <span></span>
+      </div>
+    </div>
+  </div>
 </ion-app>

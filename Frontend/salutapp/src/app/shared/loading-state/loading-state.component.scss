@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+.loading-state {
+  display: grid;
+  justify-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 30px 18px;
+  border: 1px solid #dfe7f1;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 32px rgba(16, 24, 40, 0.08);
+  text-align: center;
+}
+
+.loading-state--compact {
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-items: start;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 16px 14px;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.loading-state__spinner {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(49, 64, 212, 0.18);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(49, 64, 212, 0.1), rgba(14, 165, 233, 0.12));
+  color: #3140d4;
+}
+
+.loading-state--compact .loading-state__spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.loading-state__spinner ion-spinner {
+  width: 28px;
+  height: 28px;
+  --color: #3140d4;
+}
+
+.loading-state--compact .loading-state__spinner ion-spinner {
+  width: 22px;
+  height: 22px;
+}
+
+.loading-state__copy {
+  width: min(100%, 520px);
+}
+
+.loading-state h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.loading-state--compact h2 {
+  font-size: 14px;
+}
+
+.loading-state p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.loading-state__bar {
+  width: min(100%, 260px);
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf2f7;
+}
+
+.loading-state--compact .loading-state__bar {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 4px;
+}
+
+.loading-state__bar span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3140d4, #0ea5e9);
+  animation: loading-state-bar 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-state-bar {
+  0% {
+    transform: translateX(-105%);
+  }
+
+  100% {
+    transform: translateX(245%);
+  }
+}

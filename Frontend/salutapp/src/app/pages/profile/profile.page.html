@@ -240,9 +240,13 @@
             <p class="experience-desc">Descripcion: {{ exp.description || 'Sin descripcion' }}</p>
           </ion-card-content>
         </ion-card>
-        <ion-text color="medium" *ngIf="!experienceEditMode && !experienceEntries.length">
-          Sin experiencias registradas
-        </ion-text>
+        <app-empty-state
+          *ngIf="!experienceEditMode && !experienceEntries.length"
+          [compact]="true"
+          icon="briefcase-outline"
+          title="Sin experiencias registradas"
+          description="Agrega experiencia para fortalecer tu curriculum."
+        ></app-empty-state>
       </div>
       <div class="skills-block">
         <div class="skills-header">
@@ -285,9 +289,13 @@
             <p class="skill-item">{{ skill }}</p>
           </ion-card-content>
         </ion-card>
-        <ion-text color="medium" *ngIf="!skillsEditMode && !skillsEntries.length">
-          Sin habilidades registradas
-        </ion-text>
+        <app-empty-state
+          *ngIf="!skillsEditMode && !skillsEntries.length"
+          [compact]="true"
+          icon="sparkles-outline"
+          title="Sin habilidades registradas"
+          description="Agrega habilidades clinicas o tecnicas relevantes."
+        ></app-empty-state>
       </div>
       <div class="education-block">
         <div class="education-header">
@@ -368,9 +376,13 @@
             <p class="education-meta">Finalizado: {{ edu.completed ? 'Si' : 'No' }}</p>
           </ion-card-content>
         </ion-card>
-      <ion-text color="medium" *ngIf="!educationEditMode && !educationEntries.length">
-          Sin estudios registrados
-      </ion-text>
+      <app-empty-state
+        *ngIf="!educationEditMode && !educationEntries.length"
+        [compact]="true"
+        icon="school-outline"
+        title="Sin estudios registrados"
+        description="Completa tu formacion para que otros usuarios conozcan tu perfil."
+      ></app-empty-state>
       </div>
       <div class="cv-upload" aria-label="Currículum PDF">
         <div class="cv-upload__title">Currículum PDF</div>
@@ -507,13 +519,20 @@
               </div>
             </div>
 
-            <ion-text color="medium" *ngIf="!loadingHealthAvailability && !healthAvailability.length">
-              Aún no has agregado horarios
-            </ion-text>
+            <app-empty-state
+              *ngIf="!loadingHealthAvailability && !healthAvailability.length"
+              [compact]="true"
+              icon="calendar-clear-outline"
+              title="Aun no has agregado horarios"
+              description="Agrega disponibilidad para que los pacientes puedan reservar."
+            ></app-empty-state>
 
-            <ion-item class="availability-loading" lines="none" *ngIf="loadingHealthAvailability">
-              <ion-label>Cargando horarios...</ion-label>
-            </ion-item>
+            <app-loading-state
+              *ngIf="loadingHealthAvailability"
+              [compact]="true"
+              title="Cargando horarios"
+              description="Preparando tu disponibilidad publicada."
+            ></app-loading-state>
           </div>
         </ion-card-content>
       </ion-card>

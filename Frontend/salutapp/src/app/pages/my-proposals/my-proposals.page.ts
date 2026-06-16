@@ -2,17 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { JobsService } from '../../services/jobs.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-my-proposals',
   templateUrl: './my-proposals.page.html',
   styleUrls: ['./my-proposals.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class MyProposalsPage implements OnInit {
   proposalsSection: 'my' | 'inbox' = 'my';

@@ -2922,6 +2922,185 @@ ion-searchbar.feed-search {
   --box-shadow: 0 16px 38px rgba(16, 24, 40, 0.12);
 }
 
+.search-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 0 18px;
+}
+
+.search-filter-row ion-searchbar.feed-search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.filters-open-btn {
+  flex: 0 0 126px;
+  height: 48px;
+  margin: 0;
+  --border-radius: 16px;
+  --border-color: #cfd8e6;
+  --background: rgba(255, 255, 255, 0.98);
+  --box-shadow: 0 16px 38px rgba(16, 24, 40, 0.12);
+  --color: #101828;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: none;
+}
+
+.filters-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #3140d4;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+ion-modal.health-filter-modal {
+  --width: min(680px, calc(100vw - 24px));
+  --height: min(720px, calc(100vh - 40px));
+  --border-radius: 22px;
+}
+
+ion-modal.health-filter-modal::part(content) {
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+ion-modal.health-filter-modal .filter-modal-toolbar {
+  --background: linear-gradient(135deg, #101828, #1e293b 56%, #3140d4);
+  --color: #fff;
+}
+
+ion-modal.health-filter-modal .filter-modal-toolbar ion-title {
+  font-weight: 900;
+}
+
+ion-modal.health-filter-modal .filter-modal-content {
+  --background: #f4f7fb;
+}
+
+ion-modal.health-filter-modal .filter-sheet {
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 14px 18px;
+}
+
+ion-modal.health-filter-modal .filter-section {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #e1e8f2;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.07);
+}
+
+ion-modal.health-filter-modal .filter-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #101828;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+ion-modal.health-filter-modal .filter-section-title ion-icon {
+  color: #3140d4;
+}
+
+ion-modal.health-filter-modal .filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+ion-modal.health-filter-modal .filter-field {
+  --background: #f8fafc;
+  --color: #101828;
+  --border-radius: 14px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --min-height: 62px;
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+ion-modal.health-filter-modal .filter-field::part(native) {
+  background: #f8fafc;
+}
+
+ion-modal.health-filter-modal .filter-field ion-label {
+  color: #667085 !important;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+ion-modal.health-filter-modal .filter-field ion-input,
+ion-modal.health-filter-modal .filter-field ion-select {
+  --color: #101828;
+  --placeholder-color: #667085;
+  --placeholder-opacity: 1;
+  color: #101828;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+ion-modal.health-filter-modal .filter-field ion-select::part(text),
+ion-modal.health-filter-modal .filter-field ion-select::part(placeholder),
+ion-modal.health-filter-modal .filter-field ion-input::part(native) {
+  color: #101828;
+  opacity: 1;
+}
+
+ion-modal.health-filter-modal .filter-modal-footer {
+  background: #fff;
+  border-top: 1px solid #e6ebf2;
+}
+
+ion-modal.health-filter-modal .filter-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 14px calc(env(safe-area-inset-bottom) + 12px);
+}
+
+ion-modal.health-filter-modal .filter-actions ion-button {
+  height: 44px;
+  --border-radius: 999px;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+ion-modal.health-filter-modal .filter-reset-btn {
+  --border-color: #cfd8e6;
+  --color: #344054;
+  --background: #fff;
+}
+
+ion-modal.health-filter-modal .filter-apply-btn {
+  --background: linear-gradient(135deg, #3140d4, #2563eb);
+  --color: #fff;
+  --box-shadow: 0 14px 28px rgba(49, 64, 212, 0.22);
+}
+
 .filter-pill,
 ion-button.secondary {
   --border-color: #dbe3ee;
@@ -2929,6 +3108,31 @@ ion-button.secondary {
   --background: rgba(255, 255, 255, 0.92);
   --background-hover: #f1f5f9;
   --background-activated: #e2e8f0;
+}
+
+@media (min-width: 620px) {
+  ion-modal.health-filter-modal .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  ion-modal.health-filter-modal .filter-field--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 430px) {
+  .search-filter-row {
+    gap: 8px;
+  }
+
+  .filters-open-btn {
+    flex-basis: 108px;
+    font-size: 13px;
+  }
+
+  ion-modal.health-filter-modal .filter-actions {
+    grid-template-columns: 1fr;
+  }
 }
 
 ion-button.primary,

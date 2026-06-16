@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 import { JobsService } from '../../services/jobs.service';
 import { CompaniesService } from '../../services/companies.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-job-create',
   templateUrl: './job-create.page.html',
   styleUrls: ['./job-create.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class JobCreatePage implements OnInit {
   currentUser: any = null;

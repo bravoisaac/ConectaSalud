@@ -28,9 +28,21 @@
         </ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-text color="medium" *ngIf="canCreateJob && !loadingCompanies && !companies.length">
-      No tienes empresas registradas para publicar empleos.
-    </ion-text>
+
+    <app-loading-state
+      *ngIf="loadingCompanies"
+      [compact]="true"
+      title="Cargando empresas"
+      description="Buscando empresas disponibles para publicar."
+    ></app-loading-state>
+
+    <app-empty-state
+      *ngIf="canCreateJob && !loadingCompanies && !companies.length"
+      [compact]="true"
+      icon="business-outline"
+      title="No tienes empresas registradas"
+      description="Crea una empresa para publicar empleos en modo empresa."
+    ></app-empty-state>
 
     <ion-card *ngIf="canCreateJob && !loadingCompanies && !companies.length">
     <ion-card-header>

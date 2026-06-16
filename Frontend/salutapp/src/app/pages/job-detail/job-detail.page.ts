@@ -5,13 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { JobsService } from '../../services/jobs.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-job-detail',
   templateUrl: './job-detail.page.html',
   styleUrls: ['./job-detail.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule, FormsModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class JobDetailPage implements OnInit {
   job: any = null;

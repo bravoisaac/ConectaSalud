@@ -6,13 +6,15 @@ import { IonicModule } from '@ionic/angular';
 
 import { AuthService } from '../../services/auth.service';
 import { JobsService } from '../../services/jobs.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
+import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
 @Component({
   selector: 'app-jobs',
   templateUrl: './jobs.page.html',
   styleUrls: ['./jobs.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule, EmptyStateComponent, LoadingStateComponent],
 })
 export class JobsPage implements OnInit {
   canCreateJob = false;
@@ -31,6 +33,34 @@ export class JobsPage implements OnInit {
   errorMsg = '';
   showSuccess = false;
   showCreated = false;
+  filtersOpen = false;
+
+  get hasActiveFilters() {
+    return !!(
+      this.query.trim()
+      || this.modality !== 'todas'
+      || this.location.trim()
+      || this.specialty.trim()
+      || this.profession.trim()
+      || this.contract.trim()
+      || this.salaryMin.trim()
+      || this.salaryMax.trim()
+      || this.dateRange !== 'any'
+    );
+  }
+
+  get activeFiltersCount() {
+    let count = 0;
+    if (this.sortBy !== 'recent') count++;
+    if (this.location.trim()) count++;
+    if (this.profession.trim()) count++;
+    if (this.salaryMin.trim() || this.salaryMax.trim()) count++;
+    if (this.modality !== 'todas') count++;
+    if (this.dateRange !== 'any') count++;
+    if (this.specialty.trim()) count++;
+    if (this.contract.trim()) count++;
+    return count;
+  }
 
   constructor(
     private jobsService: JobsService,
@@ -194,6 +224,31 @@ export class JobsPage implements OnInit {
     }).add(() => {
       this.loading = false;
     });
+  }
+
+  clearFilters() {
+    this.query = '';
+    this.clearPanelFilters();
+  }
+
+  clearPanelFilters() {
+    this.modality = 'todas';
+    this.location = '';
+    this.specialty = '';
+    this.profession = '';
+    this.contract = '';
+    this.salaryMin = '';
+    this.salaryMax = '';
+    this.sortBy = 'recent';
+    this.dateRange = 'any';
+  }
+
+  openFilters() {
+    this.filtersOpen = true;
+  }
+
+  closeFilters() {
+    this.filtersOpen = false;
   }
 
   private normalizeModality(value: string | null) {

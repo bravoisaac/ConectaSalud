@@ -19,10 +19,11 @@
       <ion-text color="danger" *ngIf="errorMsg" class="error-message">{{ errorMsg }}</ion-text>
       <ion-text color="success" *ngIf="successMsg" class="success-message">{{ successMsg }}</ion-text>
 
-      <div class="loading" *ngIf="loading">
-        <ion-spinner></ion-spinner>
-        <span>Cargando...</span>
-      </div>
+      <app-loading-state
+        *ngIf="loading"
+        title="Cargando empleo"
+        description="Preparando el detalle de la oferta."
+      ></app-loading-state>
 
       <ng-container *ngIf="!loading && job">
         <div class="detail-grid">
@@ -91,17 +92,24 @@
                   {{ applyLoading ? 'Enviando...' : 'Enviar postulación' }}
                 </ion-button>
 
-                <ion-text color="medium" *ngIf="!canApply" class="empty">Esta oferta no está disponible.</ion-text>
+                <app-empty-state
+                  *ngIf="!canApply"
+                  [compact]="true"
+                  icon="lock-closed-outline"
+                  title="Oferta no disponible"
+                  description="Esta publicacion no admite nuevas postulaciones."
+                ></app-empty-state>
               </ion-card-content>
             </ion-card>
 
             <ion-card class="detail-card" *ngIf="loadingSimilar">
               <ion-card-content>
                 <p class="section-title">Empleos similares</p>
-                <div class="loading similar-loading">
-                  <ion-spinner></ion-spinner>
-                  <span>Buscando empleos similares...</span>
-                </div>
+                <app-loading-state
+                  [compact]="true"
+                  title="Buscando similares"
+                  description="Comparando ubicacion, cargo y sueldo."
+                ></app-loading-state>
               </ion-card-content>
             </ion-card>
 
@@ -150,6 +158,18 @@
                   Ver más empleos similares
                   <ion-icon slot="end" name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                 </ion-button>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="detail-card" *ngIf="!loadingSimilar && job && !similarJobs.length">
+              <ion-card-content>
+                <p class="section-title">Empleos similares</p>
+                <app-empty-state
+                  [compact]="true"
+                  icon="search-outline"
+                  title="Sin similares por ahora"
+                  description="No encontramos ofertas relacionadas con este empleo."
+                ></app-empty-state>
               </ion-card-content>
             </ion-card>
           </div>
