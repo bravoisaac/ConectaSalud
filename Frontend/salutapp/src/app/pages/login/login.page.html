@@ -48,6 +48,18 @@
           </ion-item>
         </div>
 
+        <label class="remember-option">
+          <ion-checkbox
+            name="rememberMe"
+            [checked]="rememberMe"
+            (ionChange)="rememberMe = $event.detail.checked"
+            justify="start"
+            labelPlacement="end"
+          >
+            Recordarme
+          </ion-checkbox>
+        </label>
+
         <ion-button class="primary" expand="block" type="submit" [disabled]="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </ion-button>

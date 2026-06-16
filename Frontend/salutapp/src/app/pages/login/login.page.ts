@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,17 +13,25 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterModule],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   email = '';
   password = '';
   errorMsg = '';
   loading = false;
   showPassword = false;
+  rememberMe = true;
 
   constructor(
     private auth: AuthService,
     private router: Router
   ) {}
+
+  async ngOnInit() {
+    const token = await this.auth.getToken();
+    if (token) {
+      this.router.navigateByUrl('/app/jobs', { replaceUrl: true });
+    }
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -35,8 +43,8 @@ export class LoginPage {
 
     this.auth.login(this.email, this.password).subscribe({
       next: async (res: any) => {
-        await this.auth.setToken(res.token);
-        await this.auth.setUser(res.user);
+        await this.auth.setToken(res.token, this.rememberMe);
+        await this.auth.setUser(res.user, this.rememberMe);
         this.router.navigateByUrl('/app/jobs', { replaceUrl: true });
       },
       error: (err) => {

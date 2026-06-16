@@ -15,6 +15,22 @@ ion-button.primary {
   margin-top: 18px;
 }
 
+.remember-option {
+  display: flex;
+  margin: 12px 2px 0;
+}
+
+.remember-option ion-checkbox {
+  --checkbox-background: rgba(255, 255, 255, 0.08);
+  --checkbox-background-checked: #3140d4;
+  --border-color: rgba(255, 255, 255, 0.28);
+  --border-color-checked: #3140d4;
+  --checkmark-color: #ffffff;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  font-weight: 750;
+}
+
 .error {
   margin: 12px 2px 0;
   color: #f87171;

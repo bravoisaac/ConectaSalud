@@ -18,9 +18,19 @@ export class AuthGuard implements CanActivate {
       const user = await firstValueFrom(this.auth.me());
       await this.auth.setUser(user);
       return true;
-    } catch {
-      await this.auth.clearToken();
-      await this.auth.clearUser();
+    } catch (err: any) {
+      if (err?.status === 401 || err?.status === 403) {
+        await this.auth.clearToken();
+        await this.auth.clearUser();
+        this.router.navigateByUrl('/login');
+        return false;
+      }
+
+      const cachedUser = await this.auth.getUser();
+      if (cachedUser) {
+        return true;
+      }
+
       this.router.navigateByUrl('/login');
       return false;
     }
