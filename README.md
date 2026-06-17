@@ -14,49 +14,63 @@ Salut App esta pensada para resolver tres necesidades principales:
 
 El proyecto integra autenticacion, roles, reservas, postulaciones, perfiles, servicios de salud y gestion de datos desde una API centralizada.
 
+## Credenciales demo
+
+Puedes entrar a la aplicacion con el siguiente usuario de prueba:
+
+| Rol | Correo | Contrasena |
+| --- | --- | --- |
+| Usuario demo | `usuario01@salutdemo.cl` | `SalutDemo2026!` |
+
+Ruta recomendada para iniciar sesion:
+
+```text
+http://localhost:8100/login
+```
+
 ## Capturas del sistema
 
 ### Inicio de sesion
 
 Pantalla de acceso para usuarios registrados. Desde aqui el usuario ingresa con correo y contrasena para acceder a las funciones privadas de la aplicacion.
 
-![Pantalla de inicio de sesion](docs/images/login.jpg)
+![Pantalla de inicio de sesion](docs/images/login.png)
 
 ### Registro de usuarios
 
 Formulario para crear una cuenta nueva. Permite seleccionar el tipo de usuario, idioma y datos basicos de contacto.
 
-![Pantalla de registro](docs/images/registro.jpg)
+![Pantalla de registro](docs/images/registro.png)
 
 ### Modulo de empleos
 
 Listado de ofertas laborales con buscador, filtros por ubicacion, profesion, sueldo, jornada, fecha y experiencia. Desde esta vista el usuario puede revisar oportunidades y entrar al detalle de cada publicacion.
 
-![Pantalla de empleos](docs/images/jobs.jpg)
+![Pantalla de empleos](docs/images/jobs.png)
 
 ### Servicios de salud
 
 Directorio de profesionales disponibles. Incluye filtros por especialidad, ubicacion y tarifa, mostrando informacion relevante como experiencia, profesion y valor por hora.
 
-![Pantalla de servicios de salud](docs/images/health.jpg)
+![Pantalla de servicios de salud](docs/images/health.png)
 
 ### Reservas
 
 Panel para revisar citas de salud activas y finalizadas. Permite visualizar fecha, hora, ubicacion, estado de la reserva y acciones segun el rol del usuario.
 
-![Pantalla de reservas](docs/images/health-bookings.jpg)
+![Pantalla de reservas](docs/images/health-bookings.png)
 
 ### Propuestas
 
 Vista de postulaciones enviadas o recibidas. El usuario puede consultar el estado de sus propuestas, revisar detalles y contactar cuando corresponde.
 
-![Pantalla de propuestas](docs/images/my-proposals.jpg)
+![Pantalla de propuestas](docs/images/my-proposals.png)
 
 ### Perfil
 
 Seccion de datos personales y curriculum profesional. Centraliza informacion de contacto, direccion, rol y antecedentes laborales del usuario.
 
-![Pantalla de perfil](docs/images/profile.jpg)
+![Pantalla de perfil](docs/images/profile.png)
 
 ## Funcionalidades principales
 
