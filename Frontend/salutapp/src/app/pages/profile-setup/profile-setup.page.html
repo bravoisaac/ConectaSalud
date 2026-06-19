@@ -1,0 +1,281 @@
+<ion-content class="feed-content setup-content" [fullscreen]="true">
+  <div class="feed-shell">
+    <header class="feed-header setup-header">
+      <div class="feed-header-inner">
+        <h1 class="feed-title">Completa tu perfil</h1>
+        <p class="feed-subtitle">Agrega tus datos personales y curriculum profesional antes de postular.</p>
+      </div>
+    </header>
+
+    <section class="feed-body setup-body" aria-label="Asistente de perfil">
+      <div class="setup-loading" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>Cargando perfil...</span>
+      </div>
+
+      <ng-container *ngIf="!loading">
+        <div class="setup-alert" *ngIf="!completion.complete">
+          <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+          <div>
+            <strong>Perfil incompleto</strong>
+            <p>Falta completar: {{ missingSummary.join(', ') }}</p>
+          </div>
+        </div>
+
+        <div class="setup-alert setup-alert--success" *ngIf="completion.complete">
+          <ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+          <div>
+            <strong>Perfil listo para postular</strong>
+            <p>Ya puedes volver al empleo y enviar tu postulacion.</p>
+          </div>
+        </div>
+
+        <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+        <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+        <div class="setup-layout">
+          <aside class="setup-steps" aria-label="Pasos">
+            <button
+              type="button"
+              class="setup-step"
+              [class.is-active]="activeStep === 'personal'"
+              [class.is-complete]="completion.personalComplete"
+              (click)="selectStep('personal')"
+            >
+              <ion-icon [name]="completion.personalComplete ? 'checkmark-circle-outline' : 'person-outline'"></ion-icon>
+              <span>Datos personales</span>
+            </button>
+            <button
+              type="button"
+              class="setup-step"
+              [class.is-active]="activeStep === 'professional'"
+              [class.is-complete]="completion.professionalComplete"
+              (click)="selectStep('professional')"
+            >
+              <ion-icon [name]="completion.professionalComplete ? 'checkmark-circle-outline' : 'briefcase-outline'"></ion-icon>
+              <span>Curriculum profesional</span>
+            </button>
+            <button
+              type="button"
+              class="setup-step"
+              [class.is-active]="activeStep === 'documents'"
+              (click)="selectStep('documents')"
+            >
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <span>Archivo CV</span>
+            </button>
+          </aside>
+
+          <div class="setup-forms">
+            <ion-card class="setup-card" *ngIf="activeStep === 'personal'">
+              <ion-card-header>
+                <ion-card-title>Datos personales</ion-card-title>
+                <ion-card-subtitle>Estos datos ayudan al empleador a contactarte.</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="setup-grid">
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Nombre completo</ion-label>
+                    <ion-input [(ngModel)]="profile.full_name" placeholder="Ej: Daniela Morales"></ion-input>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Email</ion-label>
+                    <ion-input [(ngModel)]="profile.email" type="email" placeholder="correo@correo.com"></ion-input>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Telefono</ion-label>
+                    <ion-input [(ngModel)]="profile.phone" inputmode="tel" placeholder="+56 9 1234 5678"></ion-input>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Region</ion-label>
+                    <ion-select
+                      [(ngModel)]="profile.address_region"
+                      interface="popover"
+                      [interfaceOptions]="profileSelectOptions"
+                      (ionChange)="onAddressRegionChange()"
+                    >
+                      <ion-select-option *ngFor="let r of regions" [value]="r.name">{{ r.name }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Ciudad</ion-label>
+                    <ion-select
+                      [(ngModel)]="profile.address_city"
+                      interface="popover"
+                      [interfaceOptions]="profileSelectOptions"
+                      [disabled]="!availableCities.length"
+                      (ionChange)="onAddressCityChange()"
+                    >
+                      <ion-select-option *ngFor="let c of availableCities" [value]="c.name">{{ c.name }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Comuna</ion-label>
+                    <ion-select
+                      [(ngModel)]="profile.address_comuna"
+                      interface="popover"
+                      [interfaceOptions]="profileSelectOptions"
+                      [disabled]="!availableComunas.length"
+                    >
+                      <ion-select-option *ngFor="let c of availableComunas" [value]="c.name">{{ c.name }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Calle</ion-label>
+                    <ion-input [(ngModel)]="profile.address_street" placeholder="Ej: Paicavi"></ion-input>
+                  </ion-item>
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Numero</ion-label>
+                    <ion-input [(ngModel)]="profile.address_number" placeholder="Ej: 1840"></ion-input>
+                  </ion-item>
+                </div>
+
+                <div class="setup-actions">
+                  <ion-button fill="outline" (click)="goBack()">Mas tarde</ion-button>
+                  <ion-button (click)="savePersonal()" [disabled]="savingPersonal">
+                    {{ savingPersonal ? 'Guardando...' : 'Guardar y continuar' }}
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="setup-card" *ngIf="activeStep === 'professional'">
+              <ion-card-header>
+                <ion-card-title>Curriculum profesional</ion-card-title>
+                <ion-card-subtitle>Completa una lista de formularios con tu experiencia, habilidades y estudios.</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="setup-grid">
+                  <ion-item class="setup-field" lines="none">
+                    <ion-label position="stacked">Profesion</ion-label>
+                    <ion-input [(ngModel)]="profile.profession" placeholder="Ej: TENS, Enfermera"></ion-input>
+                  </ion-item>
+                  <ion-item class="setup-field setup-field--wide" lines="none">
+                    <ion-label position="stacked">Resumen profesional</ion-label>
+                    <ion-textarea [(ngModel)]="profile.summary" autoGrow="true" placeholder="Describe tu experiencia y enfoque"></ion-textarea>
+                  </ion-item>
+                </div>
+
+                <div class="form-list">
+                  <section class="form-block">
+                    <h3>Experiencia laboral</h3>
+                    <div class="setup-grid">
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Empresa</ion-label>
+                        <ion-input [(ngModel)]="newExperience.company" placeholder="Ej: Clinica Central"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Cargo</ion-label>
+                        <ion-input [(ngModel)]="newExperience.role" placeholder="Ej: Tens domicilio"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Inicio</ion-label>
+                        <ion-input [(ngModel)]="newExperience.startDate" type="date"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Fin</ion-label>
+                        <ion-input [(ngModel)]="newExperience.endDate" type="date"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field setup-field--wide" lines="none">
+                        <ion-label position="stacked">Descripcion</ion-label>
+                        <ion-textarea [(ngModel)]="newExperience.description" autoGrow="true" placeholder="Responsabilidades y logros"></ion-textarea>
+                      </ion-item>
+                    </div>
+                    <ion-button fill="outline" size="small" (click)="addExperience()">Agregar experiencia</ion-button>
+                    <div class="entry-list" *ngIf="experienceEntries.length">
+                      <div class="entry-pill" *ngFor="let exp of experienceEntries; let i = index">
+                        <span>{{ exp.role || exp.company || 'Experiencia' }}</span>
+                        <button type="button" (click)="removeExperience(i)">Eliminar</button>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="form-block">
+                    <h3>Habilidades</h3>
+                    <div class="inline-form">
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Nueva habilidad</ion-label>
+                        <ion-input [(ngModel)]="newSkill" placeholder="Ej: Cuidado adulto mayor"></ion-input>
+                      </ion-item>
+                      <ion-button fill="outline" size="small" (click)="addSkill()">Agregar</ion-button>
+                    </div>
+                    <div class="entry-list" *ngIf="skillsEntries.length">
+                      <div class="entry-pill" *ngFor="let skill of skillsEntries; let i = index">
+                        <span>{{ skill }}</span>
+                        <button type="button" (click)="removeSkill(i)">Eliminar</button>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="form-block">
+                    <h3>Estudios</h3>
+                    <div class="setup-grid">
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Carrera</ion-label>
+                        <ion-input [(ngModel)]="newEducation.degree" placeholder="Ej: Enfermeria"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Casa de estudio</ion-label>
+                        <ion-input [(ngModel)]="newEducation.institution" placeholder="Ej: Duoc UC"></ion-input>
+                      </ion-item>
+                      <div class="setup-check-row">
+                        <span>Finalizado</span>
+                        <ion-checkbox aria-label="Finalizado" [(ngModel)]="newEducation.completed"></ion-checkbox>
+                      </div>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Inicio</ion-label>
+                        <ion-input [(ngModel)]="newEducation.startDate" type="date"></ion-input>
+                      </ion-item>
+                      <ion-item class="setup-field" lines="none">
+                        <ion-label position="stacked">Fin</ion-label>
+                        <ion-input [(ngModel)]="newEducation.endDate" type="date" [disabled]="!newEducation.completed"></ion-input>
+                      </ion-item>
+                    </div>
+                    <ion-button fill="outline" size="small" (click)="addEducation()">Agregar estudio</ion-button>
+                    <div class="entry-list" *ngIf="educationEntries.length">
+                      <div class="entry-pill" *ngFor="let edu of educationEntries; let i = index">
+                        <span>{{ edu.degree || edu.institution || 'Estudio' }}</span>
+                        <button type="button" (click)="removeEducation(i)">Eliminar</button>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="setup-actions">
+                  <ion-button fill="outline" (click)="selectStep('personal')">Volver</ion-button>
+                  <ion-button (click)="saveProfessional()" [disabled]="savingProfessional">
+                    {{ savingProfessional ? 'Guardando...' : 'Guardar curriculum' }}
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="setup-card" *ngIf="activeStep === 'documents'">
+              <ion-card-header>
+                <ion-card-title>Archivo CV</ion-card-title>
+                <ion-card-subtitle>Opcional, pero recomendado para mejorar tu postulacion.</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <input #cvInput class="setup-file-input" type="file" accept="application/pdf" (change)="onCvSelected($event)" />
+                <button type="button" class="file-picker" (click)="cvInput.click()">
+                  <ion-icon name="document-attach-outline" aria-hidden="true"></ion-icon>
+                  <span>{{ cvName || 'Seleccionar PDF' }}</span>
+                </button>
+
+                <div class="setup-actions">
+                  <ion-button fill="outline" (click)="selectStep('professional')">Volver</ion-button>
+                  <ion-button (click)="saveProfessional()" [disabled]="savingProfessional">
+                    {{ savingProfessional ? 'Guardando...' : 'Guardar CV' }}
+                  </ion-button>
+                  <ion-button class="return-btn" [disabled]="!completion.complete" (click)="goBack()">
+                    Volver al empleo
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+      </ng-container>
+    </section>
+  </div>
+</ion-content>

@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
+import { firstValueFrom } from 'rxjs';
 
 import { JobsService } from '../../services/jobs.service';
+import { AuthService } from '../../services/auth.service';
+import { ProfileService } from '../../services/profile.service';
+import { ProfileCompletionService } from '../../services/profile-completion.service';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
 import { LoadingStateComponent } from '../../shared/loading-state/loading-state.component';
 
@@ -80,6 +84,10 @@ export class JobDetailPage implements OnInit {
 
   constructor(
     private jobsService: JobsService,
+    private authService: AuthService,
+    private profileService: ProfileService,
+    private profileCompletion: ProfileCompletionService,
+    private alertController: AlertController,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -410,7 +418,7 @@ export class JobDetailPage implements OnInit {
     return raw.filter((t) => t.length > 2 && !stop.has(t));
   }
 
-  apply() {
+  async apply() {
     if (!this.jobId) {
       this.errorMsg = 'Empleo no encontrado';
       return;
@@ -420,10 +428,15 @@ export class JobDetailPage implements OnInit {
       return;
     }
 
-    this.applyLoading = true;
     this.errorMsg = '';
     this.successMsg = '';
 
+    const profileReady = await this.ensureHealthProfileReady();
+    if (!profileReady) {
+      return;
+    }
+
+    this.applyLoading = true;
     const letter = this.coverLetter.trim();
 
     this.jobsService.apply(this.jobId, letter ? letter : undefined).subscribe({
@@ -481,6 +494,61 @@ export class JobDetailPage implements OnInit {
     }).add(() => {
       this.applyLoading = false;
     });
+  }
+
+  private async ensureHealthProfileReady() {
+    const user = await this.authService.getUser();
+    const role = String(user?.role || '').toLowerCase();
+    if (role !== 'health') {
+      return true;
+    }
+
+    this.applyLoading = true;
+
+    let profile: any = {};
+    try {
+      profile = await firstValueFrom(this.profileService.getProfile());
+    } catch (err: any) {
+      if (err?.status !== 404) {
+        this.errorMsg = 'No se pudo revisar tu perfil antes de postular';
+        this.applyLoading = false;
+        return false;
+      }
+    }
+
+    const status = this.profileCompletion.analyze(profile || {}, user);
+    if (status.complete) {
+      this.applyLoading = false;
+      return true;
+    }
+
+    this.applyLoading = false;
+    const missing = [...status.missingPersonal, ...status.missingProfessional];
+    const missingText = missing.slice(0, 5).join(', ');
+    const moreText = missing.length > 5 ? ` y ${missing.length - 5} mas` : '';
+
+    const alert = await this.alertController.create({
+      header: 'Completa tu perfil',
+      message: `Para postular necesitas agregar tus datos personales y curriculum profesional. Falta: ${missingText}${moreText}. ¿Quieres completarlo ahora?`,
+      cssClass: 'profile-required-alert',
+      buttons: [
+        {
+          text: 'Mas tarde',
+          role: 'cancel',
+        },
+        {
+          text: 'Si, completar',
+          handler: () => {
+            this.router.navigate(['/app/profile-setup'], {
+              queryParams: { returnUrl: this.router.url },
+            });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+    return false;
   }
 
   private normalizeModality(value: string | null) {

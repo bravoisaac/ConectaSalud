@@ -4317,3 +4317,348 @@ ion-popover.profile-select-popover ion-radio {
   --color-checked: #0f766e;
   margin-right: 12px;
 }
+
+ion-alert.profile-required-alert {
+  --backdrop-opacity: 0.22;
+}
+
+ion-alert.profile-required-alert .alert-wrapper {
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(16, 32, 31, 0.22);
+}
+
+ion-alert.profile-required-alert .alert-head {
+  padding-bottom: 6px;
+}
+
+ion-alert.profile-required-alert .alert-title {
+  color: #10201f;
+  font-weight: 850;
+}
+
+ion-alert.profile-required-alert .alert-message {
+  color: #40524f;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+ion-alert.profile-required-alert .alert-button {
+  color: #0f766e;
+  font-weight: 850;
+  text-transform: none;
+}
+
+/* Guided profile setup */
+app-profile-setup .setup-body {
+  max-width: 1040px;
+  margin-top: -38px;
+}
+
+app-profile-setup .setup-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+app-profile-setup .setup-alert,
+app-profile-setup .setup-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  font-weight: 750;
+}
+
+app-profile-setup .setup-alert p {
+  margin: 4px 0 0;
+  color: #9a3412;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+app-profile-setup .setup-alert--success {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #047857;
+}
+
+app-profile-setup .setup-alert--success p {
+  color: #047857;
+}
+
+app-profile-setup .setup-steps,
+app-profile-setup .setup-card {
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(16, 32, 31, 0.08);
+}
+
+app-profile-setup .setup-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+app-profile-setup .setup-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #40524f;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  text-align: left;
+}
+
+app-profile-setup .setup-step ion-icon {
+  color: #0f766e;
+  font-size: 18px;
+}
+
+app-profile-setup .setup-step.is-active {
+  background: #dff0ed;
+  border-color: #b8ded7;
+  color: #0b5f59;
+}
+
+app-profile-setup .setup-step.is-complete ion-icon {
+  color: #047857;
+}
+
+app-profile-setup .setup-card ion-card-header {
+  padding-bottom: 8px;
+}
+
+app-profile-setup .setup-card ion-card-title {
+  color: #10201f;
+  font-size: 20px;
+  font-weight: 850;
+}
+
+app-profile-setup .setup-card ion-card-subtitle {
+  color: #40524f;
+  font-weight: 650;
+}
+
+app-profile-setup .setup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+app-profile-setup .setup-field {
+  --background: #f8fbfb;
+  --border-color: transparent;
+  --inner-border-width: 0;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --min-height: 66px;
+  margin: 0;
+  border: 1px solid #dbe8e5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+app-profile-setup .setup-field--wide {
+  grid-column: 1 / -1;
+}
+
+app-profile-setup .setup-field::part(native) {
+  background: #f8fbfb;
+}
+
+app-profile-setup .setup-field ion-label {
+  color: #40524f !important;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+app-profile-setup .setup-field ion-input,
+app-profile-setup .setup-field ion-textarea,
+app-profile-setup .setup-field ion-select {
+  color-scheme: light;
+  font-family: inherit;
+}
+
+app-profile-setup .setup-field ion-input::part(native),
+app-profile-setup .setup-field ion-textarea::part(native),
+app-profile-setup .setup-field ion-select::part(text),
+app-profile-setup .setup-field ion-select::part(placeholder) {
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+app-profile-setup .form-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+app-profile-setup .form-block {
+  padding: 12px;
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+app-profile-setup .form-block h3 {
+  margin: 0 0 10px;
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+app-profile-setup .inline-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+app-profile-setup .setup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  justify-content: flex-end;
+}
+
+app-profile-setup ion-button {
+  --border-radius: 999px;
+  --box-shadow: none;
+  text-transform: none;
+  font-weight: 850;
+}
+
+app-profile-setup ion-button:not([fill='outline']) {
+  --background: #0f766e;
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
+  --color: #ffffff;
+}
+
+app-profile-setup ion-button[fill='outline'] {
+  --background: #ffffff;
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+  --border-color: #b8ded7;
+  --color: #0f766e;
+}
+
+app-profile-setup .entry-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+app-profile-setup .entry-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #dbe8e5;
+  border-radius: 999px;
+  background: #f8fbfb;
+  color: #10201f;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+app-profile-setup .entry-pill button {
+  border: 0;
+  background: transparent;
+  color: #c7352b;
+  font: inherit;
+  font-weight: 850;
+}
+
+app-profile-setup .setup-check-row {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 14px 0 12px;
+  border: 1px solid #dbe8e5;
+  border-radius: 12px;
+  background: #f8fbfb;
+}
+
+app-profile-setup .setup-check-row span {
+  color: #243f3b;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+app-profile-setup .setup-check-row ion-checkbox {
+  --size: 22px;
+  --border-radius: 6px;
+  --checkbox-background: #ffffff;
+  --checkbox-background-checked: #0f766e;
+  --border-color: #9bb8b2;
+  --border-color-checked: #0f766e;
+  --checkmark-color: #ffffff;
+}
+
+app-profile-setup .setup-file-input {
+  display: none;
+}
+
+app-profile-setup .file-picker {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px dashed #9fcac2;
+  border-radius: 14px;
+  background: #f8fbfb;
+  color: #0f766e;
+  font: inherit;
+  font-weight: 850;
+}
+
+@media (max-width: 767px) {
+  app-profile-setup .setup-body {
+    margin-top: 14px !important;
+  }
+
+  app-profile-setup .setup-layout,
+  app-profile-setup .setup-grid,
+  app-profile-setup .inline-form {
+    grid-template-columns: 1fr;
+  }
+
+  app-profile-setup .setup-steps {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+  }
+
+  app-profile-setup .setup-actions {
+    justify-content: stretch;
+  }
+
+  app-profile-setup .setup-actions ion-button {
+    flex: 1 1 150px;
+  }
+}

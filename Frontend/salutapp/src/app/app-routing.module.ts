@@ -53,6 +53,11 @@ const routes: Routes = [
           import('./pages/profile/profile.page').then(m => m.ProfilePage),
       },
       {
+        path: 'profile-setup',
+        loadComponent: () =>
+          import('./pages/profile-setup/profile-setup.page').then(m => m.ProfileSetupPage),
+      },
+      {
         path: 'health-bookings',
         loadComponent: () =>
           import('./pages/health-bookings/health-bookings.page').then(m => m.HealthBookingsPage),
