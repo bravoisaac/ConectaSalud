@@ -24,6 +24,9 @@ export class ProfilePage implements OnInit, OnDestroy {
   readonly regions = clRegions;
   readonly provinces = clProvinces;
   readonly communes = clCommunes;
+  readonly profileSelectOptions = {
+    cssClass: 'profile-select-popover',
+  };
 
   user: any = null;
   isAdmin = false;

@@ -1212,6 +1212,299 @@ ion-modal.health-booking-modal .map-frame {
   color: var(--salut-text-1);
 }
 
+/* Profile experience editor refresh */
+.profile-header ~ .feed-body .experience-header ion-label {
+  color: #10201f !important;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.profile-header ~ .feed-body .experience-header .edit-actions ion-button,
+.profile-header ~ .feed-body .experience-card ion-button {
+  --border-radius: 999px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --box-shadow: none;
+  min-height: 34px;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body .experience-header .edit-actions ion-button:not([fill='outline']) {
+  --background: #0f766e;
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
+  --color: #ffffff;
+}
+
+.profile-header ~ .feed-body .experience-header .edit-actions ion-button[fill='outline'],
+.profile-header ~ .feed-body .experience-card ion-button[fill='outline'] {
+  --background: #ffffff;
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+  --border-color: #b8ded7;
+  --color: #0f766e;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card {
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(16, 32, 31, 0.06);
+}
+
+.profile-header ~ .feed-body ion-card.experience-card.add-card {
+  border-style: solid;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-item {
+  --background: #f8fbfb;
+  --border-color: transparent;
+  --inner-border-width: 0;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --min-height: 66px;
+  margin: 0;
+  border: 1px solid #dbe8e5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-item::part(native) {
+  background: #f8fbfb;
+  border: 0;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-label {
+  color: #40524f !important;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-input,
+.profile-header ~ .feed-body ion-card.experience-card ion-textarea {
+  font-family: inherit;
+  color-scheme: light;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-input::part(native),
+.profile-header ~ .feed-body ion-card.experience-card ion-textarea::part(native) {
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body ion-card.experience-card ion-input::part(native)::placeholder,
+.profile-header ~ .feed-body ion-card.experience-card ion-textarea::part(native)::placeholder {
+  color: #7b8b88;
+  opacity: 1;
+}
+
+/* Profile skills and education editor refresh */
+.profile-header ~ .feed-body .skills-header ion-label,
+.profile-header ~ .feed-body .education-header ion-label {
+  color: #10201f !important;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.profile-header ~ .feed-body .skills-header .edit-actions ion-button,
+.profile-header ~ .feed-body .education-header .edit-actions ion-button,
+.profile-header ~ .feed-body .skills-card ion-button,
+.profile-header ~ .feed-body .education-card ion-button {
+  --border-radius: 999px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --box-shadow: none;
+  min-height: 34px;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body .skills-header .edit-actions ion-button:not([fill='outline']),
+.profile-header ~ .feed-body .education-header .edit-actions ion-button:not([fill='outline']) {
+  --background: #0f766e;
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
+  --color: #ffffff;
+}
+
+.profile-header ~ .feed-body .skills-header .edit-actions ion-button[fill='outline'],
+.profile-header ~ .feed-body .education-header .edit-actions ion-button[fill='outline'],
+.profile-header ~ .feed-body .skills-card ion-button[fill='outline'],
+.profile-header ~ .feed-body .education-card ion-button[fill='outline'] {
+  --background: #ffffff;
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+  --border-color: #b8ded7;
+  --color: #0f766e;
+}
+
+.profile-header ~ .feed-body .skills-card ion-button[color='danger'][fill='outline'],
+.profile-header ~ .feed-body .education-card ion-button[color='danger'][fill='outline'] {
+  --background: #ffffff;
+  --background-hover: #fff1f0;
+  --background-activated: #ffe4e1;
+  --border-color: #f3b8b5;
+  --color: #c7352b;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card,
+.profile-header ~ .feed-body ion-card.education-card {
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(16, 32, 31, 0.06);
+}
+
+.profile-header ~ .feed-body ion-card.skills-card.add-card,
+.profile-header ~ .feed-body ion-card.education-card.add-card {
+  border-style: solid;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-card-content,
+.profile-header ~ .feed-body ion-card.education-card ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-item,
+.profile-header ~ .feed-body ion-card.education-card ion-item {
+  --background: #f8fbfb;
+  --border-color: transparent;
+  --inner-border-width: 0;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --min-height: 62px;
+  margin: 0;
+  border: 1px solid #dbe8e5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-item::part(native),
+.profile-header ~ .feed-body ion-card.education-card ion-item::part(native) {
+  background: #f8fbfb;
+  border: 0;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-label,
+.profile-header ~ .feed-body ion-card.education-card ion-label {
+  color: #40524f !important;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-input,
+.profile-header ~ .feed-body ion-card.education-card ion-input {
+  font-family: inherit;
+  color-scheme: light;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-input::part(native),
+.profile-header ~ .feed-body ion-card.education-card ion-input::part(native) {
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card ion-input::part(native)::placeholder,
+.profile-header ~ .feed-body ion-card.education-card ion-input::part(native)::placeholder {
+  color: #7b8b88;
+  opacity: 1;
+}
+
+.profile-header ~ .feed-body ion-card.education-card ion-checkbox {
+  --size: 22px;
+  --border-radius: 6px;
+  --checkbox-background: #ffffff;
+  --checkbox-background-checked: #0f766e;
+  --border-color: #9bb8b2;
+  --border-color-checked: #0f766e;
+  --checkmark-color: #ffffff;
+  margin-left: auto;
+}
+
+.profile-header ~ .feed-body ion-card.education-card ion-item.education-check-item {
+  --min-height: 58px;
+  --inner-padding-end: 14px;
+}
+
+.profile-header ~ .feed-body ion-card.education-card ion-item.education-check-item ion-label {
+  margin: 0;
+  color: #243f3b !important;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.profile-header ~ .feed-body ion-card.education-card ion-item.education-check-item ion-checkbox {
+  margin-inline-start: 16px;
+  margin-inline-end: 0;
+}
+
+.profile-header ~ .feed-body ion-card.education-card .education-check-row {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 14px 0 12px;
+  border: 1px solid #dbe8e5;
+  border-radius: 12px;
+  background: #f8fbfb;
+}
+
+.profile-header ~ .feed-body ion-card.education-card .education-check-row span {
+  color: #243f3b;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.profile-header ~ .feed-body ion-card.education-card .education-check-row ion-checkbox {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.profile-header ~ .feed-body ion-card.skills-card .skill-item {
+  margin: 0;
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.profile-header ~ .feed-body ion-card.education-card h3 {
+  margin: 0;
+  color: #10201f;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.profile-header ~ .feed-body ion-card.education-card .education-meta {
+  margin: 0;
+  color: #40524f;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
 .profile-header ~ .feed-body .cv-upload {
   margin-top: 12px;
   padding: 12px;
@@ -1384,14 +1677,25 @@ ion-modal.health-booking-modal .map-frame {
 
 .profile-header ~ .feed-body ion-item.personal-item ion-label {
   font-size: 12px;
-  font-weight: 800;
+  font-family: inherit;
+  font-weight: 750;
+  letter-spacing: 0;
   color: var(--salut-text-2);
 }
 
+.profile-header ~ .feed-body ion-item.personal-item ion-input,
+.profile-header ~ .feed-body ion-item.personal-item ion-select {
+  font-family: inherit;
+}
+
 .profile-header ~ .feed-body ion-item.personal-item ion-input::part(native),
-.profile-header ~ .feed-body ion-item.personal-item ion-select::part(text) {
+.profile-header ~ .feed-body ion-item.personal-item ion-select::part(text),
+.profile-header ~ .feed-body ion-item.personal-item ion-select::part(placeholder) {
+  font-family: inherit;
   font-size: 16px;
-  font-weight: 900;
+  line-height: 1.3;
+  font-weight: 650;
+  letter-spacing: 0;
   color: var(--salut-text-1);
 }
 
@@ -3810,4 +4114,206 @@ app-profile .feed-body {
   app-profile .feed-body {
     margin-top: -28px;
   }
+}
+
+/* Job detail header repair */
+
+app-job-detail .detail-header {
+  padding-bottom: 58px;
+}
+
+app-job-detail .detail-toprow {
+  position: relative;
+  z-index: 2;
+  align-items: flex-start;
+}
+
+app-job-detail ion-button.back-btn {
+  flex: 0 0 36px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+app-job-detail .detail-titles {
+  min-width: 0;
+  padding-right: 8px;
+}
+
+app-job-detail .detail-title {
+  font-size: 22px;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+app-job-detail .detail-subtitle {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 14px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+app-job-detail .feed-body {
+  margin-top: -34px;
+}
+
+app-job-detail ion-card.detail-card {
+  overflow: hidden;
+}
+
+app-job-detail ion-card.detail-card:first-of-type {
+  position: relative;
+  z-index: 3;
+}
+
+/* Health calendar strip repair: keep disabled dates visible on light cards. */
+ion-modal.health-modal .availability-mini {
+  overflow: visible;
+}
+
+ion-modal.health-modal .mini-row {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+}
+
+ion-modal.health-modal .mini-date {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #f8fbfb;
+  border: 1px solid #dbe8e5;
+  color: #62706d !important;
+  font-weight: 850;
+}
+
+ion-modal.health-modal .mini-date.is-enabled {
+  background: #d8e7f8;
+  border-color: #96b7dd;
+  color: #10201f !important;
+}
+
+ion-modal.health-modal .mini-date.is-selected {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.22);
+}
+
+@media (max-width: 767px) {
+  app-job-detail .detail-header {
+    padding: calc(env(safe-area-inset-top) + 28px) 20px 64px;
+  }
+
+  app-job-detail .detail-title {
+    font-size: 20px;
+  }
+
+  app-job-detail .detail-subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  app-job-detail .feed-body {
+    margin-top: -38px !important;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* My proposals segmented control repair */
+app-my-proposals ion-segment.proposal-segment {
+  padding: 4px;
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(16, 32, 31, 0.08);
+  overflow: hidden;
+}
+
+app-my-proposals ion-segment.proposal-segment ion-segment-button {
+  min-height: 52px;
+  --border-radius: 10px;
+  --background: transparent;
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+  --background-checked: #dff0ed;
+  --indicator-color: #dff0ed;
+  --color: #243f3b;
+  --color-checked: #0b5f59;
+  --ripple-color: rgba(15, 118, 110, 0.16);
+  color: #243f3b;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: none;
+}
+
+app-my-proposals ion-segment.proposal-segment ion-segment-button.segment-button-checked {
+  color: #0b5f59;
+}
+
+app-my-proposals ion-segment.proposal-segment ion-segment-button::part(indicator-background) {
+  border-radius: 10px;
+  border: 1px solid #b8ded7;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
+}
+
+/* Profile select popover refresh */
+.profile-header ~ .feed-body ion-select::part(icon) {
+  color: #0f766e;
+  opacity: 0.82;
+}
+
+ion-popover.profile-select-popover {
+  --width: min(380px, calc(100vw - 32px));
+  --max-height: min(430px, calc(100vh - 120px));
+  --backdrop-opacity: 0.12;
+}
+
+ion-popover.profile-select-popover::part(content) {
+  border: 1px solid #d7e5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 22px 50px rgba(16, 32, 31, 0.18);
+  overflow: hidden;
+}
+
+ion-popover.profile-select-popover ion-content {
+  --background: #ffffff;
+  --color: #10201f;
+}
+
+ion-popover.profile-select-popover ion-list {
+  padding: 6px;
+  background: #ffffff;
+}
+
+ion-popover.profile-select-popover ion-item {
+  --min-height: 46px;
+  --background: #ffffff;
+  --background-hover: #f3faf8;
+  --background-focused: #f3faf8;
+  --background-activated: #dff0ed;
+  --border-color: transparent;
+  --color: #243f3b;
+  --inner-padding-end: 8px;
+  --padding-start: 10px;
+  margin: 2px 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+ion-popover.profile-select-popover ion-item.item-radio-checked {
+  --background: #dff0ed;
+  --color: #0b5f59;
+}
+
+ion-popover.profile-select-popover ion-radio {
+  --color: #9bb8b2;
+  --color-checked: #0f766e;
+  margin-right: 12px;
 }

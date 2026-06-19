@@ -8,7 +8,7 @@
     </header>
 
     <section class="feed-body" aria-label="Propuestas">
-      <ion-segment *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
+      <ion-segment class="proposal-segment" *ngIf="canManageInbox" [(ngModel)]="proposalsSection">
         <ion-segment-button value="my">
           <ion-label>Mis postulaciones</ion-label>
         </ion-segment-button>

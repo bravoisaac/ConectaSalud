@@ -76,7 +76,12 @@
         <ion-item class="personal-item" lines="none">
           <ion-icon slot="start" name="map-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Región</ion-label>
-          <ion-select [(ngModel)]="profile.address_region" (ionChange)="onAddressRegionChange()">
+          <ion-select
+            [(ngModel)]="profile.address_region"
+            interface="popover"
+            [interfaceOptions]="profileSelectOptions"
+            (ionChange)="onAddressRegionChange()"
+          >
             <ion-select-option *ngFor="let r of regions" [value]="r.name">
               {{ r.name }}
             </ion-select-option>
@@ -87,6 +92,8 @@
           <ion-label position="stacked">Ciudad</ion-label>
           <ion-select
             [(ngModel)]="profile.address_city"
+            interface="popover"
+            [interfaceOptions]="profileSelectOptions"
             [disabled]="!availableCities.length"
             (ionChange)="onAddressCityChange()"
           >
@@ -98,7 +105,12 @@
         <ion-item class="personal-item" lines="none">
           <ion-icon slot="start" name="pin-outline" aria-hidden="true"></ion-icon>
           <ion-label position="stacked">Comuna</ion-label>
-          <ion-select [(ngModel)]="profile.address_comuna" [disabled]="!availableComunas.length">
+          <ion-select
+            [(ngModel)]="profile.address_comuna"
+            interface="popover"
+            [interfaceOptions]="profileSelectOptions"
+            [disabled]="!availableComunas.length"
+          >
             <ion-select-option *ngFor="let c of availableComunas" [value]="c.name">
               {{ c.name }}
             </ion-select-option>
@@ -325,10 +337,10 @@
               <ion-label position="stacked">Casa de estudio</ion-label>
               <ion-input [(ngModel)]="newEducation.institution" placeholder="Ej: Duoc UC"></ion-input>
             </ion-item>
-            <ion-item lines="none">
-              <ion-label>Finalizado</ion-label>
-              <ion-checkbox [(ngModel)]="newEducation.completed"></ion-checkbox>
-            </ion-item>
+            <div class="education-check-row">
+              <span>Finalizado</span>
+              <ion-checkbox aria-label="Finalizado" [(ngModel)]="newEducation.completed"></ion-checkbox>
+            </div>
             <ion-item>
               <ion-label position="stacked">Fecha de inicio</ion-label>
               <ion-input [(ngModel)]="newEducation.startDate" type="date"></ion-input>
@@ -351,10 +363,10 @@
               <ion-label position="stacked">Casa de estudio</ion-label>
               <ion-input [(ngModel)]="edu.institution"></ion-input>
             </ion-item>
-            <ion-item lines="none">
-              <ion-label>Finalizado</ion-label>
-              <ion-checkbox [(ngModel)]="edu.completed"></ion-checkbox>
-            </ion-item>
+            <div class="education-check-row">
+              <span>Finalizado</span>
+              <ion-checkbox aria-label="Finalizado" [(ngModel)]="edu.completed"></ion-checkbox>
+            </div>
             <ion-item>
               <ion-label position="stacked">Fecha de inicio</ion-label>
               <ion-input [(ngModel)]="edu.startDate" type="date"></ion-input>
@@ -478,7 +490,11 @@
             <div class="form-grid availability-form">
               <ion-item class="form-item" lines="none">
                 <ion-label position="stacked">Día</ion-label>
-                <ion-select [(ngModel)]="availabilityForm.day_of_week" interface="popover">
+                <ion-select
+                  [(ngModel)]="availabilityForm.day_of_week"
+                  interface="popover"
+                  [interfaceOptions]="profileSelectOptions"
+                >
                   <ion-select-option *ngFor="let day of weekDays" [value]="day.value">
                     {{ day.label }}
                   </ion-select-option>
