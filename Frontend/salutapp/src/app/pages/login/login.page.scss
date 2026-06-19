@@ -4,7 +4,7 @@
   align-self: center;
   --padding-start: 10px;
   --padding-end: 10px;
-  --color: rgba(255, 255, 255, 0.6);
+  --color: #62706d;
 }
 
 .eye-btn ion-icon {
@@ -21,19 +21,19 @@ ion-button.primary {
 }
 
 .remember-option ion-checkbox {
-  --checkbox-background: rgba(255, 255, 255, 0.08);
-  --checkbox-background-checked: #3140d4;
-  --border-color: rgba(255, 255, 255, 0.28);
-  --border-color-checked: #3140d4;
+  --checkbox-background: #f8fbfb;
+  --checkbox-background-checked: #0f766e;
+  --border-color: #d7e5e2;
+  --border-color-checked: #0f766e;
   --checkmark-color: #ffffff;
-  color: rgba(255, 255, 255, 0.78);
+  color: #40524f;
   font-size: 13px;
   font-weight: 750;
 }
 
 .error {
   margin: 12px 2px 0;
-  color: #f87171;
+  color: #b42318;
   font-size: 12px;
 }
 
@@ -45,7 +45,7 @@ ion-button.primary {
 .cta-text {
   margin: 10px 0 10px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #62706d;
 }
 
 ion-button.secondary {

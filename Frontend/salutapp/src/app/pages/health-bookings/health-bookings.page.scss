@@ -25,7 +25,7 @@ ion-card.health-booking-card ion-card-content {
   font-size: 13px;
   line-height: 1.35;
   font-weight: 750;
-  color: #34383b;
+  color: #40524f;
   overflow-wrap: anywhere;
 }
 
@@ -34,10 +34,10 @@ ion-card.health-booking-card ion-card-content {
   align-items: center;
   gap: 8px;
   padding: 8px 11px;
-  border-radius: 12px;
-  background: #f6f7f9;
-  border: 1px solid #dfe3e8;
-  color: #2f3437;
+  border-radius: 8px;
+  background: #f8fbfb;
+  border: 1px solid #dbe8e5;
+  color: #243f3b;
   font-size: 13px;
   line-height: 1.35;
   font-weight: 800;
@@ -48,7 +48,7 @@ ion-card.health-booking-card ion-card-content {
 .booking-meta-row ion-icon {
   flex: 0 0 auto;
   font-size: 15px;
-  color: #624de3;
+  color: #0f766e;
   opacity: 0.85;
 }
 
@@ -66,7 +66,7 @@ ion-card.health-booking-card ion-card-content {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  color: #34383b;
+  color: #40524f;
   font-size: 13px;
   line-height: 1.35;
   font-weight: 750;
@@ -76,7 +76,7 @@ ion-card.health-booking-card ion-card-content {
 .booking-desc ion-icon {
   flex: 0 0 auto;
   font-size: 15px;
-  color: #624de3;
+  color: #0f766e;
   opacity: 1;
 }
 
@@ -85,10 +85,10 @@ ion-card.health-booking-card ion-card-content {
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  border-radius: 12px;
-  background: #eef6ff;
-  border: 1px solid #b8d6ff;
-  color: #0f4f8a;
+  border-radius: 8px;
+  background: #ecfdf5;
+  border: 1px solid #b8ded7;
+  color: #0b5f59;
   font-size: 13px;
   line-height: 1.35;
   font-weight: 900;
@@ -98,7 +98,7 @@ ion-card.health-booking-card ion-card-content {
 
 .contact-pill ion-icon {
   font-size: 16px;
-  color: #1766ad;
+  color: #0f766e;
 }
 
 .contact-pill span {

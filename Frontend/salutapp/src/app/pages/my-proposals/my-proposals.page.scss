@@ -24,8 +24,8 @@ ion-card.proposal-card ion-card-content {
   font-size: 15px;
   line-height: 1.25;
   font-weight: 900;
-  color: #000000;
-  letter-spacing: -0.01em;
+  color: #10201f;
+  letter-spacing: 0;
 }
 
 .proposal-sub {
@@ -33,12 +33,12 @@ ion-card.proposal-card ion-card-content {
   font-size: 13px;
   line-height: 1.35;
   font-weight: 750;
-  color: #34383b;
+  color: #40524f;
   overflow-wrap: anywhere;
 }
 
 .proposal-sub--secondary {
-  color: #1f2326;
+  color: #243f3b;
   font-weight: 850;
 }
 
@@ -47,11 +47,11 @@ ion-card.proposal-card ion-card-content {
   font-size: 13px;
   line-height: 1.35;
   font-weight: 750;
-  color: #34383b;
+  color: #40524f;
   padding: 10px 12px;
-  border-radius: 12px;
-  background: #f6f7f9;
-  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  background: #f8fbfb;
+  border: 1px solid #dbe8e5;
   overflow-wrap: anywhere;
 }
 
@@ -59,11 +59,11 @@ ion-button.proposal-cta {
   align-self: center;
   min-width: 160px;
   --border-radius: 999px;
-  --border-color: #cfd5dd;
-  --color: #111315;
+  --border-color: #d7e5e2;
+  --color: #243f3b;
   --background: #ffffff;
-  --background-hover: #f6f7f9;
-  --background-activated: #eef0f3;
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
   height: 34px;
   text-transform: none;
   font-weight: 800;
@@ -90,9 +90,9 @@ ion-button.proposal-cta {
 }
 
 .proposal-actions ion-button[color='success'] {
-  --background: #16803a;
-  --background-hover: #126b31;
-  --background-activated: #105f2c;
+  --background: #0f766e;
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
   --color: #ffffff;
 }
 

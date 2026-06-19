@@ -3452,3 +3452,362 @@ ion-button.proposal-cta {
   text-transform: none;
   letter-spacing: 0;
 }
+
+/* Salut visual refresh layer */
+
+:root,
+html.ui-theme-light,
+html.ui-theme-dark {
+  --salut-primary: #0f766e;
+  --salut-primary-2: #2563eb;
+  --salut-accent: #f97316;
+  --salut-ink: #10201f;
+  --salut-muted: #62706d;
+  --salut-soft: #f3f8f7;
+  --salut-line: #dbe8e5;
+  --salut-card-bg: #ffffff;
+  --salut-card-border: rgba(15, 118, 110, 0.14);
+  --salut-control-bg: #f8fbfb;
+  --salut-control-border: #d7e5e2;
+  --salut-shadow-sm: 0 1px 2px rgba(16, 32, 31, 0.06);
+  --salut-shadow-md: 0 12px 28px rgba(16, 32, 31, 0.09);
+  --salut-shadow-lg: 0 22px 52px rgba(16, 32, 31, 0.13);
+  --salut-radius-card: 8px;
+  --salut-radius-control: 10px;
+}
+
+html,
+body {
+  background: var(--salut-soft);
+  color: var(--salut-ink);
+}
+
+ion-content.feed-content,
+ion-content.auth-content,
+ion-modal.health-filter-modal .filter-modal-content,
+ion-modal.health-booking-modal .modal-content,
+ion-modal.ui-settings-modal .ui-settings-content {
+  --background: var(--salut-soft);
+}
+
+.feed-shell,
+.auth-shell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(232, 244, 241, 0.82) 44%, #f8fbfb 100%),
+    var(--salut-soft);
+}
+
+.feed-header,
+.auth-top,
+.profile-header,
+ion-modal.health-filter-modal .filter-modal-toolbar {
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, #143d39 0%, #0f766e 50%, #2563eb 100%) !important;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+  box-shadow: 0 18px 42px rgba(16, 32, 31, 0.2);
+}
+
+.feed-header::before,
+.auth-top::before,
+.profile-header::before {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.065) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.76), transparent 92%);
+}
+
+.feed-header::after,
+.auth-top::after,
+.profile-header::after {
+  right: -120px;
+  bottom: -84px;
+  width: 520px;
+  height: 180px;
+  border-radius: 0;
+  transform: rotate(-10deg);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.22) 48%, rgba(255, 255, 255, 0));
+  opacity: 0.62;
+}
+
+.feed-kicker {
+  border-color: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.feed-kicker ion-icon {
+  color: #a7f3d0;
+}
+
+.feed-title {
+  text-wrap: balance;
+}
+
+.feed-subtitle,
+.auth-subtitle {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.feed-metric {
+  min-width: 112px;
+  border-radius: var(--salut-radius-card);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.auth-card,
+.feed-content ion-card,
+ion-item.job-card,
+ion-item.profile-card-item,
+ion-card.health-booking-card,
+ion-card.proposal-card,
+.chat-detail,
+.chat-card,
+.profile-header ~ .feed-body .info-row,
+.profile-header ~ .feed-body .personal-sheet,
+.profile-header ~ .feed-body .cv-upload,
+.profile-header ~ .feed-body .availability-slot {
+  border-color: var(--salut-card-border) !important;
+  border-radius: var(--salut-radius-card) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: var(--salut-shadow-md) !important;
+}
+
+.feed-content ion-card {
+  margin-inline: 0;
+}
+
+ion-item.job-card::part(native),
+ion-item.profile-card-item::part(native) {
+  border-radius: var(--salut-radius-card);
+}
+
+ion-item.job-card:hover,
+ion-item.profile-card-item:hover,
+.chat-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.24) !important;
+  box-shadow: 0 16px 34px rgba(16, 32, 31, 0.13) !important;
+}
+
+ion-searchbar.feed-search {
+  --background: rgba(255, 255, 255, 0.98);
+  --border-radius: var(--salut-radius-control);
+  --box-shadow: 0 12px 26px rgba(16, 32, 31, 0.1);
+  --icon-color: var(--salut-primary);
+}
+
+.filters-open-btn {
+  --border-radius: var(--salut-radius-control);
+  --border-color: var(--salut-control-border);
+  --background: rgba(255, 255, 255, 0.98);
+  --box-shadow: 0 12px 26px rgba(16, 32, 31, 0.1);
+  --color: var(--salut-ink);
+}
+
+.filters-count {
+  background: var(--salut-primary);
+}
+
+.filter-pill {
+  height: 38px;
+  --border-color: var(--salut-control-border);
+  --background: rgba(255, 255, 255, 0.96);
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+  --color: #233936;
+}
+
+.filter-pill.is-active {
+  --background: linear-gradient(135deg, var(--salut-primary), var(--salut-primary-2));
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
+  --box-shadow: 0 10px 22px rgba(15, 118, 110, 0.22);
+}
+
+ion-button.primary,
+ion-fab-button.fab,
+ion-button:not(.secondary):not(.filter-pill):not(.link):not(.eye-btn)[fill="solid"],
+ion-button:not([fill]) {
+  --background: linear-gradient(135deg, var(--salut-primary), var(--salut-primary-2));
+  --background-hover: #0d6b64;
+  --background-activated: #0b5f59;
+  --box-shadow: 0 12px 24px rgba(15, 118, 110, 0.24);
+}
+
+ion-button.secondary,
+.filter-reset-btn,
+ion-modal.health-filter-modal .filter-reset-btn {
+  --border-color: var(--salut-control-border);
+  --color: #243f3b;
+  --background: rgba(255, 255, 255, 0.98);
+  --background-hover: #edf7f5;
+  --background-activated: #dff0ed;
+}
+
+.avatar,
+.profile-avatar,
+.section-icon,
+.chat-empty-icon {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.13), rgba(37, 99, 235, 0.1)) !important;
+  border-color: rgba(15, 118, 110, 0.22) !important;
+  color: var(--salut-primary) !important;
+}
+
+.badge--success {
+  background: rgba(15, 118, 110, 0.12);
+  border-color: rgba(15, 118, 110, 0.22);
+  color: #0b5f59;
+}
+
+.badge--info {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.18);
+  color: #1d4ed8;
+}
+
+.badge--warning {
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.2);
+  color: #c2410c;
+}
+
+.job-salary ion-icon,
+.booking-meta-row ion-icon,
+.proposal-message ion-icon,
+.filter-section-title ion-icon,
+ion-modal.health-filter-modal .filter-section-title ion-icon {
+  color: var(--salut-primary) !important;
+}
+
+.auth-item::part(native),
+.profile-header ~ .feed-body ion-item.form-item::part(native),
+.profile-header ~ .feed-body ion-item.personal-item::part(native),
+.message-form ion-input,
+.filter-field,
+ion-modal.health-filter-modal .filter-field {
+  background: var(--salut-control-bg) !important;
+  border-color: var(--salut-control-border) !important;
+  border-radius: var(--salut-radius-control) !important;
+}
+
+.auth-item.item-has-focus::part(native),
+.profile-header ~ .feed-body ion-item.form-item.item-has-focus::part(native),
+.profile-header ~ .feed-body ion-item.personal-item.item-has-focus::part(native) {
+  border-color: rgba(15, 118, 110, 0.58) !important;
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.11) !important;
+}
+
+.success-message,
+.success,
+.hint {
+  background: #ecfdf5 !important;
+  border-color: #bbf7d0 !important;
+  color: #047857 !important;
+}
+
+.error-message,
+.error,
+.errors {
+  border-radius: var(--salut-radius-control);
+}
+
+.messages,
+.proposal-message,
+.booking-meta-row {
+  background: #f8fbfb !important;
+  border-color: var(--salut-line) !important;
+}
+
+.message--own {
+  background: linear-gradient(135deg, #e7f7f4, #e8f1ff);
+  border-color: #b8ded7;
+}
+
+ion-modal.health-filter-modal,
+ion-modal.health-booking-modal,
+ion-modal.ui-settings-modal {
+  --border-radius: 12px;
+}
+
+ion-modal.health-filter-modal::part(content),
+ion-modal.health-booking-modal::part(content),
+ion-modal.ui-settings-modal::part(content) {
+  border: 1px solid var(--salut-card-border);
+  border-radius: 12px;
+  box-shadow: var(--salut-shadow-lg);
+}
+
+.filter-section,
+ion-modal.health-filter-modal .filter-section {
+  border-color: var(--salut-card-border) !important;
+  border-radius: var(--salut-radius-card) !important;
+  box-shadow: var(--salut-shadow-sm) !important;
+}
+
+@media (min-width: 1024px) {
+  .feed-body {
+    margin-top: -46px;
+  }
+
+  .auth-top {
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 767px) {
+  .feed-header,
+  .auth-top,
+  .profile-header {
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+  }
+}
+
+/* Profile header repair */
+
+.profile-header {
+  padding-bottom: 42px;
+}
+
+.profile-hero {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-avatar {
+  width: 78px;
+  height: 78px;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  box-shadow: 0 16px 34px rgba(16, 32, 31, 0.18);
+  color: #0f766e !important;
+}
+
+.profile-name {
+  margin-top: 14px;
+  text-shadow: 0 2px 14px rgba(16, 32, 31, 0.24);
+}
+
+.profile-role {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 22px rgba(16, 32, 31, 0.14);
+  color: #10201f;
+}
+
+app-profile .feed-body {
+  margin-top: -18px;
+}
+
+@media (min-width: 1024px) {
+  app-profile .feed-body {
+    margin-top: -28px;
+  }
+}

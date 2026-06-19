@@ -3,16 +3,26 @@
 }
 
 .loading-state {
+  position: relative;
+  overflow: hidden;
   display: grid;
   justify-items: center;
   gap: 13px;
   width: 100%;
   padding: 30px 18px;
-  border: 1px solid #dfe7f1;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 14px 32px rgba(16, 24, 40, 0.08);
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 28px rgba(16, 32, 31, 0.09);
   text-align: center;
+}
+
+.loading-state::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #0f766e, #2563eb);
 }
 
 .loading-state--compact {
@@ -21,7 +31,7 @@
   align-items: center;
   gap: 10px 12px;
   padding: 16px 14px;
-  border-radius: 14px;
+  border-radius: 8px;
   text-align: left;
 }
 
@@ -30,22 +40,22 @@
   place-items: center;
   width: 54px;
   height: 54px;
-  border: 1px solid rgba(49, 64, 212, 0.18);
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(49, 64, 212, 0.1), rgba(14, 165, 233, 0.12));
-  color: #3140d4;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.13), rgba(37, 99, 235, 0.1));
+  color: #0f766e;
 }
 
 .loading-state--compact .loading-state__spinner {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .loading-state__spinner ion-spinner {
   width: 28px;
   height: 28px;
-  --color: #3140d4;
+  --color: #0f766e;
 }
 
 .loading-state--compact .loading-state__spinner ion-spinner {
@@ -59,7 +69,7 @@
 
 .loading-state h2 {
   margin: 0;
-  color: #101828;
+  color: #10201f;
   font-size: 18px;
   font-weight: 900;
   line-height: 1.2;
@@ -72,7 +82,7 @@
 
 .loading-state p {
   margin: 6px 0 0;
-  color: #667085;
+  color: #62706d;
   font-size: 13px;
   font-weight: 650;
   line-height: 1.4;
@@ -83,7 +93,7 @@
   height: 5px;
   overflow: hidden;
   border-radius: 999px;
-  background: #edf2f7;
+  background: #e6f0ee;
 }
 
 .loading-state--compact .loading-state__bar {
@@ -97,7 +107,7 @@
   width: 42%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #3140d4, #0ea5e9);
+  background: linear-gradient(90deg, #0f766e, #2563eb);
   animation: loading-state-bar 1.2s ease-in-out infinite;
 }
 
@@ -108,5 +118,12 @@
 
   100% {
     transform: translateX(245%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-state__bar span {
+    animation: none;
+    width: 100%;
   }
 }

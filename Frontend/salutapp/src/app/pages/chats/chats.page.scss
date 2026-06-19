@@ -7,7 +7,7 @@
   justify-items: center;
   gap: 12px;
   padding: 34px 18px;
-  border: 1px solid #dfe5eb;
+  border: 1px solid rgba(15, 118, 110, 0.14);
   border-radius: 8px;
   background: #ffffff;
   text-align: center;
@@ -19,9 +19,9 @@
   width: 58px;
   height: 58px;
   border-radius: 8px;
-  background: #eef6ff;
-  border: 1px solid #c7dcf5;
-  color: #1766ad;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.13), rgba(37, 99, 235, 0.1));
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  color: #0f766e;
 }
 
 .chat-empty-icon ion-icon {
@@ -30,7 +30,7 @@
 
 .chat-empty h2 {
   margin: 4px 0 0;
-  color: #202427;
+  color: #10201f;
   font-size: 20px;
   font-weight: 900;
   line-height: 1.2;
@@ -39,7 +39,7 @@
 .chat-empty p {
   width: min(100%, 520px);
   margin: 0;
-  color: #4f5962;
+  color: #62706d;
   font-size: 14px;
   font-weight: 650;
   line-height: 1.45;
@@ -70,7 +70,7 @@
 }
 
 .chat-card-title {
-  color: #202427;
+  color: #10201f;
   font-size: 15px;
   font-weight: 850;
   line-height: 1.25;
@@ -78,7 +78,7 @@
 
 .chat-card-message {
   margin-top: 6px;
-  color: #515960;
+  color: #62706d;
   font-size: 13px;
   font-weight: 650;
   line-height: 1.35;
@@ -109,19 +109,20 @@
   align-self: flex-start;
   max-width: min(82%, 520px);
   padding: 10px 12px;
-  border-radius: 8px;
-  background: #f3f5f7;
-  border: 1px solid #dde3e8;
+  border-radius: 8px 8px 8px 3px;
+  background: #f8fbfb;
+  border: 1px solid #dbe8e5;
 }
 
 .message--own {
   align-self: flex-end;
-  background: #eaf3ff;
-  border-color: #bdd8ff;
+  border-radius: 8px 8px 3px 8px;
+  background: linear-gradient(135deg, #e7f7f4, #e8f1ff);
+  border-color: #b8ded7;
 }
 
 .message-sender {
-  color: #4d5660;
+  color: #62706d;
   font-size: 11px;
   font-weight: 850;
   line-height: 1.2;
@@ -129,7 +130,7 @@
 }
 
 .message-body {
-  color: #202427;
+  color: #10201f;
   font-size: 14px;
   font-weight: 650;
   line-height: 1.35;
