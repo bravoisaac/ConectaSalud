@@ -31,6 +31,13 @@ ion-button.primary {
   font-weight: 750;
 }
 
+ion-button.link.forgot-link {
+  margin: 8px 0 0;
+  --color: #0f766e;
+  font-weight: 800;
+  text-transform: none;
+}
+
 .error {
   margin: 12px 2px 0;
   color: #b42318;

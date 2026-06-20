@@ -116,6 +116,26 @@ export class AuthService {
     });
   }
 
+  forgotPassword(email: string) {
+    return this.http.post(`${environment.apiBase}/forgot-password`, {
+      email,
+    });
+  }
+
+  resetPassword(
+    email: string,
+    token: string,
+    password: string,
+    passwordConfirmation: string
+  ) {
+    return this.http.post(`${environment.apiBase}/reset-password`, {
+      email,
+      token,
+      password,
+      password_confirmation: passwordConfirmation,
+    });
+  }
+
   me() {
     return this.http.get(`${environment.apiBase}/me`);
   }

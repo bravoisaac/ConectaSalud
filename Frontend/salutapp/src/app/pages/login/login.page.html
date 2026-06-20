@@ -60,6 +60,10 @@
           </ion-checkbox>
         </label>
 
+        <ion-button class="link forgot-link" fill="clear" routerLink="/forgot-password" type="button">
+          Olvide mi contrasena
+        </ion-button>
+
         <ion-button class="primary" expand="block" type="submit" [disabled]="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </ion-button>
